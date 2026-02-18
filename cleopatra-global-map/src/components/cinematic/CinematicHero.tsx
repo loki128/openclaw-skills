@@ -1,14 +1,16 @@
 'use client';
 
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 
-// Floating particles component
+// Floating particles component - respects reduced motion
 function FloatingParticles() {
+  const shouldReduceMotion = useReducedMotion();
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; duration: number }>>([]);
   
   useEffect(() => {
+    if (shouldReduceMotion) return;
     const newParticles = Array.from({ length: 20 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -17,7 +19,9 @@ function FloatingParticles() {
       duration: Math.random() * 20 + 15,
     }));
     setParticles(newParticles);
-  }, []);
+  }, [shouldReduceMotion]);
+  
+  if (shouldReduceMotion) return null;
   
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
