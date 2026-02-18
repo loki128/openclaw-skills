@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleopatra Delights | A World of Sweets</title>
+  <meta name="description" content="From the sands of Egypt to the peaks of Asia to the canyons of America. A cinematic journey through the world's most exquisite desserts.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <style>
+    /* ============================================
+       CSS RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      /* Core Colors */
+      --navy-deep: #050810;
+      --navy-mid: #0a0f1a;
+      --navy-light: #121a2b;
+      --charcoal: #1a1f2e;
+      
+      /* Gold Palette */
+      --gold: #d4af37;
+      --gold-light: #f4e4bc;
+      --gold-dark: #8b7355;
+      --gold-glow: rgba(212, 175, 55, 0.3);
+      
+      /* Text */
+      --text-primary: #f8f5f0;
+      --text-secondary: #a89b8c;
+      --text-muted: #6b5d4f;
+      
+      /* Region Colors */
+      --egypt-gold: #c9a227;
+      --egypt-sand: #d4a574;
+      --china-red: #8b2635;
+      --china-jade: #2d5a4a;
+      --china-gold: #c9a227;
+      --usa-canyon: #c75b39;
+      --usa-terracotta: #a0522d;
+      --usa-gold: #d4a853;
+      
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 4rem;
+      --space-xl: 8rem;
+      
+      /* Transitions */
+      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy-deep);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* ============================================
+       NOISE & TEXTURE OVERLAYS
+       ============================================ */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    .vignette-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(5,8,16,0.4) 100%);
+    }
+    
+    /* ============================================
+       CUSTOM CURSOR
+       ============================================ */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.3s;
+      mix-blend-mode: difference;
+    }
+    
+    .cursor.hover {
+      width: 60px;
+      height: 60px;
+      background: rgba(212, 175, 55, 0.1);
+    }
+    
+    .cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10001;
+      transform: translate(-50%, -50%);
+    }
+    
+    /* ============================================
+       PARTICLE SYSTEM
+       ============================================ */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* ============================================
+       NAVIGATION
+       ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(5,8,16,0.95), transparent);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .nav.scrolled {
+      background: rgba(5,8,16,0.98);
+      backdrop-filter: blur(20px) saturate(180%);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+    
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      position: relative;
+    }
+    
+    .nav-logo::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .nav-logo:hover::after {
+      width: 100%;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 3rem;
+    }
+    
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      padding: 0.5rem 0;
+    }
+    
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .nav-link:hover {
+      color: var(--gold);
+    }
+    
+    .nav-link:hover::before {
+      width: 100%;
+    }
+    
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: 
+        radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(139, 38, 53, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at center, var(--navy-mid) 0%, var(--navy-deep) 70%);
+    }
+    
+    .hero-bg-image {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      filter: blur(2px) saturate(0.5);
+    }
+    
+    .hero-content {
+      text-align: center;
+      z-index: 10;
+      padding: 2rem;
+      max-width: 1000px;
+      position: relative;
+    }
+    
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      font-weight: 300;
+    }
+    
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 2rem;
+      opacity: 0;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero-title .line {
+      display: block;
+    }
+    
+    .hero-title .gold {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 4rem;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      line-height: 1.8;
+      opacity: 0;
+    }
+    
+    /* ============================================
+       WORLD MAP
+       ============================================ */
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      opacity: 0;
+    }
+    
+    .world-map-svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.1));
+    }
+    
+    .map-continent {
+      fill: none;
+      stroke: rgba(212, 175, 55, 0.2);
+      stroke-width: 0.5;
+      transition: all 0.6s ease;
+    }
+    
+    .map-continent:hover {
+      stroke: rgba(212, 175, 55, 0.5);
+      stroke-width: 1;
+    }
+    
+    .map-marker {
+      position: absolute;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    
+    .marker-core {
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 
+        0 0 20px var(--gold),
+        0 0 40px var(--gold-glow),
+        0 0 60px rgba(212, 175, 55, 0.2);
+      animation: markerPulse 3s ease-in-out infinite;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    
+    .map-marker:hover .marker-core {
+      transform: scale(1.8);
+      box-shadow: 
+        0 0 30px var(--gold),
+        0 0 60px var(--gold-glow),
+        0 0 100px rgba(212, 175, 55, 0.3);
+    }
+    
+    .marker-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: markerRing 3s ease-out infinite;
+    }
+    
+    .marker-ring:nth-child(2) {
+      animation-delay: 1s;
+    }
+    
+    .marker-label {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      pointer-events: none;
+      font-weight: 400;
+    }
+    
+    .map-marker:hover .marker-label {
+      opacity: 1;
+      top: 40px;
+    }
+    
+    .marker-tooltip {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      background: rgba(10, 15, 26, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(10px);
+      min-width: 180px;
+    }
+    
+    .map-marker:hover .marker-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    
+    .tooltip-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+    
+    .tooltip-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    
+    @keyframes markerPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.9; }
+    }
+    
+    @keyframes markerRing {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    }
+    
+    /* ============================================
+       SCROLL INDICATOR
+       ============================================ */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0;
+      font-weight: 300;
+    }
+    
+    .scroll-line {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2.5s ease-in-out infinite;
+      transform-origin: top;
+    }
+    
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.2; transform: scaleY(0.3); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+    
+    /* ============================================
+       REGION SECTIONS
+       ============================================ */
+    .region {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 6rem 0;
+    }
+    
+    .region-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    
+    .region-bg-image {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.2;
+      filter: saturate(0.6);
+    }
+    
+    .region-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--navy-deep) 0%, transparent 30%, transparent 70%, var(--navy-deep) 100%);
+    }
+    
+    .region-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    
+    @media (max-width: 1024px) {
+      .region-content {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        padding: 0 2rem;
+      }
+    }
+    
+    /* Egypt Section */
+    .region-egypt {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, #1a1510 50%, var(--navy-deep) 100%);
+    }
+    
+    .region-egypt .region-bg-image {
+      background-image: url('https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=1920&q=80');
+    }
+    
+    .region-egypt .region-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 80%, rgba(201, 162, 39, 0.1) 0%, transparent 50%);
+    }
+    
+    .pyramid-decoration {
+      position: absolute;
+      bottom: 0;
+      right: -10%;
+      width: 80%;
+      height: 60%;
+      background: linear-gradient(135deg, transparent 40%, rgba(201, 162, 39, 0.05) 100%);
+      clip-path: polygon(60% 100%, 75% 30%, 90% 100%);
+      pointer-events: none;
+    }
+    
+    /* China Section */
+    .region-china {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, #0f1a15 50%, var(--navy-deep) 100%);
+    }
+    
+    .region-china .region-bg-image {
+      background-image: url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80');
+    }
+    
+    .region-china .region-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 30% 50%, rgba(139, 38, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(45, 90, 74, 0.08) 0%, transparent 40%);
+    }
+    
+    .mist-layer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, 
+        transparent 0%, 
+        rgba(45, 90, 74, 0.05) 30%, 
+        rgba(45, 90, 74, 0.08) 50%, 
+        rgba(45, 90, 74, 0.05) 70%, 
+        transparent 100%);
+      animation: mistDrift 25s ease-in-out infinite;
+    }
+    
+    @keyframes mistDrift {
+      0%, 100% { transform: translateX(-5%); opacity: 0.5; }
+      50% { transform: translateX(5%); opacity: 0.8; }
+    }
+    
+    /* USA Section */
+    .region-usa {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, #1f1510 50%, var(--navy-deep) 100%);
+    }
+    
+    .region-usa .region-bg-image {
+      background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80');
+    }
+    
+    .region-usa .region-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 70%, rgba(199, 91, 57, 0.1) 0%, transparent 50%);
+    }
+    
+    .canyon-layers {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, 
+        rgba(160, 82, 45, 0.15) 0%,
+        rgba(199, 91, 57, 0.08) 30%,
+        rgba(212, 168, 83, 0.03) 60%,
+        transparent 100%);
+    }
+    
+    /* Region Typography */
+    .region-text {
+      position: relative;
+    }
+    
+    .region-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      font-weight: 300;
+    }
+    
+    .region-egypt .region-eyebrow { color: var(--egypt-gold); }
+    .region-china .region-eyebrow { color: var(--china-red); }
+    .region-usa .region-eyebrow { color: var(--usa-canyon); }
+    
+    .region-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      letter-spacing: -0.01em;
+    }
+    
+    .region-title span {
+      font-style: italic;
+      font-weight: 400;
+    }
+    
+    .region-egypt .region-title span { color: var(--egypt-gold); }
+    .region-china .region-title span { color: var(--china-red); }
+    .region-usa .region-title span { color: var(--usa-canyon); }
+    
+    .region-description {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      line-height: 1.9;
+      font-weight: 300;
+      opacity: 0;
+    }
+    
+    .region-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: transparent;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .region-cta:hover {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: var(--gold);
+      transform: translateX(5px);
+    }
+    
+    .region-cta svg {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .region-cta:hover svg {
+      transform: translateX(5px);
+    }
+    
+    /* ============================================
+       DESSERT CARDS
+       ============================================ */
+    .dessert-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      perspective: 1000px;
+    }
+    
+    @media (max-width: 768px) {
+      .dessert-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .dessert-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      opacity: 0;
+      transform-style: preserve-3d;
+    }
+    
+    .dessert-card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(212, 175, 55, 0.2);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px rgba(212, 175, 55, 0.1);
+    }
+    
+    .dessert-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .dessert-card:hover .dessert-image {
+      transform: scale(1.05);
+    }
+    
+    .dessert-content {
+      padding: 1.5rem;
+    }
+    
+    .dessert-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    
+    .dessert-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .dessert-origin {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    
+    .dessert-origin::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+    }
+    
+    .region-egypt .dessert-card:hover { border-color: rgba(201, 162, 39, 0.3); }
+    .region-china .dessert-card:hover { border-color: rgba(139, 38, 53, 0.3); }
+    .region-usa .dessert-card:hover { border-color: rgba(199, 91, 57, 0.3); }
+    
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      padding: 6rem 4rem;
+      text-align: center;
+      background: var(--navy-deep);
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+      position: relative;
+    }
+    
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+    
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    
+    .footer-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-link:hover {
+      color: var(--gold);
+    }
+    
+    .footer-copy {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .marker-core, .marker-ring, .scroll-line, .mist-layer {
+        animation: none;
+      }
+      
+      .cursor, .cursor-dot {
+        display: none;
+      }
+    }
+    
+    /* ============================================
+       MOBILE RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem 1.5rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .hero-content {
+        padding: 1.5rem;
+      }
+      
+      .region-content {
+        padding: 0 1.5rem;
+        gap: 3rem;
+      }
+      
+      .dessert-showcase {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer {
+        padding: 4rem 1.5rem;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .cursor, .cursor-dot {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlays -->
+  <div class="noise-overlay"></div>
+  <div class="vignette-overlay"></div>
+  
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
+  
+  <!-- Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+  
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">Cleopatra Delights</a>
+    <div class="nav-links">
+      <a href="#egypt" class="nav-link">Egypt</a>
+      <a href="#china" class="nav-link">China</a>
+      <a href="#usa" class="nav-link">America</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-image"></div>
+    
+    <div class="hero-content">
+      <p class="hero-eyebrow">Est. 2024</p>
+      
+      <h1 class="hero-title">
+        <span class="line">A World of</span>
+        <span class="line gold">Sweets.</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        From the sands of Egypt to the peaks of Asia to the canyons of America. 
+        A cinematic journey through the world's most exquisite desserts.
+      </p>
+      
+      <!-- World Map -->
+      <div class="map-container">
+        <svg class="world-map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#d4af37;stop-opacity:0.3" />
+              <stop offset="50%" style="stop-color:#d4af37;stop-opacity:0.1" />
+              <stop offset="100%" style="stop-color:#d4af37;stop-opacity:0.3" />
+            </linearGradient>
+          </defs>
+          
+          <!-- North America -->
+          <path class="map-continent" d="M50,80 Q150,60 250,100 L280,150 Q200,200 100,180 Q50,150 50,80 Z" />
+          
+          <!-- South America -->
+          <path class="map-continent" d="M200,220 Q250,220 280,280 L260,380 Q220,420 180,380 Q160,300 200,220 Z" />
+          
+          <!-- Europe -->
+          <path class="map-continent" d="M420,80 Q500,60 550,100 L540,150 Q480,160 440,140 Q400,120 420,80 Z" />
+          
+          <!-- Africa -->
+          <path class="map-continent" d="M440,170 Q520,160 560,220 L540,350 Q500,400 460,380 Q420,300 440,170 Z" />
+          
+          <!-- Asia -->
+          <path class="map-continent" d="M560,60 Q700,40 850,100 L880,200 Q800,280 650,250 Q580,200 560,120 Q540,80 560,60 Z" />
+          
+          <!-- Australia -->
+          <path class="map-continent" d="M750,320 Q850,300 900,350 L880,420 Q820,450 760,420 Q720,380 750,320 Z" />
+        </svg>
+        
+        <!-- USA Marker -->
+        <div class="map-marker" style="left: 18%; top: 32%;" data-region="usa">
+          <div class="marker-ring"></div>
+          <div class="marker-ring"></div>
+          <div class="marker-core"></div>
+          <span class="marker-label">America</span>
+          <div class="marker-tooltip">
+            <div class="tooltip-title">United States</div>
+            <div class="tooltip-desc">Modern fusion desserts</div>
+          </div>
+        </div>
+        
+        <!-- Egypt Marker -->
+        <div class="map-marker" style="left: 52%; top: 45%;" data-region="egypt">
+          <div class="marker-ring"></div>
+          <div class="marker-ring"></div>
+          <div class="marker-core"></div>
+          <span class="marker-label">Egypt</span>
+          <div class="marker-tooltip">
+            <div class="tooltip-title">Egypt</div>
+            <div class="tooltip-desc">Ancient sweet traditions</div>
+          </div>
+        </div>
+        
+        <!-- China Marker -->
+        <div class="map-marker" style="left: 72%; top: 40%;" data-region="china">
+          <div class="marker-ring"></div>
+          <div class="marker-ring"></div>
+          <div class="marker-core"></div>
+          <span class="marker-label">China</span>
+          <div class="marker-tooltip">
+            <div class="tooltip-title">China</div>
+            <div class="tooltip-desc">Refined through generations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scroll-indicator">
+      <span>Explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+  
+  <!-- Egypt Section -->
+  <section id="egypt" class="region region-egypt">
+    <div class="region-bg">
+      <div class="region-bg-image"></div>
+      <div class="region-overlay"></div>
+      <div class="pyramid-decoration"></div>
+    </div>
+    
+    <div class="region-content">
+      <div class="region-text">
+        <p class="region-eyebrow">The Cradle of Civilization</p>
+        <h2 class="region-title">Born in<br><span>Ancient Sands.</span></h2>
+        <p class="region-description">
+          Where the Nile meets the desert, a legacy of sweetness was born. 
+          Egyptian desserts carry the warmth of the sun and the wisdom of millennia. 
+          Each recipe has been perfected over centuries, passed down through generations.
+        </p>
+        <a class="region-cta" onclick="document.getElementById('china').scrollIntoView({behavior: 'smooth'})">
+          Continue Journey
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="dessert-showcase">
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=80" alt="Kunafa">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Kunafa</h3>
+            <p class="dessert-desc">Shredded phyllo dough layered with sweet cheese, soaked in fragrant rose syrup</p>
+            <span class="dessert-origin">Egypt</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=600&q=80" alt="Baklava">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Baklava</h3>
+            <p class="dessert-desc">Paper-thin layers of pastry with crushed nuts, sweetened with honey</p>
+            <span class="dessert-origin">Middle East</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80" alt="Basbousa">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Basbousa</h3>
+            <p class="dessert-desc">Semolina cake soaked in aromatic syrup, topped with almonds</p>
+            <span class="dessert-origin">Egypt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- China Section -->
+  <section id="china" class="region region-china">
+    <div class="region-bg">
+      <div class="region-bg-image"></div>
+      <div class="region-overlay"></div>
+      <div class="mist-layer"></div>
+    </div>
+    
+    <div class="region-content">
+      <div class="region-text">
+        <p class="region-eyebrow">The Middle Kingdom</p>
+        <h2 class="region-title">Craft Refined<br><span>Through Generations.</span></h2>
+        <p class="region-description">
+          In the misty mountains of the East, dessert is an art form perfected 
+          over thousands of years. Every bite tells a story of patience, precision, 
+          and the pursuit of harmony between flavors.
+        </p>
+        <a class="region-cta" onclick="document.getElementById('usa').scrollIntoView({behavior: 'smooth'})">
+          Continue Journey
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="dessert-showcase">
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1631160299919-6a175aa6d189?w=600&q=80" alt="Mooncakes">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Mooncakes</h3>
+            <p class="dessert-desc">Lotus paste and salted egg yolk encased in delicate, ornate pastry</p>
+            <span class="dessert-origin">China</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&q=80" alt="Egg Tarts">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Egg Tarts</h3>
+            <p class="dessert-desc">Flaky, buttery crust with silky smooth custard center</p>
+            <span class="dessert-origin">Hong Kong</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80" alt="Tangyuan">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Tangyuan</h3>
+            <p class="dessert-desc">Glutinous rice balls in warm, sweet ginger syrup</p>
+            <span class="dessert-origin">China</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- USA Section -->
+  <section id="usa" class="region region-usa">
+    <div class="region-bg">
+      <div class="region-bg-image"></div>
+      <div class="region-overlay"></div>
+      <div class="canyon-layers"></div>
+    </div>
+    
+    <div class="region-content">
+      <div class="region-text">
+        <p class="region-eyebrow">The New World</p>
+        <h2 class="region-title">Modern Fusion.<br><span>Bold Flavor.</span></h2>
+        <p class="region-description">
+          Where tradition meets innovation. American desserts embrace global influences 
+          and transform them into something entirely new and unforgettable. 
+          Bold, confident, and unapologetically delicious.
+        </p>
+        <a class="region-cta" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+          Get In Touch
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="dessert-showcase">
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=600&q=80" alt="Apple Pie">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Apple Pie</h3>
+            <p class="dessert-desc">Classic American with cinnamon-spiced apples and buttery lattice crust</p>
+            <span class="dessert-origin">USA</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1586788680434-30d324b2d46f?w=600&q=80" alt="Red Velvet">
+          <div class="dessert-content">
+            <h3 class="dessert-name">Red Velvet</h3>
+            <p class="dessert-desc">Southern tradition with cream cheese frosting and cocoa undertones</p>
+            <span class="dessert-origin">USA</span>
+          </div>
+        </div>
+        
+        <div class="dessert-card">
+          <img class="dessert-image" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80" alt="S'mores">
+          <div class="dessert-content">
+            <h3 class="dessert-name">S'mores</h3>
+            <p class="dessert-desc">Campfire treat with melted chocolate and toasted marshmallow</p>
+            <span class="dessert-origin">USA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer id="contact" class="footer">
+    <div class="footer-logo">Cleopatra Delights</div>
+    <p class="footer-tagline">A World of Sweets. From our family to yours.</p>
+    
+    <div class="footer-links">
+      <a href="#egypt" class="footer-link">Egypt</a>
+      <a href="#china" class="footer-link">China</a>
+      <a href="#usa" class="footer-link">America</a>
+      <a href="mailto:hello@cleopatradelights.com" class="footer-link">Contact</a>
+    </div>
+    
+    <p class="footer-copy">© 2024 Cleopatra Delights. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // ============================================
+    // GSAP ANIMATIONS
+    // ============================================
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Check for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    
+    // ============================================
+    // CUSTOM CURSOR
+    // ============================================
+    if (!isTouchDevice && !prefersReducedMotion) {
+      const cursor = document.querySelector('.cursor');
+      const cursorDot = document.querySelector('.cursor-dot');
+      let mouseX = 0, mouseY = 0;
+      let cursorX = 0, cursorY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+      });
+      
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.1;
+        cursorY += (mouseY - cursorY) * 0.1;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+      
+      // Hover effects
+      document.querySelectorAll('a, button, .dessert-card, .map-marker').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+    
+    // ============================================
+    // PARTICLE SYSTEM
+    // ============================================
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId;
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.speedY = (Math.random() - 0.5) * 0.2;
+        this.opacity = Math.random() * 0.4 + 0.1;
+        this.glow = Math.random() * 15 + 5;
+        this.pulsePhase = Math.random() * Math.PI * 2;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.pulsePhase += 0.02;
+        
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+      
+      draw() {
+        const pulseOpacity = this.opacity * (0.7 + 0.3 * Math.sin(this.pulsePhase));
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(212, 175, 55, ${pulseOpacity})`;
+        ctx.shadowBlur = this.glow;
+        ctx.shadowColor = `rgba(212, 175, 55, ${pulseOpacity * 0.5})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+    
+    function initParticles() {
+      particles = [];
+      const count = prefersReducedMotion ? 10 : 25;
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+    
+    function animateParticles() {
+      if (prefersReducedMotion) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      animationId = requestAnimationFrame(animateParticles);
+    }
+    
+    initParticles();
+    animateParticles();
+    
+    // ============================================
+    // HERO ANIMATIONS
+    // ============================================
+    if (!prefersReducedMotion) {
+      const heroTl = gsap.timeline({ delay: 0.5 });
+      
+      gsap.set('.hero-eyebrow', { opacity: 0, y: 30 });
+      gsap.set('.hero-title', { opacity: 0, y: 50 });
+      gsap.set('.hero-subtitle', { opacity: 0, y: 30 });
+      gsap.set('.map-container', { opacity: 0, scale: 0.9 });
+      gsap.set('.scroll-indicator', { opacity: 0 });
+      
+      heroTl
+        .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+        .to('.hero-title', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '-=0.6')
+        .to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=0.8')
+        .to('.map-container', { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' }, '-=0.6')
+        .to('.scroll-indicator', { opacity: 1, duration: 0.8 }, '-=0.4');
+    } else {
+      gsap.set(['.hero-eyebrow', '.hero-title', '.hero-subtitle', '.map-container', '.scroll-indicator'], { opacity: 1 });
+    }
+    
+    // ============================================
+    // REGION SECTION ANIMATIONS
+    // ============================================
+    document.querySelectorAll('.region').forEach((region, index) => {
+      const eyebrow = region.querySelector('.region-eyebrow');
+      const title = region.querySelector('.region-title');
+      const desc = region.querySelector('.region-description');
+      const cta = region.querySelector('.region-cta');
+      const cards = region.querySelectorAll('.dessert-card');
+      
+      if (!prefersReducedMotion) {
+        gsap.set([eyebrow, title, desc, cta], { opacity: 0, y: 40 });
+        gsap.set(cards, { opacity: 0, y: 60, rotateX: 10 });
+        
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: region,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+        
+        tl
+          .to(eyebrow, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+          .to(title, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
+          .to(desc, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6')
+          .to(cta, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.4')
+          .to(cards, { 
+            opacity: 1, y: 0, rotateX: 0, 
+            duration: 0.8, stagger: 0.15, 
+            ease: 'power3.out' 
+          }, '-=0.4');
+      } else {
+        gsap.set([eyebrow, title, desc, cta], { opacity: 1 });
+        gsap.set(cards, { opacity: 1 });
+      }
+    });
+    
+    // ============================================
+    // NAVIGATION SCROLL EFFECT
+    // ============================================
+    const nav = document.querySelector('.nav');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+      lastScroll = currentScroll;
+    }, { passive: true });
+    
+    // ============================================
+    // MAP INTERACTIONS
+    // ============================================
+    document.querySelectorAll('.map-marker').forEach(marker => {
+      marker.addEventListener('click', () => {
+        const region = marker.dataset.region;
+        const targetSection = document.getElementById(region);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        }
+      });
+    });
+    
+    // ============================================
+    // SMOOTH SCROLL FOR NAV LINKS
+    // ============================================
+    document.querySelectorAll('.nav-link, .footer-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+          }
+        }
+      });
+    });
+    
+    // ============================================
+    // PARALLAX HERO
+    // ============================================
+    if (!prefersReducedMotion) {
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroContent = document.querySelector('.hero-content');
+        const heroBg = document.querySelector('.hero-bg-image');
+        
+        if (scrolled < window.innerHeight) {
+          heroContent.style.transform = `translateY(${scrolled * 0.4}px)`;
+          heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.6;
+          heroBg.style.transform = `translateY(${scrolled * 0.2}px) scale(${1 + scrolled * 0.0002})`;
+        }
+      }, { passive: true });
+    }
+    
+    // ============================================
+    // DESSERT CARD 3D TILT
+    // ============================================
+    if (!isTouchDevice && !prefersReducedMotion) {
+      document.querySelectorAll('.dessert-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (y - centerY) / 20;
+          const rotateY = (centerX - x) / 20;
+          
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+      });
+    }
+    
+    // ============================================
+    // CLEANUP
+    // ============================================
+    window.addEventListener('beforeunload', () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    });
+  </script>
+</body>
+</html>
