@@ -1,16 +1,16 @@
 import Navigation from '@/components/interactive/Navigation';
-import CinematicHero from '@/components/cinematic/CinematicHero';
-import JourneyTimeline from '@/components/cinematic/JourneyTimeline';
-import WeeklyDrops from '@/components/cinematic/WeeklyDrops';
+import CleanHero from '@/components/cinematic/CleanHero';
+import CleanJourney from '@/components/cinematic/CleanJourney';
+import CleanDrops from '@/components/cinematic/CleanDrops';
 import Footer from '@/components/interactive/Footer';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-void">
       <Navigation />
-      <CinematicHero />
-      <JourneyTimeline />
-      <WeeklyDrops />
+      <CleanHero />
+      <CleanJourney />
+      <CleanDrops />
       <Footer />
     </main>
   );
