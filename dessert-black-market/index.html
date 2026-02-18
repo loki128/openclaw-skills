@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE DESSERT BLACK MARKET | Limited Drops. No Restocks.</title>
+  <meta name="description" content="Underground patisserie. Limited drops. No restocks. Join the inner circle.">
+  
+  <!-- Fonts: Bebas Neue (condensed grotesk) + Inter (clean sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <style>
+    /* ============================================
+       CSS RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      /* Core Colors - Dark Underground */
+      --void: #0a0a0a;
+      --charcoal: #141414;
+      --charcoal-light: #1a1a1a;
+      --graphite: #2a2a2a;
+      --smoke: #3a3a3a;
+      
+      /* Accents */
+      --blood: #dc2626;
+      --blood-glow: rgba(220, 38, 38, 0.4);
+      --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.4);
+      --chrome: #c0c0c0;
+      --chrome-glow: rgba(192, 192, 192, 0.3);
+      
+      /* Text */
+      --text-primary: #fafafa;
+      --text-secondary: #a3a3a3;
+      --text-muted: #737373;
+      
+      /* Primary accent (blood red) */
+      --accent: var(--blood);
+      --accent-glow: var(--blood-glow);
+      
+      /* Typography */
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 4rem;
+      --space-xl: 8rem;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--void);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* ============================================
+       NOISE & VIGNETTE OVERLAYS
+       ============================================ */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    
+    .vignette-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+    }
+    
+    /* ============================================
+       CUSTOM CURSOR
+       ============================================ */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
+      mix-blend-mode: difference;
+    }
+    
+    .cursor.hover {
+      width: 50px;
+      height: 50px;
+      background: var(--accent-glow);
+    }
+    
+    .cursor-dot {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10001;
+      transform: translate(-50%, -50%);
+    }
+    
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--void), transparent);
+      transition: all 0.4s ease;
+    }
+    
+    .header.scrolled {
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 3rem;
+      border-bottom: 1px solid var(--graphite);
+    }
+    
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      letter-spacing: 0.05em;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--void);
+    }
+    
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: var(--accent);
+    }
+    
+    .enter-code-btn {
+      padding: 0.6rem 1.25rem;
+      background: transparent;
+      border: 1px solid var(--graphite);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 100px;
+    }
+    
+    .enter-code-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    /* ============================================
+       HERO - TONIGHT'S DROP
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+      background: 
+        radial-gradient(ellipse at 20% 50%, rgba(220,38,38,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(245,158,11,0.05) 0%, transparent 40%),
+        var(--void);
+    }
+    
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: center;
+    }
+    
+    @media (max-width: 968px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+    
+    .drop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: var(--void);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    
+    .drop-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--void);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 10vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    
+    .hero-title span {
+      color: var(--accent);
+    }
+    
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 400px;
+    }
+    
+    /* Countdown */
+    .countdown {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .countdown-item {
+      text-align: center;
+    }
+    
+    .countdown-value {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+    
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Stock Meter */
+    .stock-meter {
+      margin-bottom: 2rem;
+    }
+    
+    .stock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stock-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    
+    .stock-count {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+    
+    .stock-bar {
+      height: 4px;
+      background: var(--graphite);
+      overflow: hidden;
+    }
+    
+    .stock-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 2s ease-out;
+    }
+    
+    /* Hero Actions */
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: var(--font-body);
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: var(--void);
+    }
+    
+    .btn-primary:hover {
+      background: #b91c1c;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--graphite);
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--text-primary);
+      color: var(--text-primary);
+    }
+    
+    /* Hero Product */
+    .hero-product {
+      position: relative;
+      perspective: 1000px;
+    }
+    
+    .product-card {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid var(--graphite);
+      padding: 2rem;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease;
+    }
+    
+    .product-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .product-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      margin-bottom: 1.5rem;
+      filter: grayscale(20%) contrast(1.1);
+    }
+    
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .product-price {
+      font-size: 1.25rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .product-tag {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--accent);
+      color: var(--void);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    
+    /* Specular highlight for 3D effect */
+    .specular-highlight {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1) 0%, transparent 50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .product-card:hover .specular-highlight {
+      opacity: 1;
+    }
+    
+    /* ============================================
+       THERMAL PRINT EFFECT
+       ============================================ */
+    .thermal-print {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid var(--graphite);
+    }
+    
+    .thermal-print::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--graphite) 0px,
+        var(--graphite) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      opacity: 0.5;
+    }
+    
+    .thermal-print::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--graphite) 0px,
+        var(--graphite) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      opacity: 0.5;
+    }
+    
+    .receipt-edge {
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(45deg, transparent 33.333%, var(--charcoal) 33.333%, var(--charcoal) 66.667%, transparent 66.667%),
+                  linear-gradient(-45deg, transparent 33.333%, var(--charcoal) 33.333%, var(--charcoal) 66.667%, transparent 66.667%);
+      background-size: 20px 40px;
+      background-position: 0 -20px;
+      opacity: 0.5;
+    }
+    
+    /* ============================================
+       STAMP EFFECT
+       ============================================ */
+    .stamp {
+      position: relative;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border: 3px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.15em;
+      transform: rotate(-5deg);
+      opacity: 0.9;
+      mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+    }
+    
+    /* ============================================
+       SMOKE/FOG EFFECT
+       ============================================ */
+    .smoke-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    
+    .smoke {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(100,100,100,0.03) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 30%, rgba(150,150,150,0.02) 0%, transparent 40%);
+      animation: smokeDrift 30s ease-in-out infinite;
+    }
+    
+    @keyframes smokeDrift {
+      0%, 100% { transform: translateX(-10%) translateY(0); }
+      50% { transform: translateX(10%) translateY(-5%); }
+    }
+    
+    /* ============================================
+       GLITCH TEXT EFFECT
+       ============================================ */
+    .glitch {
+      position: relative;
+    }
+    
+    .glitch:hover {
+      animation: glitch 0.3s ease infinite;
+    }
+    
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+    
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+    }
+    
+    .glitch:hover::before {
+      animation: glitch-1 0.3s ease infinite;
+      color: var(--accent);
+      opacity: 0.8;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+    
+    .glitch:hover::after {
+      animation: glitch-2 0.3s ease infinite;
+      color: var(--amber);
+      opacity: 0.8;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { transform: translate(0); }
+      50% { transform: translate(-3px, 0); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { transform: translate(0); }
+      50% { transform: translate(3px, 0); }
+    }
+    
+    /* ============================================
+       PRINT ANIMATION
+       ============================================ */
+    @keyframes printReveal {
+      0% { 
+        clip-path: inset(100% 0 0 0);
+        opacity: 0;
+      }
+      100% { 
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+      }
+    }
+    
+    .print-reveal {
+      animation: printReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .section {
+      padding: 6rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--graphite);
+    }
+    
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      letter-spacing: 0.02em;
+    }
+    
+    .section-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    
+    .drop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .drop-item {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid var(--graphite);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+    
+    .drop-item:hover {
+      border-color: var(--smoke);
+      transform: translateY(-5px);
+    }
+    
+    .drop-item-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      filter: grayscale(30%) contrast(1.1);
+      transition: all 0.4s ease;
+    }
+    
+    .drop-item:hover .drop-item-image {
+      filter: grayscale(0%) contrast(1);
+      transform: scale(1.05);
+    }
+    
+    .drop-item-info {
+      padding: 1.5rem;
+    }
+    
+    .drop-item-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .drop-item-price {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .drop-item-stock {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    
+    .drop-item-stock.low {
+      color: var(--accent);
+    }
+    
+    /* ============================================
+       PAST SOLD OUT ARCHIVE
+       ============================================ */
+    .archive-section {
+      background: var(--charcoal);
+      padding: 6rem 3rem;
+    }
+    
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .archive-item {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--void);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .archive-item-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) brightness(0.5);
+      transition: all 0.4s ease;
+    }
+    
+    .archive-item:hover .archive-item-image {
+      filter: grayscale(80%) brightness(0.6);
+    }
+    
+    .sold-out-stamp {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg) scale(0.8);
+      padding: 0.5rem 1.5rem;
+      border: 2px solid var(--text-muted);
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.2em;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    
+    .archive-item:hover .sold-out-stamp {
+      transform: translate(-50%, -50%) rotate(-15deg) scale(1);
+      border-color: var(--accent);
+      color: var(--accent);
+      opacity: 1;
+    }
+    
+    .archive-item-name {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    
+    /* ============================================
+       SECRET MENU
+       ============================================ */
+    .secret-section {
+      padding: 6rem 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .secret-locked {
+      padding: 4rem;
+      background: var(--charcoal);
+      border: 1px solid var(--graphite);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .secret-locked::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+    
+    .secret-lock-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+    
+    .secret-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .secret-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    
+    .secret-form {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .secret-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: var(--void);
+      border: 1px solid var(--graphite);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    
+    .secret-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .secret-submit {
+      padding: 1rem 1.5rem;
+      background: var(--accent);
+      color: var(--void);
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .secret-submit:hover {
+      background: #b91c1c;
+    }
+    
+    .secret-error {
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .secret-error.show {
+      opacity: 1;
+    }
+    
+    /* Unlocked State */
+    .secret-unlocked {
+      display: none;
+    }
+    
+    .secret-unlocked.active {
+      display: block;
+    }
+    
+    .secret-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 768px) {
+      .secret-items {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .secret-item {
+      background: var(--charcoal);
+      border: 1px solid var(--graphite);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .secret-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      animation: scan 3s ease-in-out infinite;
+    }
+    
+    @keyframes scan {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .secret-item-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--amber);
+      color: var(--void);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    
+    .secret-item-name {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .secret-item-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    /* ============================================
+       JOIN INNER CIRCLE
+       ============================================ */
+    .join-section {
+      padding: 6rem 3rem;
+      background: var(--charcoal);
+    }
+    
+    .join-container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .join-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1rem;
+    }
+    
+    .join-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+    }
+    
+    .join-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .join-input-group {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .join-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: var(--void);
+      border: 1px solid var(--graphite);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+    
+    .join-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .join-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    
+    .join-checkbox input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+    
+    .join-submit {
+      padding: 1.25rem 2rem;
+      background: var(--accent);
+      color: var(--void);
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .join-submit:hover:not(:disabled) {
+      background: #b91c1c;
+      transform: translateY(-2px);
+    }
+    
+    .join-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .join-success {
+      display: none;
+      padding: 2rem;
+      background: var(--void);
+      border: 1px solid var(--accent);
+    }
+    
+    .join-success.show {
+      display: block;
+      animation: successPulse 0.6s ease;
+    }
+    
+    @keyframes successPulse {
+      0% { transform: scale(0.95); opacity: 0; }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      padding: 4rem 3rem;
+      border-top: 1px solid var(--graphite);
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .footer-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+    
+    .footer-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    
+    .footer-rules {
+      list-style: none;
+    }
+    
+    .footer-rules li {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--graphite);
+    }
+    
+    .footer-rules li::before {
+      content: '→ ';
+      color: var(--accent);
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--graphite);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .social-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 3rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--graphite);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    /* ============================================
+       REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .cursor, .cursor-dot {
+        display: none;
+      }
+    }
+    
+    /* ============================================
+       MOBILE
+       ============================================ */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem 1.5rem;
+      }
+      
+      .nav {
+        display: none;
+      }
+      
+      .hero {
+        padding: 6rem 1.5rem 3rem;
+      }
+      
+      .section {
+        padding: 4rem 1.5rem;
+      }
+      
+      .countdown {
+        gap: 1rem;
+      }
+      
+      .countdown-value {
+        font-size: 2rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .secret-form {
+        flex-direction: column;
+      }
+      
+      .join-input-group {
+        flex-direction: column;
+      }
+      
+      .footer-grid {
+        gap: 2rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlays -->
+  <div class="noise-overlay"></div>
+  <div class="vignette-overlay"></div>
+  
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
+  
+      <!-- Smoke Effect -->
+  <div class="smoke-container">
+    <div class="smoke"></div>
+  </div>
+  
+  <!-- Header -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-mark">◼</span>
+      <span>THE DESSERT BLACK MARKET</span>
+    </a>
+    
+    <nav class="nav">
+      <a href="#drop" class="nav-link">Tonight's Drop</a>
+      <a href="#archive" class="nav-link">Archive</a>
+      <a href="#secret" class="nav-link">Secret Menu</a>
+      <a href="#join" class="nav-link">Join</a>
+      <button class="enter-code-btn" onclick="document.getElementById('secret').scrollIntoView({behavior: 'smooth'})">Enter Code</button>
+    </nav>
+  </header>
+  
+  <!-- Hero: Tonight's Drop -->
+  <section class="hero" id="drop">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="drop-badge">Tonight's Drop</div>
+        
+        <h1 class="hero-title">
+          MIDNIGHT<br>
+          <span class="glitch" data-text="BLACKOUT">BLACKOUT</span><br>
+          CAKE
+        </h1>
+        
+        <p class="hero-subtitle">
+          Activated charcoal sponge. Black sesame buttercream. 
+          24-karat gold leaf. Only 50 exist.
+        </p>
+        
+        <!-- Countdown -->
+        <div class="countdown">
+          <div class="countdown-item">
+            <div class="countdown-value" id="hours">00</div>
+            <div class="countdown-label">Hours</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value" id="minutes">00</div>
+            <div class="countdown-label">Minutes</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value" id="seconds">00</div>
+            <div class="countdown-label">Seconds</div>
+          </div>
+        </div>
+        
+        <!-- Stock Meter -->
+        <div class="stock-meter">
+          <div class="stock-header">
+            <span class="stock-label">Remaining Stock</span>
+            <span class="stock-count" id="stock-count">0</span>
+          </div>
+          <div class="stock-bar">
+            <div class="stock-fill" id="stock-fill"></div>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="alert('Added to cart! (Demo)')">Add to Cart — $89</button>
+          <button class="btn btn-secondary" onclick="alert('You will be notified! (Demo)')">Notify Me</button>
+        </div>
+      </div>
+      
+      <!-- Product Card with 3D Tilt -->
+      <div class="hero-product">
+        <div class="product-card thermal-print" id="product-card">
+          <div class="receipt-edge"></div>
+          <div class="specular-highlight"></div>
+          <span class="product-tag">Only 50</span>
+          <img class="product-image" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&q=80" alt="Midnight Blackout Cake">
+          <h3 class="product-name">MIDNIGHT BLACKOUT</h3>
+          <p class="product-price">$89.00</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Today's Drop Grid -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">TODAY'S DROP</h2>
+      <span class="section-meta">6 Items • Ends Midnight</span>
+    </div>
+    
+    <div class="drop-grid">
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80" alt="Blood Orange Tart">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">BLOOD ORANGE TART</h3>
+          <p class="drop-item-price">$42.00</p>
+          <p class="drop-item-stock">12 remaining</p>
+        </div>
+      </div>
+      
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600&q=80" alt="Smoked Vanilla Bean">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">SMOKED VANILLA</h3>
+          <p class="drop-item-price">$56.00</p>
+          <p class="drop-item-stock low">3 remaining</p>
+        </div>
+      </div>
+      
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=600&q=80" alt="Burnt Honey">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">BURNT HONEY</h3>
+          <p class="drop-item-price">$38.00</p>
+          <p class="drop-item-stock">8 remaining</p>
+        </div>
+      </div>
+      
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1543508168-44c3c2011ad6?w=600&q=80" alt="Midnight Macaron">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">MIDNIGHT MACARON</h3>
+          <p class="drop-item-price">$24.00</p>
+          <p class="drop-item-stock low">5 remaining</p>
+        </div>
+      </div>
+      
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80" alt="Dark Chocolate">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">85% DARK</h3>
+          <p class="drop-item-price">$48.00</p>
+          <p class="drop-item-stock">15 remaining</p>
+        </div>
+      </div>
+      
+      <div class="drop-item">
+        <img class="drop-item-image" src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&q=80" alt="Espresso">
+        <div class="drop-item-info">
+          <h3 class="drop-item-name">DEATH WISH ESPRESSO</h3>
+          <p class="drop-item-price">$34.00</p>
+          <p class="drop-item-stock low">2 remaining</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Past Sold-Out Archive -->
+  <section class="archive-section" id="archive">
+    <div class="section-header" style="max-width: 1400px; margin: 0 auto 3rem; padding: 0 3rem;">
+      <h2 class="section-title">PAST DROPS — SOLD OUT</h2>
+      <span class="section-meta">You Missed It? That's The Point.</span>
+    </div>
+    
+    <div class="archive-grid">
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1602351447937-745cb720612f?w=400&q=80" alt="Void Cake">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">THE VOID</span>
+      </div>
+      
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1612203985729-70726954388c?w=400&q=80" alt="Obsidian">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">OBSIDIAN</span>
+      </div>
+      
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&q=80" alt="Noir">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">NOIR</span>
+      </div>
+      
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=400&q=80" alt="Umbra">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">UMBRA</span>
+      </div>
+      
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80" alt="Eclipse">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">ECLIPSE</span>
+      </div>
+      
+      <div class="archive-item">
+        <img class="archive-item-image" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80" alt="Abyss">
+        <div class="sold-out-stamp stamp">SOLD OUT</div>
+        <span class="archive-item-name">ABYSS</span>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Secret Menu -->
+  <section class="secret-section" id="secret">
+    <div class="secret-locked" id="secret-locked">
+      <div class="secret-lock-icon">🔒</div>
+      <h2 class="secret-title">SECRET MENU</h2>
+      <p class="secret-subtitle">Inner Circle Only. Enter the code.</p>
+      
+      <form class="secret-form" onsubmit="checkCode(event)">
+        <input type="text" class="secret-input" id="secret-code" placeholder="ENTER CODE" maxlength="10">
+        <button type="submit" class="secret-submit">UNLOCK</button>
+      </form>
+      
+      <p class="secret-error" id="secret-error">Invalid code. Try again.</p>
+    </div>
+    
+    <div class="secret-unlocked" id="secret-unlocked">
+      <h2 class="secret-title">WELCOME TO THE INNER CIRCLE</h2>
+      <p class="secret-subtitle">These items are not available to the public.</p>
+      
+      <div class="secret-items">
+        <div class="secret-item">
+          <span class="secret-item-badge">Inner Circle Exclusive</span>
+          <h3 class="secret-item-name">THE DEVIL'S CAKE</h3>
+          <p class="secret-item-desc">Carolina Reaper chocolate. Ghost pepper caramel. Only for the brave.</p>
+        </div>
+        
+        <div class="secret-item">
+          <span class="secret-item-badge">Inner Circle Exclusive</span>
+          <h3 class="secret-item-name">24K TRUFFLE</h3>
+          <p class="secret-item-desc">Pure gold leaf. Black truffle. $500 per piece. By appointment only.</p>
+        </div>
+        
+        <div class="secret-item">
+          <span class="secret-item-badge">Inner Circle Exclusive</span>
+          <h3 class="secret-item-name">FORBIDDEN FRUIT</h3>
+          <p class="secret-item-desc">Ingredients we cannot legally disclose. Sign NDA required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Join Inner Circle -->
+  <section class="join-section" id="join">
+    <div class="join-container">
+      <h2 class="join-title">JOIN THE INNER CIRCLE</h2>
+      <p class="join-subtitle">Get access to secret drops, 24-hour early access, and exclusive items.</p>
+      
+      <form class="join-form" id="join-form" onsubmit="handleJoin(event)">
+        <div class="join-input-group">
+          <input type="email" class="join-input" id="join-email" placeholder="Enter your email" required>
+          <button type="submit" class="join-submit" id="join-submit">JOIN NOW</button>
+        </div>
+        
+        <label class="join-checkbox">
+          <input type="checkbox" id="join-rules" onchange="toggleSubmit()">
+          <span>I accept the rules: No screenshots. No reselling. No restocks.</span>
+        </label>
+      </form>
+      
+      <div class="join-success" id="join-success">
+        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem;">YOU'RE IN.</h3>
+        <p style="color: var(--text-muted);">Check your email for the secret handshake.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h4 class="footer-title">THE RULES</h4>
+        <ul class="footer-rules">
+          <li>No restocks. Ever.</li>
+          <li>No reservations.</li>
+          <li>No refunds.</li>
+          <li>You missed it? That's the point.</li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="footer-title">DROP SCHEDULE</h4>
+        <p class="footer-text">
+          Every Friday at Midnight EST.<br>
+          Limited quantities.<br>
+          First come, first served.<br>
+          No exceptions.
+        </p>
+      </div>
+      
+      <div>
+        <h4 class="footer-title">CONNECT</h4>
+        <p class="footer-text">Follow for drop alerts. No spam. Ever.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">IG</a>
+          <a href="#" class="social-link">TW</a>
+          <a href="#" class="social-link">DC</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <span>© 2024 THE DESSERT BLACK MARKET</span>
+      <span>LIMITED DROPS. NO RESTOCKS.</span>
+    </div>
+  </footer>
+  
+  <script>
+    // ============================================
+    // GSAP ANIMATIONS
+    // ============================================
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    
+    // ============================================
+    // CUSTOM CURSOR
+    // ============================================
+    if (!isTouchDevice && !prefersReducedMotion) {
+      const cursor = document.querySelector('.cursor');
+      const cursorDot = document.querySelector('.cursor-dot');
+      let mouseX = 0, mouseY = 0;
+      let cursorX = 0, cursorY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+      });
+      
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+      
+      document.querySelectorAll('a, button, .drop-item, .archive-item').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+    
+    // ============================================
+    // COUNTDOWN TIMER
+    // ============================================
+    function updateCountdown() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      
+      const diff = midnight - now;
+      
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    
+    // ============================================
+    // STOCK METER
+    // ============================================
+    const totalStock = 50;
+    const remainingStock = 12;
+    
+    function animateStock() {
+      const stockFill = document.getElementById('stock-fill');
+      const stockCount = document.getElementById('stock-count');
+      const percentage = (remainingStock / totalStock) * 100;
+      
+      setTimeout(() => {
+        stockFill.style.width = percentage + '%';
+      }, 500);
+      
+      let current = 0;
+      const increment = remainingStock / 30;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= remainingStock) {
+          current = remainingStock;
+          clearInterval(timer);
+        }
+        stockCount.textContent = Math.floor(current);
+      }, 50);
+    }
+    
+    // Trigger stock animation when visible
+    if (!prefersReducedMotion) {
+      ScrollTrigger.create({
+        trigger: '.stock-meter',
+        start: 'top 80%',
+        onEnter: animateStock,
+        once: true
+      });
+    } else {
+      document.getElementById('stock-fill').style.width = '24%';
+      document.getElementById('stock-count').textContent = remainingStock;
+    }
+    
+    // ============================================
+    // 3D TILT + SPECULAR HIGHLIGHT
+    // ============================================
+    if (!isTouchDevice && !prefersReducedMotion) {
+      const productCard = document.getElementById('product-card');
+      const highlight = productCard.querySelector('.specular-highlight');
+      
+      productCard.addEventListener('mousemove', (e) => {
+        const rect = productCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 15;
+        const rotateY = (centerX - x) / 15;
+        
+        productCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+        highlight.style.setProperty('--mouse-x', percentX + '%');
+        highlight.style.setProperty('--mouse-y', percentY + '%');
+      });
+      
+      productCard.addEventListener('mouseleave', () => {
+        productCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      });
+    }
+    
+    // ============================================
+    // SCROLL REVEALS
+    // ============================================
+    if (!prefersReducedMotion) {
+      gsap.utils.toArray('.drop-item').forEach((item, i) => {
+        gsap.from(item, {
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          y: 60,
+          opacity: 0,
+          duration: 0.6,
+          delay: i * 0.1,
+          ease: 'power2.out'
+        });
+      });
+      
+      gsap.utils.toArray('.archive-item').forEach((item, i) => {
+        gsap.from(item, {
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          scale: 0.9,
+          opacity: 0,
+          duration: 0.5,
+          delay: i * 0.05,
+          ease: 'power2.out'
+        });
+      });
+    }
+    
+    // ============================================
+    // SECRET MENU UNLOCK
+    // ============================================
+    function checkCode(e) {
+      e.preventDefault();
+      const code = document.getElementById('secret-code').value.toUpperCase();
+      const error = document.getElementById('secret-error');
+      
+      if (code === 'BLACKGOLD') {
+        document.getElementById('secret-locked').style.display = 'none';
+        document.getElementById('secret-unlocked').classList.add('active');
+        
+        if (!prefersReducedMotion) {
+          gsap.from('.secret-item', {
+            y: 50,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.out'
+          });
+        }
+      } else {
+        error.classList.add('show');
+        setTimeout(() => error.classList.remove('show'), 3000);
+      }
+    }
+    
+    // ============================================
+    // JOIN FORM
+    // ============================================
+    function toggleSubmit() {
+      const checkbox = document.getElementById('join-rules');
+      const submit = document.getElementById('join-submit');
+      submit.disabled = !checkbox.checked;
+    }
+    
+    function handleJoin(e) {
+      e.preventDefault();
+      document.getElementById('join-form').style.display = 'none';
+      document.getElementById('join-success').classList.add('show');
+    }
+    
+    // ============================================
+    // HEADER SCROLL
+    // ============================================
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }, { passive: true });
+    
+    // ============================================
+    // SMOOTH SCROLL
+    // ============================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
