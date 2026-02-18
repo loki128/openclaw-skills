@@ -1,0 +1,474 @@
+export interface Dessert {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  tags: string[];
+  flavorNotes: string[];
+}
+
+export interface Region {
+  slug: string;
+  name: string;
+  nameLocal: string;
+  accentColor: string;
+  accentSecondary: string;
+  storyLine: string;
+  mythicStory: string;
+  desserts: Dessert[];
+  techniques: string[];
+  flavorProfile: string[];
+  coordinates: { x: number; y: number };
+  signatureSweets: string;
+}
+
+export const regions: Region[] = [
+  {
+    slug: 'egypt',
+    name: 'Egypt',
+    nameLocal: 'مصر',
+    accentColor: '#D4AF37',
+    accentSecondary: '#8B7355',
+    storyLine: 'Where the Nile meets the desert, a legacy of sweetness was born.',
+    mythicStory: 'From the banks of the Nile, where pharaohs once commanded empires, comes a tradition of sweetness that has endured millennia. Egyptian desserts carry the warmth of the sun and the wisdom of ancient craft.',
+    coordinates: { x: 52, y: 45 },
+    signatureSweets: 'Kunafa, Basbousa, Om Ali',
+    flavorProfile: ['Rose water', 'Orange blossom', 'Pistachio', 'Honey', 'Cream'],
+    techniques: [
+      'Phyllo mastery — paper-thin dough stretched to transparency',
+      'Syrup control — precise soaking for optimal texture',
+      'Nut roasting — bringing out deep, complex flavors',
+      'Slow baking — patience transforms simple ingredients'
+    ],
+    desserts: [
+      {
+        id: 'egypt-1',
+        name: 'Kunafa',
+        description: 'Shredded phyllo dough layered with sweet cheese, soaked in fragrant rose syrup and topped with crushed pistachios.',
+        image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&q=80',
+        tags: ['Cheese', 'Syrup', 'Pistachio'],
+        flavorNotes: ['Crispy', 'Gooey', 'Floral', 'Nutty']
+      },
+      {
+        id: 'egypt-2',
+        name: 'Basbousa',
+        description: 'Semolina cake soaked in aromatic syrup, crowned with almonds. A texture that melts on the tongue.',
+        image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=800&q=80',
+        tags: ['Semolina', 'Syrup', 'Almond'],
+        flavorNotes: ['Dense', 'Sweet', 'Grainy', 'Rich']
+      },
+      {
+        id: 'egypt-3',
+        name: 'Om Ali',
+        description: 'Egyptian bread pudding with milk, nuts, and raisins. A royal dessert with a legendary origin.',
+        image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80',
+        tags: ['Pudding', 'Nuts', 'Raisins'],
+        flavorNotes: ['Creamy', 'Warm', 'Spiced', 'Comforting']
+      },
+      {
+        id: 'egypt-4',
+        name: 'Kahk',
+        description: 'Ancient Egyptian cookies filled with malban or nuts, dusted with powdered sugar. A taste of history.',
+        image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&q=80',
+        tags: ['Cookie', 'Filled', 'Traditional'],
+        flavorNotes: ['Buttery', 'Sweet', 'Delicate', 'Nutty']
+      },
+      {
+        id: 'egypt-5',
+        name: 'Qatayef',
+        description: 'Stuffed pancakes filled with cream or nuts, folded into perfect half-moons and fried to golden perfection.',
+        image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80',
+        tags: ['Pancake', 'Filled', 'Fried'],
+        flavorNotes: ['Crispy', 'Creamy', 'Sweet', 'Rich']
+      }
+    ]
+  },
+  {
+    slug: 'turkey',
+    name: 'Turkey',
+    nameLocal: 'Türkiye',
+    accentColor: '#C41E3A',
+    accentSecondary: '#8B4513',
+    storyLine: 'The crossroads of empires, where East and West merge in layers of phyllo and syrup.',
+    mythicStory: 'At the crossroads of continents, Ottoman artisans perfected the art of layered pastry. Turkish sweets carry the weight of empire and the delicacy of centuries-old craft.',
+    coordinates: { x: 55, y: 38 },
+    signatureSweets: 'Baklava, Lokum, Kunefe',
+    flavorProfile: ['Pistachio', 'Rose', 'Saffron', 'Honey', 'Yogurt'],
+    techniques: [
+      'Layering mastery — 40+ sheets of phyllo, each brushed with butter',
+      'Syrup timing — hot pastry meets cool syrup for perfect absorption',
+      'Pistachio selection — only the finest Antep pistachios',
+      'Copper craftsmanship — traditional utensils for even heat'
+    ],
+    desserts: [
+      {
+        id: 'turkey-1',
+        name: 'Baklava',
+        description: 'Paper-thin phyllo layers with butter and pistachios, soaked in syrup. The crown jewel of Turkish confection.',
+        image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&q=80',
+        tags: ['Phyllo', 'Pistachio', 'Syrup'],
+        flavorNotes: ['Crispy', 'Buttery', 'Sweet', 'Nutty']
+      },
+      {
+        id: 'turkey-2',
+        name: 'Lokum',
+        description: 'Turkish delight — gelatinous cubes of rose, pistachio, or citrus, dusted with powdered sugar.',
+        image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800&q=80',
+        tags: ['Gelatin', 'Rose', 'Citrus'],
+        flavorNotes: ['Chewy', 'Floral', 'Sweet', 'Soft']
+      },
+      {
+        id: 'turkey-3',
+        name: 'Kunefe',
+        description: 'Shredded wheat filled with cheese, soaked in syrup, topped with pistachios. Hot, crispy, gooey perfection.',
+        image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80',
+        tags: ['Cheese', 'Wheat', 'Syrup'],
+        flavorNotes: ['Crispy', 'Cheesy', 'Sweet', 'Hot']
+      },
+      {
+        id: 'turkey-4',
+        name: 'Sutlac',
+        description: 'Baked rice pudding with caramelized top. Comfort in every spoonful, perfected over centuries.',
+        image: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=800&q=80',
+        tags: ['Rice', 'Milk', 'Baked'],
+        flavorNotes: ['Creamy', 'Vanilla', 'Caramel', 'Comforting']
+      }
+    ]
+  },
+  {
+    slug: 'china',
+    name: 'China',
+    nameLocal: '中国',
+    accentColor: '#DC2626',
+    accentSecondary: '#F59E0B',
+    storyLine: 'Craft refined through generations, where every dessert tells a story of patience.',
+    mythicStory: 'In the misty mountains of the East, dessert is an art form perfected over millennia. Every bite carries the weight of dynastic tradition and the precision of master craftsmen.',
+    coordinates: { x: 72, y: 40 },
+    signatureSweets: 'Mooncakes, Tangyuan, Egg Tarts',
+    flavorProfile: ['Red bean', 'Lotus seed', 'Osmanthus', 'Ginger', 'Coconut'],
+    techniques: [
+      'Mooncake molding — intricate patterns pressed into perfect rounds',
+      'Lotus paste preparation — hours of stirring for silky smoothness',
+      'Glutinous rice mastery — achieving the perfect chewy texture',
+      'Sugar pulling — transformed into delicate, edible art'
+    ],
+    desserts: [
+      {
+        id: 'china-1',
+        name: 'Mooncakes',
+        description: 'Lotus paste and salted egg yolk encased in delicate pastry, stamped with intricate patterns. A festival in every bite.',
+        image: 'https://images.unsplash.com/photo-1631160299919-6a175aa6d189?w=800&q=80',
+        tags: ['Lotus', 'Egg yolk', 'Festival'],
+        flavorNotes: ['Rich', 'Savory-sweet', 'Dense', 'Complex']
+      },
+      {
+        id: 'china-2',
+        name: 'Tangyuan',
+        description: 'Glutinous rice balls in warm, sweet ginger syrup. Roundness symbolizes family reunion.',
+        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80',
+        tags: ['Rice', 'Ginger', 'Soup'],
+        flavorNotes: ['Chewy', 'Warm', 'Spiced', 'Comforting']
+      },
+      {
+        id: 'china-3',
+        name: 'Egg Tarts',
+        description: 'Flaky, buttery crust with silky smooth custard center. A Portuguese-Chinese fusion masterpiece.',
+        image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80',
+        tags: ['Custard', 'Pastry', 'Baked'],
+        flavorNotes: ['Flaky', 'Creamy', 'Sweet', 'Buttery']
+      },
+      {
+        id: 'china-4',
+        name: 'Mango Sago',
+        description: 'Chilled mango puree with tapioca pearls and coconut milk. A refreshing tropical escape.',
+        image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800&q=80',
+        tags: ['Mango', 'Tapioca', 'Coconut'],
+        flavorNotes: ['Tropical', 'Creamy', 'Refreshing', 'Sweet']
+      }
+    ]
+  },
+  {
+    slug: 'america',
+    name: 'America',
+    nameLocal: 'USA',
+    accentColor: '#3B82F6',
+    accentSecondary: '#EF4444',
+    storyLine: 'Modern fusion. Bold flavors. No rules, just pure indulgence.',
+    mythicStory: 'Where tradition meets innovation, American desserts embrace global influences and transform them into something entirely new. Bold, confident, and unapologetically delicious.',
+    coordinates: { x: 22, y: 35 },
+    signatureSweets: 'NYC Cookies, Brownies, Banana Pudding',
+    flavorProfile: ['Chocolate', 'Vanilla', 'Peanut butter', 'Caramel', 'Sea salt'],
+    techniques: [
+      'Brown butter technique — nutty depth in every bite',
+      'Cookie edge crisping — achieving the perfect texture contrast',
+      'Layered assembly — building desserts with architectural precision',
+      'Salted caramel balance — the sweet-savory frontier'
+    ],
+    desserts: [
+      {
+        id: 'america-1',
+        name: 'NYC Cookies',
+        description: 'Giant, gooey chocolate chip cookies with crispy edges and a soft center. The city that never sleeps deserves dessert this good.',
+        image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&q=80',
+        tags: ['Chocolate', 'Cookie', 'Gooey'],
+        flavorNotes: ['Gooey', 'Chocolatey', 'Buttery', 'Crispy-edged']
+      },
+      {
+        id: 'america-2',
+        name: 'Fudge Brownies',
+        description: 'Dense, fudgy chocolate squares with that coveted crackly top. Pure chocolate intensity.',
+        image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=80',
+        tags: ['Chocolate', 'Fudge', 'Dense'],
+        flavorNotes: ['Fudgy', 'Rich', 'Intense', 'Gooey']
+      },
+      {
+        id: 'america-3',
+        name: 'Banana Pudding',
+        description: 'Layers of vanilla wafers, fresh bananas, and creamy pudding. Southern comfort in a cup.',
+        image: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=800&q=80',
+        tags: ['Banana', 'Pudding', 'Wafers'],
+        flavorNotes: ['Creamy', 'Sweet', 'Fruity', 'Nostalgic']
+      },
+      {
+        id: 'america-4',
+        name: "S'mores Bars",
+        description: 'Graham cracker crust, chocolate ganache, toasted marshmallow topping. Campfire nostalgia, elevated.',
+        image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&q=80',
+        tags: ['Marshmallow', 'Chocolate', 'Graham'],
+        flavorNotes: ['Toasted', 'Sweet', 'Gooey', 'Smoky']
+      }
+    ]
+  },
+  {
+    slug: 'greece',
+    name: 'Greece',
+    nameLocal: 'Ελλάδα',
+    accentColor: '#0066CC',
+    accentSecondary: '#FFFFFF',
+    storyLine: 'Mediterranean sunshine captured in honey and phyllo.',
+    mythicStory: 'From the land of gods and philosophers comes a tradition of sweetness as old as democracy itself. Greek desserts honor the bounty of the Mediterranean.',
+    coordinates: { x: 53, y: 38 },
+    signatureSweets: 'Galaktoboureko, Loukoumades, Kataifi',
+    flavorProfile: ['Honey', 'Cinnamon', 'Walnut', 'Orange', 'Yogurt'],
+    techniques: [
+      'Phyllo whispering — tissue-thin pastry handled with care',
+      'Honey drizzling — achieving the perfect sweetness balance',
+      'Semolina custard — the creamy heart of Greek desserts',
+      'Syrup soaking — transforming crisp into tender'
+    ],
+    desserts: [
+      {
+        id: 'greece-1',
+        name: 'Galaktoboureko',
+        description: 'Semolina custard wrapped in crispy phyllo, bathed in citrus-scented syrup. A textural masterpiece.',
+        image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&q=80',
+        tags: ['Custard', 'Phyllo', 'Syrup'],
+        flavorNotes: ['Creamy', 'Crispy', 'Citrusy', 'Sweet']
+      },
+      {
+        id: 'greece-2',
+        name: 'Loukoumades',
+        description: 'Greek doughnut holes drizzled with honey and cinnamon. Crispy outside, airy inside.',
+        image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&q=80',
+        tags: ['Fried', 'Honey', 'Cinnamon'],
+        flavorNotes: ['Crispy', 'Airy', 'Sweet', 'Spiced']
+      },
+      {
+        id: 'greece-3',
+        name: 'Kataifi',
+        description: 'Shredded phyllo wrapped around nuts, soaked in syrup. The cousin of baklava, distinct in texture.',
+        image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=800&q=80',
+        tags: ['Phyllo', 'Nuts', 'Syrup'],
+        flavorNotes: ['Crispy', 'Nutty', 'Sweet', 'Textured']
+      }
+    ]
+  },
+  {
+    slug: 'france',
+    name: 'France',
+    nameLocal: 'France',
+    accentColor: '#1E40AF',
+    accentSecondary: '#DC2626',
+    storyLine: 'The art of patisserie — precision, elegance, and butter.',
+    mythicStory: 'In the ateliers of Paris, dessert is elevated to high art. French patisserie demands precision, respects tradition, and pursues perfection in every layer.',
+    coordinates: { x: 48, y: 32 },
+    signatureSweets: 'Mille-feuille, Macarons, Éclairs',
+    flavorProfile: ['Butter', 'Vanilla', 'Chocolate', 'Caramel', 'Coffee'],
+    techniques: [
+      'Lamination — creating thousands of layers in puff pastry',
+      'Macaronage — achieving the perfect macaron texture',
+      'Tempering — chocolate with professional precision',
+      'Ganache mastery — the perfect cream-chocolate marriage'
+    ],
+    desserts: [
+      {
+        id: 'france-1',
+        name: 'Mille-feuille',
+        description: 'Thousands of layers of puff pastry with vanilla cream. A architectural marvel of butter and air.',
+        image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80',
+        tags: ['Puff pastry', 'Custard', 'Layered'],
+        flavorNotes: ['Flaky', 'Creamy', 'Buttery', 'Elegant']
+      },
+      {
+        id: 'france-2',
+        name: 'Macarons',
+        description: 'Delicate almond meringue cookies with ganache or buttercream filling. Colorful, crisp, and chewy.',
+        image: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=800&q=80',
+        tags: ['Almond', 'Meringue', 'Ganache'],
+        flavorNotes: ['Crisp', 'Chewy', 'Delicate', 'Flavorful']
+      },
+      {
+        id: 'france-3',
+        name: 'Éclairs',
+        description: 'Choux pastry filled with cream and topped with glossy chocolate. A classic of French patisserie.',
+        image: 'https://images.unsplash.com/photo-1612203985729-70726954388c?w=800&q=80',
+        tags: ['Choux', 'Custard', 'Chocolate'],
+        flavorNotes: ['Light', 'Creamy', 'Chocolatey', 'Refined']
+      },
+      {
+        id: 'france-4',
+        name: 'Crème Brûlée',
+        description: 'Rich custard with caramelized sugar top. The crack of the spoon is part of the experience.',
+        image: 'https://images.unsplash.com/photo-1470324161839-ce2bb6fa6bc3?w=800&q=80',
+        tags: ['Custard', 'Caramel', 'Vanilla'],
+        flavorNotes: ['Creamy', 'Crackly', 'Rich', 'Vanilla']
+      }
+    ]
+  },
+  {
+    slug: 'italy',
+    name: 'Italy',
+    nameLocal: 'Italia',
+    accentColor: '#16A34A',
+    accentSecondary: '#DC2626',
+    storyLine: 'La dolce vita — the sweet life, perfected over centuries.',
+    mythicStory: 'From the cafes of Rome to the patisseries of Milan, Italian desserts embody la dolce vita. Simple ingredients, masterful technique, and a passion for pleasure.',
+    coordinates: { x: 50, y: 35 },
+    signatureSweets: 'Tiramisu, Cannoli, Panna Cotta',
+    flavorProfile: ['Coffee', 'Mascarpone', 'Ricotta', 'Citrus', 'Chocolate'],
+    techniques: [
+      'Mascarpone folding — achieving cloud-like texture',
+      'Espresso soaking — infusing every layer with coffee',
+      'Cannoli shell frying — achieving the perfect crunch',
+      'Gelato churning — density and flavor concentration'
+    ],
+    desserts: [
+      {
+        id: 'italy-1',
+        name: 'Tiramisu',
+        description: 'Coffee-soaked ladyfingers layered with mascarpone cream and cocoa. Pick me up, indeed.',
+        image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80',
+        tags: ['Coffee', 'Mascarpone', 'Cocoa'],
+        flavorNotes: ['Coffee-rich', 'Creamy', 'Light', 'Indulgent']
+      },
+      {
+        id: 'italy-2',
+        name: 'Cannoli',
+        description: 'Crispy fried shells filled with sweet ricotta, chocolate chips, and candied fruit. Sicilian perfection.',
+        image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&q=80',
+        tags: ['Ricotta', 'Shell', 'Sicilian'],
+        flavorNotes: ['Crispy', 'Creamy', 'Sweet', 'Textured']
+      },
+      {
+        id: 'italy-3',
+        name: 'Panna Cotta',
+        description: 'Silky cooked cream with berry compote. Elegant simplicity at its finest.',
+        image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80',
+        tags: ['Cream', 'Vanilla', 'Berries'],
+        flavorNotes: ['Silky', 'Light', 'Elegant', 'Fruity']
+      },
+      {
+        id: 'italy-4',
+        name: 'Sfogliatella',
+        description: 'Shell-shaped pastry with ricotta filling and hundreds of crispy layers. A Neapolitan treasure.',
+        image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=800&q=80',
+        tags: ['Pastry', 'Ricotta', 'Layered'],
+        flavorNotes: ['Crispy', 'Flaky', 'Creamy', 'Complex']
+      }
+    ]
+  },
+  {
+    slug: 'saudi',
+    name: 'Saudi Arabia',
+    nameLocal: 'السعودية',
+    accentColor: '#059669',
+    accentSecondary: '#D4AF37',
+    storyLine: 'Desert hospitality — dates, cardamom, and golden generosity.',
+    mythicStory: 'In the heart of the Arabian Peninsula, hospitality is sacred. Saudi desserts honor this tradition with ingredients from the land: dates, cardamom, and the warmth of shared moments.',
+    coordinates: { x: 58, y: 48 },
+    signatureSweets: 'Maamoul, Luqaimat, Dates & Tahini',
+    flavorProfile: ['Dates', 'Cardamom', 'Saffron', 'Rose', 'Tahini'],
+    techniques: [
+      'Date preparation — pitting and stuffing with precision',
+      'Cardamom grinding — releasing aromatic oils',
+      'Semolina resting — allowing grains to bloom',
+      'Syrup perfuming — infusing with rose and orange blossom'
+    ],
+    desserts: [
+      {
+        id: 'saudi-1',
+        name: 'Maamoul',
+        description: 'Semolina cookies filled with dates or nuts, molded in intricate wooden forms. Eid essential.',
+        image: 'https://images.unsplash.com/photo-1602351447937-745cb720612f?w=800&q=80',
+        tags: ['Semolina', 'Dates', 'Molded'],
+        flavorNotes: ['Buttery', 'Nutty', 'Sweet', 'Textured']
+      },
+      {
+        id: 'saudi-2',
+        name: 'Luqaimat',
+        description: 'Golden fried dumplings drizzled with date syrup. Crispy outside, soft inside, utterly addictive.',
+        image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80',
+        tags: ['Fried', 'Dates', 'Dumplings'],
+        flavorNotes: ['Crispy', 'Soft', 'Sweet', 'Warm']
+      },
+      {
+        id: 'saudi-3',
+        name: 'Dates & Tahini',
+        description: 'Medjool dates stuffed with tahini and topped with pistachios. Simple, ancient, perfect.',
+        image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800&q=80',
+        tags: ['Dates', 'Tahini', 'Pistachio'],
+        flavorNotes: ['Rich', 'Nutty', 'Sweet', 'Earthy']
+      },
+      {
+        id: 'saudi-4',
+        name: 'Basbousa Bil Qishta',
+        description: 'Saudi variant of basbousa with clotted cream center. A luxurious twist on a classic.',
+        image: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=800&q=80',
+        tags: ['Semolina', 'Cream', 'Syrup'],
+        flavorNotes: ['Dense', 'Creamy', 'Sweet', 'Rich']
+      }
+    ]
+  }
+];
+
+export const fusionDesserts = [
+  {
+    id: 'fusion-1',
+    name: 'Kunafa x Mochi',
+    description: 'Japanese mochi texture meets Middle Eastern kunafa. Crispy, chewy, revolutionary.',
+    regions: ['Egypt', 'Turkey', 'China'],
+    image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80'
+  },
+  {
+    id: 'fusion-2',
+    name: 'Tiramisu Baklava',
+    description: 'Italian coffee culture meets Turkish phyllo mastery. Layers of espresso-soaked pastry.',
+    regions: ['Italy', 'Turkey'],
+    image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80'
+  },
+  {
+    id: 'fusion-3',
+    name: 'Macaron Kunefe',
+    description: 'French delicacy meets Turkish cheese pastry. A sweet-savory bridge between cultures.',
+    regions: ['France', 'Turkey'],
+    image: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=800&q=80'
+  }
+];
+
+export function getRegionBySlug(slug: string): Region | undefined {
+  return regions.find(r => r.slug === slug);
+}
+
+export function getAllSlugs(): string[] {
+  return regions.map(r => r.slug);
+}
