@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleopatra Delights | Family-Size Desserts by an Engineer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    
+    /* Header */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      border-bottom: 1px solid #1e293b;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Hero */
+    .hero {
+      padding: 140px 0 80px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: #fbbf24;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    h1 span {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.125rem;
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+      color: #0f172a;
+      font-weight: 600;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #475569;
+      color: #f8fafc;
+      margin-left: 16px;
+    }
+    .hero-image {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .hero-image img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+    
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-card {
+      text-align: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+    }
+    .stat-card div:first-child {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    .stat-card .label {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    
+    /* Menu */
+    .menu {
+      padding: 80px 0;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 16px;
+    }
+    .section-header p {
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: #f59e0b;
+    }
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-content {
+      padding: 24px;
+    }
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .product-origin {
+      font-size: 0.75rem;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .product-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fbbf24;
+    }
+    .product-desc {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin-bottom: 16px;
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tag {
+      padding: 4px 12px;
+      background: #334155;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+    }
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid #334155;
+    }
+    .serves {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    
+    /* Gallery */
+    .gallery {
+      padding: 80px 0;
+      background: rgba(30, 41, 59, 0.3);
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* Story */
+    .story {
+      padding: 80px 0;
+    }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+    }
+    .story h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 24px;
+    }
+    .story h2 span {
+      color: #fbbf24;
+    }
+    .story p {
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    .countries {
+      display: grid;
+      gap: 16px;
+    }
+    .country-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      border: 1px solid #334155;
+    }
+    .country-flag {
+      font-size: 2rem;
+    }
+    .country-name {
+      font-weight: 600;
+    }
+    .country-specialty {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    
+    /* CTA */
+    .cta {
+      padding: 80px 0;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), transparent);
+    }
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 16px;
+    }
+    .cta p {
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid #1e293b;
+      text-align: center;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">👩‍🍳</div>
+          <span>Cleopatra Delights</span>
+        </div>
+        <a href="#order" class="btn">Order Now</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">
+            <span>📍</span> Jacksonville, FL
+          </div>
+          
+          <h1>
+            Engineered for
+            <br>
+            <span>Delight</span>
+          </h1>
+          
+          <p>An African engineer's precision meets three continents of flavor. Family-size brownies, cookies, and cakes — perfected across Egypt, Greece, and Turkey.</p>
+          
+          <a href="#menu" class="btn">View Menu →</a>
+          <a href="#story" class="btn btn-outline">Our Story</a>
+          
+          <div class="stats">
+            <div class="stat-card">
+              <div>🌍</div>
+              <div class="label">3 Continents</div>
+            </div>
+            <div class="stat-card">
+              <div>⚗️</div>
+              <div class="label">Engineer</div>
+            </div>
+            <div class="stat-card">
+              <div>👨‍👩‍👧‍👦</div>
+              <div class="label">Family-Size</div>
+            </div>
+            <div class="stat-card">
+              <div>⏰</div>
+              <div class="label">Years Experience</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hero-image">
+          <img src="https://i.ibb.co/0yy36qCQ/Chat-GPT-Image-Feb-17-2026-09-57-55-PM.png" alt="Cleopatra Delights">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">Family-Size Portions</div>
+        <h2>The Menu</h2>
+        <p>Every recipe traveled across continents before reaching your table. Engineered for the perfect texture, baked for the whole family.</p>
+      </div>
+      
+      <div class="products">
+        <div class="product-card">
+          <img src="https://i.ibb.co/0yy36qCQ/Chat-GPT-Image-Feb-17-2026-09-57-55-PM.png" alt="Basbousa Brownies">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">Egypt</div>
+                <div class="product-name">Basbousa Brownies</div>
+              </div>
+              <div class="product-price">$24</div>
+            </div>
+            <p class="product-desc">Semolina-brownie fusion soaked in rose syrup</p>
+            <div class="tags">
+              <span class="tag">Signature</span>
+              <span class="tag">Fudge</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Serves 8-10</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="https://i.ibb.co/5xLPmmM6/Chat-GPT-Image-Feb-17-2026-09-58-03-PM.png" alt="Baklava Cookies">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">Greece</div>
+                <div class="product-name">Baklava Crunch Cookies</div>
+              </div>
+              <div class="product-price">$18</div>
+            </div>
+            <p class="product-desc">Walnut-honey cookies with phyllo crumble</p>
+            <div class="tags">
+              <span class="tag">Nutty</span>
+              <span class="tag">Crisp</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Dozen</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="https://i.ibb.co/1tG9YyR4/Chat-GPT-Image-Feb-17-2026-09-58-09-PM.png" alt="Turkish Delight Brownies">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">Turkey</div>
+                <div class="product-name">Turkish Delight Brownies</div>
+              </div>
+              <div class="product-price">$26</div>
+            </div>
+            <p class="product-desc">Pistachio-rose water fudge brownies</p>
+            <div class="tags">
+              <span class="tag">Floral</span>
+              <span class="tag">Dense</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Serves 8-10</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="https://i.ibb.co/5xYNP5vw/Chat-GPT-Image-Feb-17-2026-09-58-15-PM.png" alt="Chocolate Cake">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">USA</div>
+                <div class="product-name">Engineer's Chocolate Cake</div>
+              </div>
+              <div class="product-price">$45</div>
+            </div>
+            <p class="product-desc">Triple-layer precision chocolate cake</p>
+            <div class="tags">
+              <span class="tag">Celebration</span>
+              <span class="tag">Classic</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Serves 12-16</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="https://i.ibb.co/YFBHXmXR/Chat-GPT-Image-Feb-17-2026-09-58-35-PM.png" alt="Tahini Shortbread">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">Turkey</div>
+                <div class="product-name">Tahini Shortbread</div>
+              </div>
+              <div class="product-price">$16</div>
+            </div>
+            <p class="product-desc">Sesame-forward crisp cookies</p>
+            <div class="tags">
+              <span class="tag">Unique</span>
+              <span class="tag">Buttery</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Dozen</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="https://i.ibb.co/fzDNPpDT/Chat-GPT-Image-Feb-17-2026-09-59-04-PM.png" alt="Galaktoboureko Cake">
+          <div class="product-content">
+            <div class="product-header">
+              <div>
+                <div class="product-origin">Greece</div>
+                <div class="product-name">Galaktoboureko Cake</div>
+              </div>
+              <div class="product-price">$42</div>
+            </div>
+            <p class="product-desc">Custard-filled semolina celebration cake</p>
+            <div class="tags">
+              <span class="tag">Custard</span>
+              <span class="tag">Citrus</span>
+            </div>
+            <div class="product-footer">
+              <span class="serves">Serves 10-12</span>
+              <a href="#order" style="color: #fbbf24; text-decoration: none;">Add to Order →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" id="gallery">
+    <div class="container">
+      <div class="section-header">
+        <h2>From Our <span style="color: #fbbf24;">Kitchen</span></h2>
+        <p>Where engineering meets artistry</p>
+      </div>
+      
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="https://i.ibb.co/q34ZWfvb/Chat-GPT-Image-Feb-17-2026-09-59-13-PM.png" alt="Gallery 1">
+        </div>
+        <div class="gallery-item">
+          <img src="https://i.ibb.co/fzZhfjRn/Toasty-s-mores-brownies-with-chocolate-drizzle.png" alt="Gallery 2">
+        </div>
+        <div class="gallery-item">
+          <img src="https://i.ibb.co/0yy36qCQ/Chat-GPT-Image-Feb-17-2026-09-57-55-PM.png" alt="Gallery 3">
+        </div>
+        <div class="gallery-item">
+          <img src="https://i.ibb.co/5xLPmmM6/Chat-GPT-Image-Feb-17-2026-09-58-03-PM.png" alt="Gallery 4">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story-grid">
+        <div>
+          <div class="badge">Our Heritage</div>
+          
+          <h2>
+            Engineering
+            <br>
+            <span>Excellence</span>
+          </h2>
+          
+          <p>I'm an engineer by training, a baker by calling. For decades, I have nourished my family across three continents — Africa, Asia, and North America.</p>
+          
+          <p>Every dessert emerging from my kitchen represents the marriage of engineering precision with recipes passed through generations. From Egyptian basbousa to Greek baklava to Turkish delight — each perfected through rigorous iteration.</p>
+          
+          <p>Now in Jacksonville, I create family-size portions because dessert should be shared. No diminutive portions. No compromises. Only authentic, engineered delight.</p>
+        </div>
+        
+        <div class="countries">
+          <div class="country-card">
+            <span class="country-flag">🇪🇬</span>
+            <div>
+              <div class="country-name">Egypt</div>
+              <div class="country-specialty">Basbousa & Rose Desserts</div>
+            </div>
+          </div>
+          
+          <div class="country-card">
+            <span class="country-flag">🇬🇷</span>
+            <div>
+              <div class="country-name">Greece</div>
+              <div class="country-specialty">Baklava & Honey Pastries</div>
+            </div>
+          </div>
+          
+          <div class="country-card">
+            <span class="country-flag">🇹🇷</span>
+            <div>
+              <div class="country-name">Turkey</div>
+              <div class="country-specialty">Turkish Delight & Tahini</div>
+            </div>
+          </div>
+          
+          <div class="country-card">
+            <span class="country-flag">🇺🇸</span>
+            <div>
+              <div class="country-name">USA</div>
+              <div class="country-specialty">Engineered Classics</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="order">
+    <div class="container">
+      <h2>
+        Experience the
+        <br>
+        <span>Extraordinary</span>
+      </h2>
+      
+      <p>Family-size portions, engineered to perfection. Delivered fresh in Jacksonville.</p>
+      
+      <a href="mailto:orders@cleopatradelights.com" class="btn">
+        📧 Place Your Order
+      </a>
+      
+      <p style="margin-top: 24px; color: #64748b;">
+        orders@cleopatradelights.com
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2024 Cleopatra Delights. An engineer's passion, a family's legacy.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
