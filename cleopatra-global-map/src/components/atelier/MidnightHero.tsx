@@ -54,12 +54,13 @@ export default function MidnightHero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-white mb-8"
+            className="text-white mb-10"
             style={{ 
               fontSize: 'clamp(48px, 6vw, 90px)',
-              lineHeight: '1.0',
-              letterSpacing: '-0.03em',
-              fontFamily: "'Playfair Display', serif"
+              lineHeight: '1.05',
+              letterSpacing: '-0.02em',
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 400
             }}
           >
             We mastered the world's finest sweets.
@@ -70,18 +71,19 @@ export default function MidnightHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
-            className="text-[#a3a3a3] mb-12"
+            className="text-[#a3a3a3] mb-16"
             style={{ 
-              fontSize: '17px',
-              lineHeight: '1.7',
-              maxWidth: '45ch'
+              fontSize: '18px',
+              lineHeight: '1.75',
+              maxWidth: '42ch',
+              letterSpacing: '0.01em'
             }}
           >
             From ancient Egypt through the Silk Road to the New World. 
             Eight kingdoms. One pursuit of perfection.
           </motion.p>
 
-          {/* Single CTA */}
+          {/* Single CTA with refined hover */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -90,11 +92,17 @@ export default function MidnightHero() {
             <Link href="#regions">
               <motion.span
                 whileHover={{ x: 8 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="inline-flex items-center gap-4 text-[#d4af37] text-sm uppercase tracking-[0.2em] cursor-pointer group"
-                style={{ lineHeight: '1.6' }}
+                style={{ lineHeight: '1.6', padding: '12px 0' }}
               >
                 <span>Enter the Atelier</span>
-                <span className="w-12 h-px bg-[#d4af37] group-hover:w-20 transition-all duration-500" />
+                <motion.span 
+                  className="h-px bg-[#d4af37] origin-left"
+                  initial={{ width: 48 }}
+                  whileHover={{ width: 80 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                />
               </motion.span>
             </Link>
           </motion.div>

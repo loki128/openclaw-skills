@@ -99,11 +99,13 @@ function RegionShowcase({ region, position, index }: {
           
           {/* Region name */}
           <h2 
-            className="text-white mb-4"
+            className="text-white mb-5"
             style={{ 
-              fontSize: 'clamp(28px, 3vw, 52px)',
-              lineHeight: '1.15',
-              fontFamily: "'Playfair Display', serif"
+              fontSize: 'clamp(32px, 3.5vw, 56px)',
+              lineHeight: '1.1',
+              letterSpacing: '-0.01em',
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 400
             }}
           >
             {region.name}
@@ -111,11 +113,12 @@ function RegionShowcase({ region, position, index }: {
           
           {/* Story - concise */}
           <p 
-            className="text-[#a3a3a3] mb-6"
+            className="text-[#a3a3a3] mb-8"
             style={{ 
-              fontSize: '16px',
-              lineHeight: '1.7',
-              maxWidth: '40ch'
+              fontSize: '17px',
+              lineHeight: '1.75',
+              maxWidth: '38ch',
+              letterSpacing: '0.01em'
             }}
           >
             {region.mythicStory}

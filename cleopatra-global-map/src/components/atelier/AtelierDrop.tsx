@@ -84,21 +84,24 @@ export default function AtelierDrop() {
               {weeklyArtifact.origin}
             </p>            
             <h3 
-              className="text-white mb-4"
+              className="text-white mb-5"
               style={{ 
-                fontSize: 'clamp(28px, 3vw, 48px)',
-                lineHeight: '1.15',
-                fontFamily: "'Playfair Display', serif"
+                fontSize: 'clamp(32px, 3.5vw, 52px)',
+                lineHeight: '1.1',
+                letterSpacing: '-0.01em',
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 400
               }}
             >
               {weeklyArtifact.name}
             </h3>            
             <p 
-              className="text-[#a3a3a3] mb-8"
+              className="text-[#a3a3a3] mb-10"
               style={{ 
-                fontSize: '16px',
-                lineHeight: '1.7',
-                maxWidth: '45ch'
+                fontSize: '17px',
+                lineHeight: '1.75',
+                maxWidth: '42ch',
+                letterSpacing: '0.01em'
               }}
             >
               {weeklyArtifact.description}
