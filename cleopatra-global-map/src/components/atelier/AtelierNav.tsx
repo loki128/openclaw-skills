@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function Navigation() {
+export default function AtelierNav() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -14,48 +14,44 @@ export default function Navigation() {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-void/90 backdrop-blur-md' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? 'bg-[#0a0a0f]/90 backdrop-blur-md' : 'bg-transparent'
       }`}
     >
       <div 
         className="max-w-[1200px] mx-auto px-5 md:px-8 lg:px-12 py-6 flex items-center justify-between"
       >
-        <Link href="/" className="font-display text-xl tracking-tight">
+        <Link 
+          href="/" 
+          className="text-white text-lg"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
           Cleopatra
         </Link>
 
         <div className="hidden md:flex items-center gap-10"
         >
           <Link 
-            href="/#journey" 
-            className="text-sm text-text-secondary hover:text-white transition-colors"
+            href="/#regions" 
+            className="text-[#888] text-sm hover:text-white transition-colors"
             style={{ lineHeight: '1.6' }}
           >
-            Journey
-          </Link>
-          
-          <Link 
-            href="/#drops" 
-            className="text-sm text-text-secondary hover:text-white transition-colors"
-            style={{ lineHeight: '1.6' }}
-          >
-            Drops
+            Regions
           </Link>
           
           <Link 
             href="/menu" 
-            className="text-sm text-text-secondary hover:text-white transition-colors"
+            className="text-[#888] text-sm hover:text-white transition-colors"
             style={{ lineHeight: '1.6' }}
           >
-            Menu
+            Collection
           </Link>
         </div>
 
         <Link 
-          href="/#drops"
-          className="text-sm px-6 py-3 border border-gold-400 text-gold-400 hover:bg-gold-400 hover:text-void transition-colors"
-          style={{ minHeight: '44px', lineHeight: '1.5' }}
+          href="/#drop"
+          className="text-sm text-[#d4af37] border-b border-[#d4af37] pb-0.5 hover:text-white hover:border-white transition-colors"
+          style={{ lineHeight: '1.6' }}
         >
           Order
         </Link>

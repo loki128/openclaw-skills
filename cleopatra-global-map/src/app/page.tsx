@@ -1,17 +1,19 @@
-import Navigation from '@/components/interactive/Navigation';
-import SpacedHero from '@/components/cinematic/SpacedHero';
-import SpacedJourney from '@/components/cinematic/SpacedJourney';
-import SpacedDrops from '@/components/cinematic/SpacedDrops';
-import Footer from '@/components/interactive/Footer';
+import AtelierNav from '@/components/atelier/AtelierNav';
+import MidnightHero from '@/components/atelier/MidnightHero';
+import AtelierRegions from '@/components/atelier/AtelierRegions';
+import AtelierDrop from '@/components/atelier/AtelierDrop';
+import AtelierFooter from '@/components/atelier/AtelierFooter';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-void">
-      <Navigation />
-      <SpacedHero />
-      <SpacedJourney />
-      <SpacedDrops />
-      <Footer />
+    <main className="min-h-screen bg-[#0a0a0f]">
+      <AtelierNav />
+      <MidnightHero />
+      <AtelierRegions />
+      <div id="drop">
+        <AtelierDrop />
+      </div>
+      <AtelierFooter />
     </main>
   );
 }
