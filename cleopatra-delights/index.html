@@ -71,7 +71,36 @@
         .hero {
             background: linear-gradient(135deg, #fffbeb 0%, #fafafa 50%, #fef3c7 100%);
             padding: 4rem 0;
-            text-align: center;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            text-align: left;
+        }
+        .hero-image {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-image {
+                order: -1;
+            }
+            .hero-image img {
+                height: 300px;
+            }
         }
         .badge {
             display: inline-flex;
@@ -320,16 +349,22 @@
         </div>
     </header>
 
+    <!-- Hero Section with Photo -->
     <section class="hero">
         <div class="container">
-            <div class="badge">
-                📍 Jacksonville, FL
-            </div>
-            <h1>Engineered for<br><span>Delight</span></h1>
-            <p>An African engineer's precision meets three continents of flavor. Family-size brownies, cookies, and cakes — perfected across Egypt, Greece, and Turkey.</p>
-            <div class="hero-buttons">
-                <a href="#menu" class="btn">View Menu →</a>
-                <a href="#story" class="btn btn-outline">Our Story</a>
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="badge">📍 Jacksonville, FL</div>
+                    <h1>Engineered for<br><span>Delight</span></h1>
+                    <p>An African engineer's precision meets three continents of flavor. Family-size brownies, cookies, and cakes — perfected across Egypt, Greece, and Turkey.</p>
+                    <div class="hero-buttons">
+                        <a href="#menu" class="btn">View Menu →</a>
+                        <a href="#story" class="btn btn-outline">Our Story</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://i.ibb.co/9HHj1nbG/baked-goods-1.jpg" alt="Cleopatra Delights Baked Goods">
+                </div>
             </div>
             
             <div class="stats">
@@ -540,6 +575,42 @@
                             <div class="country-specialty">Engineered Classics</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery" style="padding: 4rem 0; background: #fef3c7;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Fresh From the Oven</h2>
+                <p>Handcrafted with precision and passion</p>
+            </div>
+            <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/9HHj1nbG" alt="Baked Goods 1" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/4gpHzzm7" alt="Baked Goods 2" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/wFhKZGp2" alt="Baked Goods 3" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/prWtS3Z5" alt="Baked Goods 4" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/tTpVzgzm" alt="Baked Goods 5" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/Zp2gk82b" alt="Baked Goods 6" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/PvbS9ndB" alt="Baked Goods 7" style="width: 100%; height: 250px; object-fit: cover;">
+                </div>
+                <div class="gallery-item" style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <img src="https://i.ibb.co/39VD2gXM" alt="Baked Goods 8" style="width: 100%; height: 250px; object-fit: cover;">
                 </div>
             </div>
         </div>
