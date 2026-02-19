@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC LABS — Performance Institute</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --lab-white: #fafafa;
+            --lab-gray-100: #f0f0f0;
+            --lab-gray-200: #e0e0e0;
+            --lab-gray-300: #c0c0c0;
+            --lab-gray-400: #808080;
+            --lab-gray-500: #404040;
+            --lab-gray-600: #202020;
+            --lab-black: #0a0a0a;
+            --accent-cyan: #00d4aa;
+            --accent-blue: #0066ff;
+            --accent-amber: #ff9500;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--lab-white);
+            color: var(--lab-black);
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Grid overlay for technical feel */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(var(--lab-gray-400) 1px, transparent 1px),
+                linear-gradient(90deg, var(--lab-gray-400) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--lab-gray-200);
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: var(--lab-gray-500);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--lab-black);
+        }
+
+        /* Hero - clean and controlled */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 4rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--lab-gray-400);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-label::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--accent-cyan);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 strong {
+            font-weight: 700;
+        }
+
+        .hero-description {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 900px;
+        }
+
+        .hero-description p {
+            font-size: 1rem;
+            color: var(--lab-gray-500);
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            margin-top: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid var(--lab-gray-200);
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--lab-black);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.6875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--lab-gray-400);
+            margin-top: 0.5rem;
+        }
+
+        /* Section styling */
+        section {
+            padding: 8rem 4rem;
+            position: relative;
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            letter-spacing: 0.2em;
+            color: var(--lab-gray-400);
+            text-transform: uppercase;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .section-title h2 strong {
+            font-weight: 600;
+        }
+
+        .section-title p {
+            color: var(--lab-gray-500);
+            max-width: 600px;
+        }
+
+        /* Muscle fiber diagram */
+        .fiber-section {
+            background: var(--lab-gray-100);
+        }
+
+        .fiber-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .fiber-diagram {
+            aspect-ratio: 1;
+            background: var(--lab-white);
+            border: 1px solid var(--lab-gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fiber-svg {
+            position: absolute;
+            inset: 2rem;
+        }
+
+        .fiber-path {
+            fill: none;
+            stroke: var(--lab-gray-300);
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .fiber-path.active {
+            stroke: var(--accent-cyan);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px var(--accent-cyan));
+        }
+
+        .fiber-info h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .fiber-types {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .fiber-type {
+            padding: 1.5rem;
+            border-left: 3px solid var(--lab-gray-200);
+            transition: all 0.3s;
+        }
+
+        .fiber-type:hover {
+            border-left-color: var(--accent-cyan);
+            background: var(--lab-white);
+        }
+
+        .fiber-type h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--lab-gray-400);
+            margin-bottom: 0.5rem;
+        }
+
+        .fiber-type p {
+            font-size: 0.9375rem;
+            color: var(--lab-gray-500);
+        }
+
+        /* Movement mechanics */
+        .mechanics-section {
+            background: var(--lab-black);
+            color: var(--lab-white);
+        }
+
+        .mechanics-section .section-number,
+        .mechanics-section .section-title p {
+            color: var(--lab-gray-400);
+        }
+
+        .mechanics-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .mechanic-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .mechanic-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .mechanic-icon {
+            width: 60px;
+            height: 60px;
+            border: 1px solid var(--lab-gray-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mechanic-card h3 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .mechanic-card p {
+            font-size: 0.875rem;
+            color: var(--lab-gray-400);
+            line-height: 1.7;
+        }
+
+        /* Data visualization section */
+        .data-section {
+            background: var(--lab-white);
+        }
+
+        .data-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .data-card {
+            padding: 2rem;
+            border: 1px solid var(--lab-gray-200);
+            transition: all 0.3s;
+        }
+
+        .data-card:hover {
+            border-color: var(--lab-black);
+        }
+
+        .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-label {
+            font-size: 0.6875rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--lab-gray-400);
+        }
+
+        .data-chart {
+            height: 300px;
+            background: var(--lab-gray-100);
+            border: 1px solid var(--lab-gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bars {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .chart-bar {
+            width: 60px;
+            background: var(--lab-gray-300);
+            transition: all 0.5s ease;
+        }
+
+        .chart-bar.active {
+            background: var(--accent-cyan);
+        }
+
+        /* Protocols section */
+        .protocols-section {
+            background: var(--lab-gray-100);
+        }
+
+        .protocols-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .protocol-card {
+            background: var(--lab-white);
+            padding: 3rem;
+            border: 1px solid var(--lab-gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .protocol-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-cyan);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .protocol-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .protocol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .protocol-header h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .protocol-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            letter-spacing: 0.1em;
+            color: var(--lab-gray-400);
+            padding: 0.25rem 0.5rem;
+            background: var(--lab-gray-100);
+        }
+
+        .protocol-card p {
+            color: var(--lab-gray-500);
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .protocol-metrics {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .protocol-metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .protocol-metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .protocol-metric-label {
+            font-size: 0.625rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--lab-gray-400);
+        }
+
+        /* CTA section */
+        .cta-section {
+            background: var(--lab-black);
+            color: var(--lab-white);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            color: var(--lab-gray-400);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: var(--lab-white);
+            color: var(--lab-black);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--lab-white);
+            padding: 4rem;
+            border-top: 1px solid var(--lab-gray-200);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--lab-gray-400);
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .footer-right a {
+            color: var(--lab-gray-500);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .footer-right a:hover {
+            color: var(--lab-black);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .section-header {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-description {
+                grid-template-columns: 1fr;
+            }
+
+            .fiber-content,
+            .mechanics-grid,
+            .protocols-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-overlay"></div>
+
+    <nav>
+        <div class="logo">KINETIC LABS</div>
+        <div class="nav-links">
+            <a href="#fibers">Physiology</a>
+            <a href="#mechanics">Mechanics</a>
+            <a href="#protocols">Protocols</a>
+            <a href="#assessment">Assessment</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="hero-label">Performance Institute</p>
+            
+            <h1>We study <strong>movement</strong> to perfect <strong>performance</strong>.</h1>
+            
+            <div class="hero-description">
+                <p>Kinetic Labs applies biomechanical research and physiological data to develop training protocols that optimize human performance.</p>
+                <p>Our facility combines research-grade diagnostics with applied training methodology for athletes, professionals, and dedicated individuals.</p>
+            </div>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">12,847</span>
+                    <span class="hero-stat-label">Movement Patterns Analyzed</span>
+                </div>
+                
+                <div class="hero-stat">
+                    <span class="hero-stat-value">94.3%</span>
+                    <span class="hero-stat-label">Performance Improvement</span>
+                </div>
+                
+                <div class="hero-stat">
+                    <span class="hero-stat-value">0.01s</span>
+                    <span class="hero-stat-label">Measurement Precision</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="fibers" class="fiber-section">
+        <div class="section-header">
+            <span class="section-number">01 / Physiology</span>
+            <div class="section-title">
+                <h2>Muscle <strong>Fiber Typing</strong></h2>
+                <p>Understanding your cellular composition allows us to prescribe training that targets your specific physiological profile.</p>
+            </div>
+        </div>
+        
+        <div class="fiber-content">
+            <div class="fiber-diagram">
+                <svg class="fiber-svg" viewBox="0 0 400 400">
+                    <ellipse cx="200" cy="200" rx="180" ry="180" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+                    <ellipse cx="200" cy="200" rx="150" ry="150" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+                    
+                    <g class="fiber-bundle">
+                        <path class="fiber-path active" d="M200 50 Q250 200 200 350" />
+                        <path class="fiber-path active" d="M200 50 Q150 200 200 350" />
+                        <path class="fiber-path" d="M50 200 Q200 150 350 200" />
+                        <path class="fiber-path" d="M50 200 Q200 250 350 200" />
+                        <path class="fiber-path" d="M100 100 Q200 200 300 300" />
+                        <path class="fiber-path" d="M300 100 Q200 200 100 300" />
+                    </g>
+                    
+                    <circle cx="200" cy="200" r="30" fill="#00d4aa" opacity="0.2"/>
+                    <circle cx="200" cy="200" r="15" fill="#00d4aa" opacity="0.4"/>
+                </svg>
+            </div>
+            
+            <div class="fiber-info">
+                <h3>Fiber Type Distribution</h3>
+                
+                <div class="fiber-types">
+                    <div class="fiber-type">
+                        <h4>Type I — Slow Twitch</h4>
+                        <p>Endurance-focused fibers with high mitochondrial density. Predominant in distance athletes.</p>
+                    </div>
+                    
+                    <div class="fiber-type">
+                        <h4>Type IIa — Fast Oxidative</h4>
+                        <p>Intermediate fibers adaptable to both strength and endurance demands. Highly trainable.</p>
+                    </div>
+                    
+                    <div class="fiber-type">
+                        <h4>Type IIx — Fast Glycolytic</h4>
+                        <p>Maximum power output fibers. Essential for explosive movements and peak force production.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mechanics" class="mechanics-section">
+        <div class="section-header">
+            <span class="section-number">02 / Biomechanics</span>
+            <div class="section-title">
+                <h2>Movement <strong>Mechanics</strong></h2>
+                <p>Every motion is analyzed through the lens of force production, joint mechanics, and energy transfer.</p>
+            </div>
+        </div>
+        
+        <div class="mechanics-grid">
+            <div class="mechanic-card">
+                <div class="mechanic-icon">⚡</div>
+                <h3>Force-Velocity Profile</h3>
+                <p>Mapping your power output across different loads to identify optimal training zones for maximum adaptation.</p>
+            </div>
+            
+            <div class="mechanic-card">
+                <div class="mechanic-icon">🎯</div>
+                <h3>Motor Unit Recruitment</h3>
+                <p>Training the nervous system to activate muscle fibers more efficiently, increasing strength without mass gain.</p>
+            </div>
+            
+            <div class="mechanic-card">
+                <div class="mechanic-icon">📐</div>
+                <h3>Joint Angle Analysis</h3>
+                <p>3D motion capture to identify mechanical advantages and optimize movement patterns for injury prevention.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="data" class="data-section">
+        <div class="section-header">
+            <span class="section-number">03 / Performance Data</span>
+            <div class="section-title">
+                <h2>Training <strong>Metrics</strong></h2>
+                <p>Quantified progress through precise measurement and analysis.</p>
+            </div>
+        </div>
+        
+        <div class="data-content">
+            <div class="data-grid">
+                <div class="data-card">
+                    <span class="data-value" style="color: var(--accent-cyan);">847</span>
+                    <span class="data-label">Watts Peak Power</span>
+                </div>
+                
+                <div class="data-card">
+                    <span class="data-value" style="color: var(--accent-blue);">2.4</span>
+                    <span class="data-label">W/kg Power Ratio</span>
+                </div>
+                
+                <div class="data-card">
+                    <span class="data-value" style="color: var(--accent-amber);">186</span>
+                    <span class="data-label">BPM Max HR</span>
+                </div>
+                
+                <div class="data-card">
+                    <span class="data-value">4.2</span>
+                    <span class="data-label">L/min VO2 Max</span>
+                </div>
+            </div>
+            
+            <div class="data-chart">
+                <div class="chart-bars">
+                    <div class="chart-bar active" style="height: 40%;"></div>
+                    <div class="chart-bar active" style="height: 65%;"></div>
+                    <div class="chart-bar active" style="height: 85%;"></div>
+                    <div class="chart-bar" style="height: 70%;"></div>
+                    <div class="chart-bar" style="height: 90%;"></div>
+                    <div class="chart-bar active" style="height: 95%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="protocols" class="protocols-section">
+        <div class="section-header">
+            <span class="section-number">04 / Training Protocols</span>
+            <div class="section-title">
+                <h2>Research-Based <strong>Methodologies</strong></h2>
+                <p>Each protocol is developed through peer-reviewed research and validated in our performance laboratory.</p>
+            </div>
+        </div>
+        
+        <div class="protocols-grid">
+            <div class="protocol-card">
+                <div class="protocol-header">
+                    <h3>Neuromuscular Potentiation</h3>
+                    <span class="protocol-code">PROTOCOL NMP-7</span>
+                </div>
+                <p>Complex training utilizing post-activation potentiation to enhance power output. Heavy compound movements followed by explosive plyometrics.</p>
+                
+                <div class="protocol-metrics">
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">4-6</span>
+                        <span class="protocol-metric-label">Weeks</span>
+                    </div>
+                    
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">85%</span>
+                        <span class="protocol-metric-label">1RM Load</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protocol-card">
+                <div class="protocol-header">
+                    <h3>Metabolic Conditioning</h3>
+                    <span class="protocol-code">PROTOCOL MC-12</span>
+                </div>
+                <p>Energy system development through structured interval training. Manipulating work-to-rest ratios to target specific metabolic pathways.</p>
+                
+                <div class="protocol-metrics">
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">8-12</span>
+                        <span class="protocol-metric-label">Weeks</span>
+                    </div>
+                    
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">2:1</span>
+                        <span class="protocol-metric-label">Work:Rest</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protocol-card">
+                <div class="protocol-header">
+                    <h3>Eccentric Overload</h3>
+                    <span class="protocol-code">PROTOCOL EO-4</span>
+                </div>
+                <p>Emphasizing the lengthening phase of muscle contraction to stimulate hypertrophy and strength gains. Tempo-manipulated resistance training.</p>
+                
+                <div class="protocol-metrics">
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">6-8</span>
+                        <span class="protocol-metric-label">Weeks</span>
+                    </div>
+                    
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">4s</span>
+                        <span class="protocol-metric-label">Eccentric</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protocol-card">
+                <div class="protocol-header">
+                    <h3>Velocity-Based Training</h3>
+                    <span class="protocol-code">PROTOCOL VBT-9</span>
+                </div>
+                <p>Real-time velocity monitoring to ensure optimal power output. Load adjustments based on bar speed to maintain specific force-velocity targets.</p>
+                
+                <div class="protocol-metrics">
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">0.8</span>
+                        <span class="protocol-metric-label">m/s Target</span>
+                    </div>
+                    
+                    <div class="protocol-metric">
+                        <span class="protocol-metric-value">±5%</span>
+                        <span class="protocol-metric-label">Tolerance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="assessment" class="cta-section">
+        <h2>Begin Your Assessment</h2>
+        <p>Schedule a comprehensive movement analysis and physiological assessment. Our research team will design your personalized performance protocol.</p>
+        <a href="#" class="cta-button">Request Assessment →</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                KINETIC LABS — PERFORMANCE INSTITUTE
+            </div>
+            
+            <div class="footer-right">
+                <a href="#">Research</a>
+                <a href="#">Facilities</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '-10% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fiber-type, .mechanic-card, .protocol-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
