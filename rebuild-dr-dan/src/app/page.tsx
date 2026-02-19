@@ -1,19 +1,19 @@
-import ExperienceOpening from '@/components/experience/ExperienceOpening';
-import ExperienceIron from '@/components/experience/ExperienceIron';
-import ExperienceMolecule from '@/components/experience/ExperienceMolecule';
-import ExperienceLab from '@/components/experience/ExperienceLab';
-import ExperienceStory from '@/components/experience/ExperienceStory';
-import ExperienceProduct from '@/components/experience/ExperienceProduct';
+import Hero from './sections/Hero';
+import IronSection from './sections/IronSection';
+import MoleculeSection from './sections/MoleculeSection';
+import LabSection from './sections/LabSection';
+import StorySection from './sections/StorySection';
+import ProductSection from './sections/ProductSection';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#050505]">
-      <ExperienceOpening />
-      <ExperienceIron />
-      <ExperienceMolecule />
-      <ExperienceLab />
-      <ExperienceStory />
-      <ExperienceProduct />
+    <main className="bg-black">
+      <Hero />
+      <IronSection />
+      <MoleculeSection />
+      <LabSection />
+      <StorySection />
+      <ProductSection />
     </main>
   );
 }
