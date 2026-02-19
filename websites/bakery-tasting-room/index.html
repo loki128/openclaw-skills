@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleopatra — Private Tasting Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-black: #0a0a0a;
+            --soft-black: #111111;
+            --charcoal: #1a1a1a;
+            --warm-gray: #2a2a2a;
+            --light-gray: #888888;
+            --cream: #e8e4dc;
+            --gold: #c9a962;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-black);
+            color: var(--cream);
+            overflow-x: hidden;
+            font-weight: 300;
+        }
+
+        /* Initial darkness */
+        .curtain {
+            position: fixed;
+            inset: 0;
+            background: var(--deep-black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 2s ease, visibility 2s ease;
+        }
+
+        .curtain.revealed {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Opening sequence */
+        .opening {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 30%, #1a1a1a 0%, var(--deep-black) 60%);
+        }
+
+        .opening-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201,169,98,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: reveal 3s ease forwards;
+            animation-delay: 0.5s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-name::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0;
+            animation: lineReveal 2s ease forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes reveal {
+            0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.5em; }
+            100% { opacity: 1; transform: translateY(0); letter-spacing: 0.3em; }
+        }
+
+        @keyframes lineReveal {
+            0% { opacity: 0; width: 0; }
+            100% { opacity: 1; width: 60px; }
+        }
+
+        .opening-subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 4s;
+        }
+
+        .scroll-hint span {
+            font-size: 0.625rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        /* Journey sections - each region */
+        .region {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .region.visible .region-bg {
+            opacity: 1;
+        }
+
+        /* Egypt - warm amber */
+        .region-egypt .region-bg {
+            background: radial-gradient(ellipse at 70% 50%, rgba(201,169,98,0.15) 0%, transparent 50%);
+        }
+
+        /* France - soft lavender */
+        .region-france .region-bg {
+            background: radial-gradient(ellipse at 30% 50%, rgba(180,160,200,0.12) 0%, transparent 50%);
+        }
+
+        /* Italy - warm terracotta */
+        .region-italy .region-bg {
+            background: radial-gradient(ellipse at 70% 30%, rgba(180,120,100,0.12) 0%, transparent 50%);
+        }
+
+        /* Turkey - deep rose */
+        .region-turkey .region-bg {
+            background: radial-gradient(ellipse at 40% 60%, rgba(160,100,100,0.12) 0%, transparent 50%);
+        }
+
+        /* China - subtle red */
+        .region-china .region-bg {
+            background: radial-gradient(ellipse at 60% 40%, rgba(140,60,60,0.1) 0%, transparent 50%);
+        }
+
+        /* America - cool neutral */
+        .region-america .region-bg {
+            background: radial-gradient(ellipse at 50% 50%, rgba(100,100,120,0.1) 0%, transparent 50%);
+        }
+
+        .region-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .region-header {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .region.visible .region-header {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .region-number {
+            font-size: 0.625rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .region-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .region-description {
+            font-size: 0.9375rem;
+            line-height: 2;
+            color: var(--light-gray);
+            max-width: 400px;
+        }
+
+        /* Dessert presentation */
+        .dessert-showcase {
+            position: relative;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 1.2s ease;
+            transition-delay: 0.3s;
+        }
+
+        .region.visible .dessert-showcase {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .dessert-plate {
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, var(--charcoal), var(--soft-black));
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+        }
+
+        .dessert-plate::before {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border: 1px solid rgba(201,169,98,0.2);
+            border-radius: 2px;
+        }
+
+        .dessert-image {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            opacity: 0.8;
+        }
+
+        .dessert-info {
+            margin-top: 2rem;
+            padding-left: 20px;
+            border-left: 1px solid var(--warm-gray);
+        }
+
+        .dessert-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dessert-origin {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .dessert-note {
+            font-size: 0.8125rem;
+            line-height: 1.8;
+            color: var(--light-gray);
+            font-style: italic;
+        }
+
+        /* Reservation section */
+        .reservation {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, var(--charcoal) 0%, var(--deep-black) 70%);
+            padding: 4rem;
+        }
+
+        .reservation-content {
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .reservation h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .reservation > p {
+            color: var(--light-gray);
+            line-height: 2;
+            margin-bottom: 3rem;
+        }
+
+        .reservation-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.625rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--soft-black);
+            border: 1px solid var(--warm-gray);
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .submit-btn {
+            padding: 1.25rem 3rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--gold);
+            color: var(--deep-black);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem;
+            text-align: center;
+            border-top: 1px solid var(--warm-gray);
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--light-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .region-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .region {
+                padding: 4rem 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="curtain" id="curtain"></div>
+
+    <section class="opening">
+        <div class="opening-glow"></div>
+        <h1 class="brand-name">Cleopatra</h1>
+        <p class="opening-subtitle">Private Tasting Room</p>
+        
+        <div class="scroll-hint">
+            <span>Begin Your Journey</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <section class="region region-egypt" data-region="egypt">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 01</p>
+                <h2 class="region-name">Egypt</h2>
+                <p class="region-description">Where it all began. The ancient land of pharaohs and timeless recipes passed through generations. Here, honey and nuts meet in sacred union.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🍯</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">Cairo, Egypt</p>
+                    <h3 class="dessert-name">Baklava de Luxe</h3>
+                    <p class="dessert-note">Paper-thin phyllo layered with pistachios and orange blossom honey. A recipe unchanged for five centuries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="region region-france" data-region="france">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 02</p>
+                <h2 class="region-name">France</h2>
+                <p class="region-description">The art of precision. Where butter becomes silk and chocolate achieves transcendence. Patisserie as high art.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🥐</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">Paris, France</p>
+                    <h3 class="dessert-name">Croissant au Beurre</h3>
+                    <p class="dessert-note">AOC Charentes-Poitou butter, 27 layers, fermented 48 hours. The true measure of a baker's skill.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="region region-italy" data-region="italy">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 03</p>
+                <h2 class="region-name">Italy</h2>
+                <p class="region-description">La dolce vita in every bite. From Sicilian citrus to Tuscan chestnuts, each region contributes its soul.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🍨</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">Sicily, Italy</p>
+                    <h3 class="dessert-name">Cannoli Siciliani</h3>
+                    <p class="dessert-note">Crisp shells filled with sheep's ricotta, pistachios from Bronte, and candied orange from Catania.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="region region-turkey" data-region="turkey">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 04</p>
+                <h2 class="region-name">Turkey</h2>
+                <p class="region-description">Where East meets West in a symphony of rose, pomegranate, and spice. The silk road of sweets.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🌹</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">Istanbul, Turkey</p>
+                    <h3 class="dessert-name">Turkish Delight</h3>
+                    <p class="dessert-note">Rose petal lokum with pistachio centers, dusted with powdered sugar and memory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="region region-china" data-region="china">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 05</p>
+                <h2 class="region-name">China</h2>
+                <p class="region-description">Balance in all things. Delicate textures and subtle sweetness. The philosophy of yin and yang, edible.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🥮</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">Hong Kong</p>
+                    <h3 class="dessert-name">Mooncake Supreme</h3>
+                    <p class="dessert-note">Salted egg yolk nestled in lotus paste, encased in thin pastry. A celebration of the harvest moon.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="region region-america" data-region="america">
+        <div class="region-bg"></div>
+        <div class="region-content">
+            <div class="region-header">
+                <p class="region-number">Station 06</p>
+                <h2 class="region-name">America</h2>
+                <p class="region-description">Bold, unapologetic, generous. The new world reimagines the old with confidence and creativity.</p>
+            </div>
+            
+            <div class="dessert-showcase">
+                <div class="dessert-plate">
+                    <div class="dessert-image">🍰</div>
+                </div>
+                <div class="dessert-info">
+                    <p class="dessert-origin">New York, USA</p>
+                    <h3 class="dessert-name">Cheesecake NY</h3>
+                    <p class="dessert-note">Cream cheese, sour cream, and vanilla on a graham crust. The city that never sleeps, in cake form.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reservation">
+        <div class="reservation-content">
+            <h2>Reserve Your Tasting</h2>
+            <p>Each journey is curated for a maximum of eight guests. Private sessions available upon request.</p>
+            
+            <form class="reservation-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" placeholder="Full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preferred Date</label>
+                        <input type="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Number of Guests</label>
+                        <select required>
+                            <option value="">Select...</option>
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5-8">5-8 Guests</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Request Reservation</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>CLEOPATRA — PRIVATE TASTING ROOM</p>
+    </footer>
+
+    <script>
+        // Initial curtain reveal
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('curtain').classList.add('revealed');
+            }, 500);
+        });
+
+        // Intersection Observer for region reveals
+        const regions = document.querySelectorAll('.region');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.3,
+            rootMargin: '-10% 0px'
+        });
+
+        regions.forEach(region => observer.observe(region));
+    </script>
+</body>
+</html>
