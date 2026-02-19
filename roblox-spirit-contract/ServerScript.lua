@@ -1,61 +1,59 @@
--- Spirit Contract System v5 - PROPERLY WORKING
+-- Spirit Contract System v6 - DEBUG & FIX
 -- Place this in ServerScriptService
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Debris = game:GetService("Debris")
 
--- Create remote events in ReplicatedStorage
+print("=== SERVER STARTING ===")
+
+-- Create remote events
 local ShowContract = Instance.new("RemoteEvent")
 ShowContract.Name = "ShowContract"
 ShowContract.Parent = ReplicatedStorage
+print("ShowContract created")
 
 local SignContract = Instance.new("RemoteEvent")
 SignContract.Name = "SignContract"
 SignContract.Parent = ReplicatedStorage
+print("SignContract created")
 
--- Spirit database
+-- Spirit data
 local Spirits = {
 	EmberWisp = {
 		name = "Ember Wisp",
 		element = "Fire",
-		description = "A volatile spirit born from volcanic ash. Grants destructive power at a cost.",
-		strength = "Burn damage over time + 25% fire damage boost",
-		drawback = "Take 20% more damage from water/ice attacks",
+		description = "A volatile spirit born from volcanic ash.",
+		strength = "Burn damage over time",
+		drawback = "Take 20% more water damage",
 		ability = "Fireball",
 		damage = 25,
-		cooldown = 2,
 		color = Color3.fromRGB(255, 80, 40),
-		glowColor = Color3.fromRGB(255, 120, 60),
-		rarity = "Common"
+		glowColor = Color3.fromRGB(255, 120, 60)
 	},
 	FrostShade = {
 		name = "Frost Shade",
 		element = "Ice", 
-		description = "A mournful spirit of frozen wastelands. Controls the battlefield.",
-		strength = "Slow enemies by 40% on hit + ice armor",
-		drawback = "Move 15% slower, fire damage increased by 15%",
+		description = "A spirit of frozen wastelands.",
+		strength = "Slow enemies by 40%",
+		drawback = "Move 15% slower",
 		ability = "Ice Shard",
 		damage = 20,
-		cooldown = 1.5,
 		color = Color3.fromRGB(80, 180, 255),
-		glowColor = Color3.fromRGB(120, 200, 255),
-		rarity = "Common"
+		glowColor = Color3.fromRGB(120, 200, 255)
 	}
 }
 
--- Player data
-local PlayerData = {}
-
--- Create spirit model with ProximityPrompt
-local function CreateSpiritModel(spiritKey, position)
+-- Create spirit
+local function CreateSpirit(spiritKey, position)
 	local data = Spirits[spiritKey]
+	print("Creating spirit: " .. data.name)
 	
-	-- Main model
+	-- Model
 	local model = Instance.new("Model")
 	model.Name = data.name
 	
-	-- Core orb
+	-- Core part
 	local core = Instance.new("Part")
 	core.Name = "Core"
 	core.Shape = Enum.PartType.Ball
@@ -64,101 +62,93 @@ local function CreateSpiritModel(spiritKey, position)
 	core.Anchored = true
 	core.Color = data.color
 	core.Material = Enum.Material.Neon
-	core.Transparency = 0.2
+	core.Transparency = 0.3
 	core.Parent = model
 	
-	-- Outer ring
-	local ring = Instance.new("Part")
-	ring.Name = "Ring"
-	ring.Shape = Enum.PartType.Cylinder
-	ring.Size = Vector3.new(0.5, 6, 6)
-	ring.Position = position
-	ring.Anchored = true
-	ring.Color = data.color
-	ring.Material = Enum.Material.Neon
-	ring.Transparency = 0.4
-	ring.Parent = model
-	
-	-- Glow light
+	-- Light
 	local light = Instance.new("PointLight")
 	light.Color = data.glowColor
-	light.Brightness = 5
-	light.Range = 25
+	light.Brightness = 3
+	light.Range = 20
 	light.Parent = core
 	
 	-- Name tag
 	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 200, 0, 50)
-	billboard.StudsOffset = Vector3.new(0, 4, 0)
+	billboard.Size = UDim2.new(0, 200, 0, 40)
+	billboard.StudsOffset = Vector3.new(0, 3.5, 0)
 	billboard.AlwaysOnTop = true
 	
-	local nameLabel = Instance.new("TextLabel")
-	nameLabel.Size = UDim2.new(1, 0, 1, 0)
-	nameLabel.BackgroundTransparency = 1
-	nameLabel.Text = data.name:upper()
-	nameLabel.TextColor3 = data.glowColor
-	nameLabel.Font = Enum.Font.GothamBlack
-	nameLabel.TextSize = 20
-	nameLabel.TextStrokeTransparency = 0
-	nameLabel.Parent = billboard
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, 0, 1, 0)
+	label.BackgroundTransparency = 1
+	label.Text = data.name:upper()
+	label.TextColor3 = data.glowColor
+	label.Font = Enum.Font.GothamBlack
+	label.TextSize = 18
+	label.TextStrokeTransparency = 0
+	label.Parent = billboard
 	
 	billboard.Parent = core
 	
-	-- PROXIMITY PROMPT - This is the key interaction
+	-- CRITICAL: ProximityPrompt setup
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = "Sign Contract"
 	prompt.ObjectText = data.name
 	prompt.HoldDuration = 0.5
-	prompt.MaxActivationDistance = 15
+	prompt.MaxActivationDistance = 12
 	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.RequiresLineOfSight = false
 	prompt.Parent = core
 	
-	-- When prompt is triggered, fire remote to client
+	print("Prompt created for " .. data.name)
+	
+	-- CRITICAL: Prompt triggered event
 	prompt.Triggered:Connect(function(player)
-		print(player.Name .. " triggered prompt for " .. data.name)
-		-- Fire to client to show UI
-		ShowContract:FireClient(player, spiritKey, data)
+		print("=== PROMPT TRIGGERED ===")
+		print("Player: " .. player.Name)
+		print("Spirit: " .. spiritKey)
+		
+		-- CRITICAL: Fire to specific client
+		local success, err = pcall(function()
+			ShowContract:FireClient(player, spiritKey, data)
+		end)
+		
+		if success then
+			print("FireClient SUCCESS")
+		else
+			print("FireClient FAILED: " .. tostring(err))
+		end
 	end)
 	
 	-- Animation
 	spawn(function()
-		local time = 0
+		local t = 0
 		while model.Parent do
-			time = time + 0.03
-			local floatY = math.sin(time * 2) * 0.5
-			local basePos = position + Vector3.new(0, floatY, 0)
-			
-			ring.CFrame = CFrame.new(basePos) * CFrame.Angles(time, time * 0.5, 0)
-			core.Position = basePos
-			
+			t = t + 0.03
+			core.Position = position + Vector3.new(0, math.sin(t * 2) * 0.5, 0)
+			core.Size = Vector3.new(3, 3, 3) * (1 + math.sin(t * 3) * 0.1)
 			wait(0.03)
 		end
 	end)
 	
 	model.Parent = workspace
-	print("Spawned " .. data.name)
+	print(data.name .. " spawned successfully")
 end
 
--- Handle contract signing from client
+-- Player data
+local PlayerData = {}
+
+-- Handle sign
 SignContract.OnServerEvent:Connect(function(player, spiritKey)
-	print("Server received sign request from " .. player.Name .. " for " .. tostring(spiritKey))
+	print("=== SIGN REQUEST ===")
+	print("From: " .. player.Name)
+	print("Spirit: " .. tostring(spiritKey))
 	
 	local data = Spirits[spiritKey]
 	if not data then 
-		print("Invalid spirit key")
+		print("ERROR: Invalid spirit")
 		return 
 	end
-	
-	-- Initialize player data
-	if not PlayerData[player.UserId] then
-		PlayerData[player.UserId] = { contracts = {}, activeContract = nil }
-	end
-	
-	local pdata = PlayerData[player.UserId]
-	
-	-- Store contract
-	pdata.contracts[spiritKey] = { signed = true, loyalty = 100 }
-	pdata.activeContract = spiritKey
 	
 	-- Clear old tools
 	for _, tool in pairs(player.Backpack:GetChildren()) do
@@ -170,63 +160,58 @@ SignContract.OnServerEvent:Connect(function(player, spiritKey)
 		end
 	end
 	
-	-- Create ability tool
+	-- Create tool
 	local tool = Instance.new("Tool")
 	tool.Name = data.ability
 	tool.RequiresHandle = false
 	
-	-- Tool activated
 	tool.Activated:Connect(function()
-		local character = player.Character
-		if not character then return end
-		
-		local hrp = character:FindFirstChild("HumanoidRootPart")
+		local char = player.Character
+		if not char then return end
+		local hrp = char:FindFirstChild("HumanoidRootPart")
 		if not hrp then return end
 		
-		-- Create projectile
-		local projectile = Instance.new("Part")
-		projectile.Size = Vector3.new(1.5, 1.5, 1.5)
-		projectile.Shape = Enum.PartType.Ball
-		projectile.Color = data.color
-		projectile.Material = Enum.Material.Neon
-		projectile.Position = hrp.Position + hrp.CFrame.LookVector * 3 + Vector3.new(0, 1, 0)
-		projectile.CanCollide = false
+		local proj = Instance.new("Part")
+		proj.Size = Vector3.new(1.5, 1.5, 1.5)
+		proj.Shape = Enum.PartType.Ball
+		proj.Color = data.color
+		proj.Material = Enum.Material.Neon
+		proj.Position = hrp.Position + hrp.CFrame.LookVector * 3 + Vector3.new(0, 1, 0)
+		proj.CanCollide = false
 		
-		local velocity = Instance.new("BodyVelocity")
-		velocity.Velocity = hrp.CFrame.LookVector * 80
-		velocity.MaxForce = Vector3.new(50000, 50000, 50000)
-		velocity.Parent = projectile
+		local vel = Instance.new("BodyVelocity")
+		vel.Velocity = hrp.CFrame.LookVector * 80
+		vel.MaxForce = Vector3.new(50000, 50000, 50000)
+		vel.Parent = proj
 		
-		projectile.Parent = workspace
+		proj.Parent = workspace
 		
-		-- Damage on hit
-		projectile.Touched:Connect(function(hit)
-			if hit:IsDescendantOf(character) then return end
-			
-			local humanoid = hit.Parent:FindFirstChild("Humanoid")
-			if humanoid then
-				humanoid:TakeDamage(data.damage)
-				projectile:Destroy()
-			elseif not hit:IsDescendantOf(character) then
-				projectile:Destroy()
+		proj.Touched:Connect(function(hit)
+			if hit:IsDescendantOf(char) then return end
+			local hum = hit.Parent:FindFirstChild("Humanoid")
+			if hum then
+				hum:TakeDamage(data.damage)
+				proj:Destroy()
+			elseif not hit:IsDescendantOf(char) then
+				proj:Destroy()
 			end
 		end)
 		
-		Debris:AddItem(projectile, 3)
+		Debris:AddItem(proj, 3)
 	end)
 	
 	tool.Parent = player.Backpack
-	print("Gave " .. data.ability .. " to " .. player.Name)
+	print("Tool given: " .. data.ability)
 	
-	-- Success message
+	-- Notify
 	local msg = Instance.new("Message")
-	msg.Text = "CONTRACT SIGNED: " .. data.name .. "\nCheck your backpack for " .. data.ability
+	msg.Text = "CONTRACT SIGNED: " .. data.name .. "\nAbility: " .. data.ability
 	msg.Parent = player
 	Debris:AddItem(msg, 3)
 end)
 
--- Spawn spirits
-CreateSpiritModel("EmberWisp", Vector3.new(0, 8, -20))
-CreateSpiritModel("FrostShade", Vector3.new(20, 8, 0))
+-- Spawn
+CreateSpirit("EmberWisp", Vector3.new(0, 6, -15))
+CreateSpirit("FrostShade", Vector3.new(15, 6, 0))
 
-print("=== Spirit Contract System Loaded ===")
+print("=== SERVER READY ===")
