@@ -212,7 +212,7 @@
             max-width: 50ch;
         }
 
-        /* Muscle section */
+        /* Muscle section - ENHANCED */
         .muscle-section {
             min-height: 100vh;
             display: flex;
@@ -220,6 +220,24 @@
             padding: 6rem 4rem;
             background: var(--forged-black);
             position: relative;
+            overflow: hidden;
+        }
+
+        .muscle-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(204,0,0,0.08) 0%, transparent 60%);
+            animation: muscleGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes muscleGlow {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         .muscle-content {
@@ -230,72 +248,127 @@
             grid-template-columns: 1fr 1fr;
             gap: 6rem;
             align-items: center;
+            position: relative;
+            z-index: 10;
         }
 
         .muscle-fiber-display {
-            height: 500px;
+            height: 600px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .muscle-bicep {
-            width: 200px;
-            height: 350px;
+        .muscle-anatomy {
+            width: 300px;
+            height: 500px;
             position: relative;
         }
 
-        .muscle-bulge {
+        /* Muscle base shape */
+        .muscle-base {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%);
-            border: 2px solid var(--iron-gray);
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%);
+            border: 3px solid var(--iron-gray);
             border-radius: 50%;
-            animation: muscleContract 3s ease-in-out infinite;
+            box-shadow: 
+                0 0 60px rgba(204,0,0,0.2),
+                inset 0 0 40px rgba(0,0,0,0.5);
         }
 
-        .muscle-bulge:nth-child(1) {
-            width: 140px;
-            height: 120px;
-            top: 20px;
-            animation-delay: 0s;
+        .muscle-base:nth-child(1) {
+            width: 200px;
+            height: 180px;
+            top: 0;
+            animation: musclePulse1 2s ease-in-out infinite;
         }
 
-        .muscle-bulge:nth-child(2) {
+        .muscle-base:nth-child(2) {
+            width: 280px;
+            height: 240px;
+            top: 100px;
+            animation: musclePulse2 2s ease-in-out infinite 0.2s;
+        }
+
+        .muscle-base:nth-child(3) {
+            width: 260px;
+            height: 220px;
+            top: 220px;
+            animation: musclePulse3 2s ease-in-out infinite 0.4s;
+        }
+
+        .muscle-base:nth-child(4) {
             width: 180px;
             height: 160px;
-            top: 100px;
-            animation-delay: 0.3s;
+            top: 340px;
+            animation: musclePulse4 2s ease-in-out infinite 0.6s;
         }
 
-        .muscle-bulge:nth-child(3) {
-            width: 160px;
-            height: 140px;
-            top: 200px;
-            animation-delay: 0.6s;
+        @keyframes musclePulse1 {
+            0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 60px rgba(204,0,0,0.2); }
+            50% { transform: translateX(-50%) scale(1.08); box-shadow: 0 0 80px rgba(204,0,0,0.4); }
         }
 
-        @keyframes muscleContract {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.08); }
+        @keyframes musclePulse2 {
+            0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 60px rgba(204,0,0,0.2); }
+            50% { transform: translateX(-50%) scale(1.12); box-shadow: 0 0 100px rgba(204,0,0,0.5); }
         }
 
-        .muscle-striation {
+        @keyframes musclePulse3 {
+            0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 60px rgba(204,0,0,0.2); }
+            50% { transform: translateX(-50%) scale(1.1); box-shadow: 0 0 90px rgba(204,0,0,0.45); }
+        }
+
+        @keyframes musclePulse4 {
+            0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 60px rgba(204,0,0,0.2); }
+            50% { transform: translateX(-50%) scale(1.06); box-shadow: 0 0 70px rgba(204,0,0,0.35); }
+        }
+
+        /* Muscle fibers - diagonal striations */
+        .muscle-fiber-line {
             position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
+            left: 50%;
+            width: 300px;
+            height: 3px;
             background: linear-gradient(90deg, transparent, var(--forged-red), transparent);
-            opacity: 0.3;
-            animation: striationPulse 2s ease-in-out infinite;
+            transform-origin: center;
+            opacity: 0.6;
+            animation: fiberGlow 1.5s ease-in-out infinite;
         }
 
-        @keyframes striationPulse {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.5; }
+        .muscle-fiber-line:nth-child(5) { top: 60px; transform: translateX(-50%) rotate(-15deg); animation-delay: 0s; }
+        .muscle-fiber-line:nth-child(6) { top: 100px; transform: translateX(-50%) rotate(15deg); animation-delay: 0.1s; }
+        .muscle-fiber-line:nth-child(7) { top: 140px; transform: translateX(-50%) rotate(-15deg); animation-delay: 0.2s; }
+        .muscle-fiber-line:nth-child(8) { top: 180px; transform: translateX(-50%) rotate(15deg); animation-delay: 0.3s; }
+        .muscle-fiber-line:nth-child(9) { top: 220px; transform: translateX(-50%) rotate(-15deg); animation-delay: 0.4s; }
+        .muscle-fiber-line:nth-child(10) { top: 260px; transform: translateX(-50%) rotate(15deg); animation-delay: 0.5s; }
+        .muscle-fiber-line:nth-child(11) { top: 300px; transform: translateX(-50%) rotate(-15deg); animation-delay: 0.6s; }
+        .muscle-fiber-line:nth-child(12) { top: 340px; transform: translateX(-50%) rotate(15deg); animation-delay: 0.7s; }
+        .muscle-fiber-line:nth-child(13) { top: 380px; transform: translateX(-50%) rotate(-15deg); animation-delay: 0.8s; }
+        .muscle-fiber-line:nth-child(14) { top: 420px; transform: translateX(-50%) rotate(15deg); animation-delay: 0.9s; }
+
+        @keyframes fiberGlow {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 5px var(--forged-red); }
+            50% { opacity: 0.8; box-shadow: 0 0 20px var(--forged-red), 0 0 40px var(--forged-red); }
         }
+
+        /* Tendon attachments */
+        .muscle-tendon {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+            border: 2px solid var(--iron-gray);
+            border-radius: 4px;
+        }
+
+        .muscle-tendon.top { top: -20px; }
+        .muscle-tendon.bottom { bottom: -20px; }
 
         /* Precision section */
         .precision-section {
@@ -826,18 +899,103 @@
         </div>
     </section>
 
-    <!-- Muscle Section -->
+    <!-- Cancer/Sweetener Graph Section -->
+    <section class="graph-section">
+        <div class="graph-content">
+            <div class="graph-header">
+                <h2>THE CORRELATION.</h2>
+                <p>As artificial sweeteners decrease, so do cancer markers.</p>
+            </div>
+
+            <div class="graph-container">
+                <div class="graph-grid"></div>
+                
+                <svg class="graph-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="cancerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <linearGradient id="sweetenerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#666666;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#888888;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <path class="graph-path cancer" 
+                          d="M 0 80 Q 200 100, 400 200 T 800 320" />
+                    
+                    <path class="graph-path sweetener" 
+                          d="M 0 120 Q 200 140, 400 240 T 800 360" />
+                </svg>
+                
+                <div class="graph-dot cancer" style="left: 10%; top: 20%;"></div>
+                <div class="graph-dot cancer" style="left: 35%; top: 28%;"></div>
+                <div class="graph-dot cancer" style="left: 60%; top: 50%;"></div>
+                <div class="graph-dot cancer" style="left: 85%; top: 80%;"></div>
+                
+                <div class="graph-dot sweetener" style="left: 10%; top: 30%;"></div>
+                <div class="graph-dot sweetener" style="left: 35%; top: 38%;"></div>
+                <div class="graph-dot sweetener" style="left: 60%; top: 60%;"></div>
+                <div class="graph-dot sweetener" style="left: 85%; top: 90%;"></div>
+                
+                <div class="particle-fall cancer" style="left: 15%; top: 15%; animation-delay: 0s;"></div>
+                <div class="particle-fall cancer" style="left: 40%; top: 25%; animation-delay: 0.3s;"></div>
+                <div class="particle-fall cancer" style="left: 65%; top: 45%; animation-delay: 0.6s;"></div>
+                <div class="particle-fall sweetener" style="left: 20%; top: 25%; animation-delay: 0.2s;"></div>
+                <div class="particle-fall sweetener" style="left: 45%; top: 35%; animation-delay: 0.5s;"></div>
+                <div class="particle-fall sweetener" style="left: 70%; top: 55%; animation-delay: 0.8s;"></div>
+                
+                <div class="graph-labels-y">
+                    <span class="graph-label">HIGH</span>
+                    <span class="graph-label">MEDIUM</span>
+                    <span class="graph-label">LOW</span>
+                </div>
+                
+                <div class="graph-labels-x">
+                    <span class="graph-label">HIGH SWEETENER INTAKE</span>
+                    <span class="graph-label">NO SWEETENERS</span>
+                </div>
+            </div>
+            
+            <div class="graph-legend">
+                <div class="legend-item">
+                    <div class="legend-line cancer"></div>
+                    <span class="legend-text">Cancer Cell Markers</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-line sweetener"></div>
+                    <span class="legend-text">Artificial Sweeteners</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Muscle Section - ENHANCED -->
     <section class="muscle-section">
         <div class="muscle-content">
             <div class="muscle-fiber-display">
-                <div class="muscle-bicep">
-                    <div class="muscle-bulge"></div>
-                    <div class="muscle-bulge"></div>
-                    <div class="muscle-bulge"></div>
+                <div class="muscle-anatomy">
+                    <div class="muscle-base"></div>
+                    <div class="muscle-base"></div>
+                    <div class="muscle-base"></div>
+                    <div class="muscle-base"></div>
                     
-                    <div class="muscle-striation" style="top: 80px;"></div>
-                    <div class="muscle-striation" style="top: 160px;"></div>
-                    <div class="muscle-striation" style="top: 240px;"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    <div class="muscle-fiber-line"></div>
+                    
+                    <div class="muscle-tendon top"></div>
+                    <div class="muscle-tendon bottom"></div>
                 </div>
             </div>
 
