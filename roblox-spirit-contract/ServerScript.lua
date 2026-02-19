@@ -1,17 +1,13 @@
--- Spirit Contract System v1
+-- Spirit Contract System v2 - FIXED
 -- Place this in ServerScriptService
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
--- Create remote events
+-- Create remote event
 local ContractEvent = Instance.new("RemoteEvent")
 ContractEvent.Name = "ContractEvent"
 ContractEvent.Parent = ReplicatedStorage
-
-local UseAbilityEvent = Instance.new("RemoteEvent")
-UseAbilityEvent.Name = "UseAbilityEvent"
-UseAbilityEvent.Parent = ReplicatedStorage
 
 -- Spirit data
 local Spirits = {
@@ -59,9 +55,24 @@ local function CreateSpiritNPC(spiritKey, position)
 	-- Glow effect
 	local glow = Instance.new("PointLight")
 	glow.Color = spiritData.color
-	glow.Brightness = 2
-	glow.Range = 15
+	glow.Brightness = 3
+	glow.Range = 20
 	glow.Parent = body
+	
+	-- PROXIMITY PROMPT (the Hold E thing that actually works)
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.ActionText = "Sign Contract"
+	prompt.ObjectText = spiritData.name
+	prompt.HoldDuration = 0.5
+	prompt.MaxActivationDistance = 15
+	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.Parent = body
+	
+	-- Handle interaction
+	prompt.Triggered:Connect(function(player)
+		print(player.Name .. " triggered prompt for " .. spiritData.name)
+		ContractEvent:FireClient(player, spiritKey, spiritData)
+	end)
 	
 	-- Floating animation
 	spawn(function()
@@ -72,44 +83,25 @@ local function CreateSpiritNPC(spiritKey, position)
 		end
 	end)
 	
-	-- Click detector for interaction
-	local clickDetector = Instance.new("ClickDetector")
-	clickDetector.MaxActivationDistance = 15
-	clickDetector.Parent = body
-	
-	-- Interaction prompt
-	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 200, 0, 60)
-	billboard.StudsOffset = Vector3.new(0, 4, 0)
-	billboard.AlwaysOnTop = true
-	
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.Text = "[E] Contract " .. spiritData.name
-	textLabel.TextColor3 = spiritData.color
-	textLabel.TextStrokeTransparency = 0
-	textLabel.Font = Enum.Font.GothamBold
-	textLabel.TextSize = 18
-	textLabel.Parent = billboard
-	
-	billboard.Parent = body
-	
-	-- Handle interaction
-	clickDetector.MouseClick:Connect(function(player)
-		ContractEvent:FireClient(player, spiritKey, spiritData)
-	end)
-	
 	npc.Parent = workspace
+	print("Spawned " .. spiritData.name .. " at " .. tostring(position))
 	return npc
 end
 
 -- Handle contract signing
 ContractEvent.OnServerEvent:Connect(function(player, spiritKey, accept)
-	if not accept then return end
+	print("Server received: " .. player.Name .. " wants to sign " .. tostring(spiritKey) .. " accept=" .. tostring(accept))
+	
+	if not accept then 
+		print("Contract declined")
+		return 
+	end
 	
 	local spiritData = Spirits[spiritKey]
-	if not spiritData then return end
+	if not spiritData then 
+		print("ERROR: Spirit not found: " .. tostring(spiritKey))
+		return 
+	end
 	
 	-- Store contract
 	PlayerContracts[player.UserId] = {
@@ -119,69 +111,76 @@ ContractEvent.OnServerEvent:Connect(function(player, spiritKey, accept)
 		contractsSigned = (PlayerContracts[player.UserId] and PlayerContracts[player.UserId].contractsSigned or 0) + 1
 	}
 	
+	print("Contract stored for " .. player.Name)
+	
 	-- Give ability tool
 	local tool = Instance.new("Tool")
 	tool.Name = spiritData.ability
 	tool.RequiresHandle = false
 	
-	local abilityScript = Instance.new("Script")
-	abilityScript.Source = [[
-		tool = script.Parent
-		player = game:GetService("Players").LocalPlayer
+	-- Add ability script to tool
+	tool.Activated:Connect(function()
+		print(player.Name .. " used " .. spiritData.ability)
 		
-		tool.Activated:Connect(function()
-			game:GetService("ReplicatedStorage").UseAbilityEvent:FireServer()
+		-- Create projectile
+		local character = player.Character
+		if not character then return end
+		
+		local hrp = character:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+		
+		local projectile = Instance.new("Part")
+		projectile.Name = spiritData.ability .. "Projectile"
+		projectile.Size = Vector3.new(2, 2, 2)
+		projectile.Shape = Enum.PartType.Ball
+		projectile.Color = spiritData.color
+		projectile.Material = Enum.Material.Neon
+		projectile.Position = hrp.Position + hrp.CFrame.LookVector * 5 + Vector3.new(0, 2, 0)
+		
+		-- Velocity toward where player is looking
+		local bv = Instance.new("BodyVelocity")
+		bv.Velocity = hrp.CFrame.LookVector * 80
+		bv.MaxForce = Vector3.new(50000, 50000, 50000)
+		bv.Parent = projectile
+		
+		-- Trail effect
+		local trail = Instance.new("Trail")
+		trail.Color = ColorSequence.new(spiritData.color)
+		trail.Lifetime = 0.5
+		trail.Parent = projectile
+		
+		projectile.Parent = workspace
+		
+		-- Damage on touch
+		projectile.Touched:Connect(function(hit)
+			local humanoid = hit.Parent:FindFirstChild("Humanoid")
+			if humanoid and hit.Parent ~= character then
+				humanoid:TakeDamage(spiritData.damage)
+				print("Hit " .. hit.Parent.Name .. " for " .. spiritData.damage .. " damage")
+				projectile:Destroy()
+			elseif hit.Parent ~= character and not hit:IsDescendantOf(character) then
+				-- Hit wall/ground
+				projectile:Destroy()
+			end
 		end)
-	]]
-	abilityScript.Parent = tool
-	
-	tool.Parent = player.Backpack
-	
-	-- Notify player
-	print(player.Name .. " signed contract with " .. spiritData.name)
-end)
-
--- Handle ability use
-UseAbilityEvent.OnServerEvent:Connect(function(player)
-	local contract = PlayerContracts[player.UserId]
-	if not contract then return end
-	
-	local spiritData = contract.data
-	
-	-- Create projectile
-	local projectile = Instance.new("Part")
-	projectile.Size = Vector3.new(1, 1, 1)
-	projectile.Shape = Enum.PartType.Ball
-	projectile.Color = spiritData.color
-	projectile.Material = Enum.Material.Neon
-	projectile.Position = player.Character.HumanoidRootPart.Position + Vector3.new(0, 2, 0)
-	
-	-- Add velocity toward mouse direction
-	local mouse = player:GetMouse()
-	local direction = (mouse.Hit.Position - projectile.Position).Unit
-	
-	local bodyVelocity = Instance.new("BodyVelocity")
-	bodyVelocity.Velocity = direction * 100
-	bodyVelocity.MaxForce = Vector3.new(5000, 5000, 5000)
-	bodyVelocity.Parent = projectile
-	
-	projectile.Parent = workspace
-	
-	-- Damage on touch
-	projectile.Touched:Connect(function(hit)
-		local humanoid = hit.Parent:FindFirstChild("Humanoid")
-		if humanoid and hit.Parent ~= player.Character then
-			humanoid:TakeDamage(spiritData.damage)
-			projectile:Destroy()
-		end
+		
+		-- Cleanup after 3 seconds
+		game:GetService("Debris"):AddItem(projectile, 3)
 	end)
 	
-	-- Cleanup
-	game:GetService("Debris"):AddItem(projectile, 3)
+	tool.Parent = player.Backpack
+	print("Gave " .. spiritData.ability .. " tool to " .. player.Name)
+	
+	-- Notify player it worked
+	local successMsg = Instance.new("Message")
+	successMsg.Text = "CONTRACT SIGNED: " .. spiritData.name:upper() .. "\nCheck your backpack for " .. spiritData.ability:upper()
+	successMsg.Parent = player
+	game:GetService("Debris"):AddItem(successMsg, 3)
 end)
 
--- Spawn spirits in world
+-- Spawn spirits
 CreateSpiritNPC("EmberWisp", Vector3.new(0, 5, -20))
 CreateSpiritNPC("FrostShade", Vector3.new(20, 5, 0))
 
-print("Spirit Contract System Loaded!")
+print("=== Spirit Contract System v2 LOADED ===")
+print("Walk up to spirits and HOLD E to sign contract")
