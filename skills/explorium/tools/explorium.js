@@ -1,137 +1,162 @@
 /**
- * Explorium API Tool
- * Search for companies and leads
+ * Explorium API Tool - WORKING VERSION
+ * Search for prospects using Explorium's API
+ * Base URL: https://api.explorium.ai/v1/
+ * Auth: api_key header (not Bearer)
  */
 
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 const execAsync = promisify(exec);
 
-// Load config
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const configPath = join(__dirname, '..', 'config.yaml');
-
-let config = { api_key: '', base_url: 'https://api.explorium.ai/v1' };
-try {
-  const configContent = readFileSync(configPath, 'utf8');
-  // Simple YAML parsing
-  configContent.split('\n').forEach(line => {
-    const [key, value] = line.split(':').map(s => s.trim());
-    if (key && value) {
-      config[key] = value.replace(/^["']|["']$/g, '');
-    }
-  });
-} catch (e) {
-  console.error('Config load error:', e.message);
-}
+const API_KEY = '39b27640-980d-4635-90d3-4affbb8c6597';
+const BASE_URL = 'https://api.explorium.ai/v1';
 
 /**
- * Search for companies using Explorium API
+ * Search for prospects
  */
-export async function searchCompanies({ industry, location, size, limit = 10 }) {
-  const url = `${config.base_url}/companies/search`;
+export async function searchProspects({ title, company, location, size = 10 }) {
+  const url = `${BASE_URL}/prospects`;
   
-  const queryParams = new URLSearchParams();
-  if (industry) queryParams.append('industry', industry);
-  if (location) queryParams.append('location', location);
-  if (size) queryParams.append('size', size);
-  queryParams.append('limit', String(limit));
+  const payload = {
+    mode: "full",
+    page: 1,
+    size: parseInt(size) || 10,
+    page_size: parseInt(size) || 10
+  };
   
-  const fullUrl = `${url}?${queryParams.toString()}`;
+  // Add filters if provided
+  if (title) payload.title = title;
+  if (company) payload.company = company;
+  if (location) payload.location = location;
   
   try {
     const { stdout } = await execAsync(
-      `curl -s -H "Authorization: Bearer ${config.api_key}" "${fullUrl}"`
+      `curl -s -X POST '${url}' \
+       -H 'api_key: ${API_KEY}' \
+       -H 'Content-Type: application/json' \
+       -H 'accept: application/json' \
+       -d '${JSON.stringify(payload)}'`
     );
     
     const data = JSON.parse(stdout);
-    return formatCompanies(data);
+    return formatProspects(data);
   } catch (error) {
-    return `Error searching companies: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
+    return `Error: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
   }
 }
 
 /**
- * Get detailed info about a specific company
+ * Search for businesses/companies
  */
-export async function getCompany({ domain }) {
-  const url = `${config.base_url}/companies/${domain}`;
+export async function searchBusinesses({ domain, company_name, size = 10 }) {
+  const url = `${BASE_URL}/businesses`;
+  
+  const payload = {
+    mode: "full",
+    page: 1,
+    size: parseInt(size) || 10,
+    page_size: parseInt(size) || 10
+  };
+  
+  if (domain) payload.domain = domain;
+  if (company_name) payload.company_name = company_name;
   
   try {
     const { stdout } = await execAsync(
-      `curl -s -H "Authorization: Bearer ${config.api_key}" "${url}"`
+      `curl -s -X POST '${url}' \
+       -H 'api_key: ${API_KEY}' \
+       -H 'Content-Type: application/json' \
+       -H 'accept: application/json' \
+       -d '${JSON.stringify(payload)}'`
     );
     
     const data = JSON.parse(stdout);
-    return formatCompanyDetail(data);
+    return formatBusinesses(data);
   } catch (error) {
-    return `Error getting company: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
+    return `Error: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
   }
 }
 
 /**
- * Find leads/contacts for companies
+ * Get technographics for a company
  */
-export async function findLeads({ company, title, location, limit = 10 }) {
-  const url = `${config.base_url}/leads/search`;
+export async function getTechnographics({ domain }) {
+  if (!domain) return 'Error: domain is required';
   
-  const queryParams = new URLSearchParams();
-  if (company) queryParams.append('company', company);
-  if (title) queryParams.append('title', title);
-  if (location) queryParams.append('location', location);
-  queryParams.append('limit', String(limit));
+  const url = `${BASE_URL}/businesses/enrich/technographics`;
   
-  const fullUrl = `${url}?${queryParams.toString()}`;
+  const payload = { domain };
   
   try {
     const { stdout } = await execAsync(
-      `curl -s -H "Authorization: Bearer ${config.api_key}" "${fullUrl}"`
+      `curl -s -X POST '${url}' \
+       -H 'api_key: ${API_KEY}' \
+       -H 'Content-Type: application/json' \
+       -H 'accept: application/json' \
+       -d '${JSON.stringify(payload)}'`
     );
     
     const data = JSON.parse(stdout);
-    return formatLeads(data);
+    return formatTechnographics(data);
   } catch (error) {
-    return `Error finding leads: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
+    return `Error: ${error.message}\nResponse: ${error.stdout || 'No response'}`;
   }
 }
 
 // Formatting helpers
-function formatCompanies(data) {
-  if (!data || !data.companies || data.companies.length === 0) {
-    return 'No companies found.';
+function formatProspects(data) {
+  if (!data || !data.data || data.data.length === 0) {
+    return 'No prospects found.';
   }
   
-  return data.companies.map(c => 
-    `- ${c.name} (${c.domain})\n  Industry: ${c.industry}\n  Location: ${c.location}\n  Size: ${c.size || 'Unknown'}`
-  ).join('\n\n');
+  return data.data.map(p => {
+    const contact = p.contact_details || {};
+    const company = p.company_details || {};
+    return `
+- ${p.name || 'Unknown'}
+  Title: ${p.title || 'N/A'}
+  Company: ${company.name || 'N/A'}
+  Email: ${contact.email || 'N/A'}
+  Phone: ${contact.phone || 'N/A'}
+  Location: ${p.location || 'N/A'}
+  LinkedIn: ${p.linkedin_url || 'N/A'}
+    `.trim();
+  }).join('\n\n');
 }
 
-function formatCompanyDetail(data) {
-  if (!data) return 'Company not found.';
+function formatBusinesses(data) {
+  if (!data || !data.data || data.data.length === 0) {
+    return 'No businesses found.';
+  }
   
+  return data.data.map(b => `
+- ${b.name || 'Unknown'}
+  Domain: ${b.domain || 'N/A'}
+  Industry: ${b.industry || 'N/A'}
+  Size: ${b.size || 'N/A'}
+  Revenue: ${b.revenue || 'N/A'}
+  Location: ${b.location || 'N/A'}
+  Description: ${b.description || 'N/A'}
+  `.trim()).join('\n\n');
+}
+
+function formatTechnographics(data) {
+  if (!data || !data.data) {
+    return 'No technographics found.';
+  }
+  
+  const tech = data.data;
   return `
-# ${data.name}
-- Domain: ${data.domain}
-- Industry: ${data.industry}
-- Location: ${data.location}
-- Size: ${data.size || 'Unknown'}
-- Revenue: ${data.revenue || 'Unknown'}
-- Description: ${data.description || 'No description'}
-  `.trim();
-}
+Technographics for ${data.entity_id || 'Unknown'}:
 
-function formatLeads(data) {
-  if (!data || !data.leads || data.leads.length === 0) {
-    return 'No leads found.';
-  }
-  
-  return data.leads.map(l =>
-    `- ${l.name}\n  Title: ${l.title}\n  Company: ${l.company}\n  Email: ${l.email || 'N/A'}\n  LinkedIn: ${l.linkedin || 'N/A'}`
-  ).join('\n\n');
+Marketing: ${(tech.marketing || []).join(', ') || 'N/A'}
+Sales: ${(tech.sales || []).join(', ') || 'N/A'}
+Productivity: ${(tech.productivity_and_operations || []).join(', ') || 'N/A'}
+IT Security: ${(tech.it_security || []).join(', ') || 'N/A'}
+DevOps: ${(tech.devops_and_development || []).join(', ') || 'N/A'}
+  `.trim();
 }
 
 // CLI interface
@@ -144,15 +169,20 @@ args.forEach(arg => {
 });
 
 switch (command) {
-  case 'search':
-    searchCompanies(params).then(console.log);
+  case 'prospects':
+    searchProspects(params).then(console.log);
     break;
-  case 'company':
-    getCompany(params).then(console.log);
+  case 'businesses':
+    searchBusinesses(params).then(console.log);
     break;
-  case 'leads':
-    findLeads(params).then(console.log);
+  case 'tech':
+    getTechnographics(params).then(console.log);
     break;
   default:
-    console.log('Usage: node explorium.js <search|company|leads> [params...]');
+    console.log('Usage: node explorium.js <prospects|businesses|tech> [params...]');
+    console.log('');
+    console.log('Examples:');
+    console.log('  node explorium.js prospects title=CEO size=10');
+    console.log('  node explorium.js businesses domain=google.com');
+    console.log('  node explorium.js tech domain=google.com');
 }
