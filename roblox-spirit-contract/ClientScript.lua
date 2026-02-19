@@ -1,80 +1,27 @@
--- Client UI v7 - GUARANTEED WORKING
+-- WORKING Spirit Contract - Based on proven code
 -- Place in StarterPlayerScripts as LocalScript
 
-print("CLIENT: === SCRIPT START ===")
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
-
--- Wait for local player
 local player = Players.LocalPlayer
-if not player then
-	print("CLIENT: ERROR - No local player!")
-	return
-end
+local playerGui = player:WaitForChild("PlayerGui")
 
-print("CLIENT: Local player: " .. player.Name)
+print("CLIENT: Starting...")
 
--- Wait for PlayerGui with timeout
-local playerGui = player:WaitForChild("PlayerGui", 10)
-if not playerGui then
-	print("CLIENT: ERROR - PlayerGui not found!")
-	return
-end
-
-print("CLIENT: PlayerGui found")
-
--- Wait for remotes
-local ShowContract = ReplicatedStorage:WaitForChild("ShowContract", 10)
-if not ShowContract then
-	print("CLIENT: ERROR - ShowContract not found!")
-	return
-end
-
-local SignContract = ReplicatedStorage:WaitForChild("SignContract", 10)
-if not SignContract then
-	print("CLIENT: ERROR - SignContract not found!")
-	return
-end
-
-print("CLIENT: Remotes found")
-
--- Create UI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ContractUI"
-screenGui.ResetOnSpawn = false
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
--- Parent to PlayerGui
-local success, err = pcall(function()
-	screenGui.Parent = playerGui
-end)
-
-if not success then
-	print("CLIENT: ERROR creating ScreenGui: " .. tostring(err))
-	return
-end
-
-print("CLIENT: ScreenGui created")
-
--- Simple backdrop
-local backdrop = Instance.new("Frame")
-backdrop.Name = "Backdrop"
-backdrop.Size = UDim2.new(1, 0, 1, 0)
-backdrop.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-backdrop.BackgroundTransparency = 0.5
-backdrop.Visible = false
-backdrop.Parent = screenGui
+-- Create UI in StarterGui style
+local gui = Instance.new("ScreenGui")
+gui.Name = "ContractGUI"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
 
 -- Main frame
 local frame = Instance.new("Frame")
-frame.Name = "MainFrame"
-frame.Size = UDim2.new(0, 400, 0, 300)
-frame.Position = UDim2.new(0.5, -200, 0.5, -150)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+frame.Name = "ContractFrame"
+frame.Size = UDim2.new(0, 350, 0, 400)
+frame.Position = UDim2.new(0.5, -175, 0.5, -200)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 frame.BorderSizePixel = 0
 frame.Visible = false
-frame.Parent = screenGui
+frame.Parent = gui
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 12)
@@ -82,10 +29,10 @@ corner.Parent = frame
 
 -- Title
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 10)
+title.Size = UDim2.new(1, 0, 0, 50)
+title.Position = UDim2.new(0, 0, 0, 15)
 title.BackgroundTransparency = 1
-title.Text = "CONTRACT"
+title.Text = "SPIRIT CONTRACT"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 28
@@ -94,123 +41,177 @@ title.Parent = frame
 -- Spirit name
 local nameLabel = Instance.new("TextLabel")
 nameLabel.Name = "SpiritName"
-nameLabel.Size = UDim2.new(1, 0, 0, 30)
-nameLabel.Position = UDim2.new(0, 0, 0, 55)
+nameLabel.Size = UDim2.new(1, 0, 0, 35)
+nameLabel.Position = UDim2.new(0, 0, 0, 65)
 nameLabel.BackgroundTransparency = 1
-nameLabel.Text = "SPIRIT NAME"
+nameLabel.Text = "SPIRIT"
 nameLabel.TextColor3 = Color3.fromRGB(255, 100, 50)
 nameLabel.Font = Enum.Font.GothamBold
-nameLabel.TextSize = 22
+nameLabel.TextSize = 24
 title.Parent = frame
 
--- Info text
-local infoText = Instance.new("TextLabel")
-infoText.Name = "InfoText"
-infoText.Size = UDim2.new(1, -40, 0, 100)
-infoText.Position = UDim2.new(0, 20, 0, 100)
-infoText.BackgroundTransparency = 1
-infoText.Text = "Loading..."
-infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-infoText.Font = Enum.Font.Gotham
-infoText.TextSize = 16
-infoText.TextWrapped = true
-infoText.Parent = frame
+-- Description box
+local descBox = Instance.new("Frame")
+descBox.Size = UDim2.new(1, -30, 0, 200)
+descBox.Position = UDim2.new(0, 15, 0, 110)
+descBox.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+descBox.BorderSizePixel = 0
+descBox.Parent = frame
+
+local descCorner = Instance.new("UICorner")
+descCorner.CornerRadius = UDim.new(0, 8)
+descCorner.Parent = descBox
+
+-- Description text
+local descText = Instance.new("TextLabel")
+descText.Name = "Description"
+descText.Size = UDim2.new(1, -20, 1, -20)
+descText.Position = UDim2.new(0, 10, 0, 10)
+descText.BackgroundTransparency = 1
+descText.Text = "Spirit description..."
+descText.TextColor3 = Color3.fromRGB(220, 220, 220)
+descText.Font = Enum.Font.Gotham
+descText.TextSize = 14
+descText.TextWrapped = true
+descText.TextXAlignment = Enum.TextXAlignment.Left
+descText.TextYAlignment = Enum.TextYAlignment.Top
+descText.Parent = descBox
 
 -- Sign button
 local signBtn = Instance.new("TextButton")
 signBtn.Name = "SignButton"
-signBtn.Size = UDim2.new(0, 150, 0, 50)
-signBtn.Position = UDim2.new(0.5, -160, 1, -70)
+signBtn.Size = UDim2.new(0, 140, 0, 45)
+signBtn.Position = UDim2.new(0.5, -150, 1, -65)
 signBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
-signBtn.Text = "SIGN"
+signBtn.Text = "SIGN CONTRACT"
 signBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 signBtn.Font = Enum.Font.GothamBlack
-signBtn.TextSize = 20
+signBtn.TextSize = 16
 signBtn.Parent = frame
 
 local signCorner = Instance.new("UICorner")
 signCorner.CornerRadius = UDim.new(0, 10)
 signCorner.Parent = signBtn
 
--- Decline button
-local declineBtn = Instance.new("TextButton")
+-- Decline button  
+declineBtn = Instance.new("TextButton")
 declineBtn.Name = "DeclineButton"
-declineBtn.Size = UDim2.new(0, 150, 0, 50)
-declineBtn.Position = UDim2.new(0.5, 10, 1, -70)
+declineBtn.Size = UDim2.new(0, 140, 0, 45)
+declineBtn.Position = UDim2.new(0.5, 10, 1, -65)
 declineBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 declineBtn.Text = "DECLINE"
 declineBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 declineBtn.Font = Enum.Font.GothamBold
-declineBtn.TextSize = 18
+declineBtn.TextSize = 16
 declineBtn.Parent = frame
 
 local declineCorner = Instance.new("UICorner")
 declineCorner.CornerRadius = UDim.new(0, 10)
 declineCorner.Parent = declineBtn
 
-print("CLIENT: UI elements created")
+print("CLIENT: UI created")
 
--- Current spirit
-local currentSpirit = nil
+-- Spirit data (same as server)
+local SpiritData = {
+    EmberWisp = {
+        name = "Ember Wisp",
+        description = "A volatile spirit born from volcanic ash.\n\nSTRENGTH: Burn damage over time\n\nDRAWBACK: Take 20% more water damage\n\nABILITY: Fireball (25 DMG)",
+        color = Color3.fromRGB(255, 100, 50)
+    },
+    FrostShade = {
+        name = "Frost Shade",
+        description = "A spirit of frozen wastelands.\n\nSTRENGTH: Slow enemies by 40%\n\nDRAWBACK: Move 15% slower\n\nABILITY: Ice Shard (20 DMG)",
+        color = Color3.fromRGB(100, 180, 255)
+    }
+}
 
--- Show UI function
-local function ShowUI(spiritKey, data)
-	print("CLIENT: ShowUI called with " .. tostring(spiritKey))
-	
-	currentSpirit = spiritKey
-	nameLabel.Text = data.name:upper()
-	infoText.Text = "Strength: " .. data.strength .. "\n\nDrawback: " .. data.drawback .. "\n\nAbility: " .. data.ability
-	
-	-- Show
-	backdrop.Visible = true
-	frame.Visible = true
-	
-	print("CLIENT: UI VISIBLE - spirit: " .. data.name)
+-- Function to show contract
+local function ShowContract(spiritKey)
+    print("CLIENT: Showing contract for " .. spiritKey)
+    
+    local data = SpiritData[spiritKey]
+    if not data then
+        print("CLIENT: No data for " .. spiritKey)
+        return
+    end
+    
+    -- Update UI
+    nameLabel.Text = data.name:upper()
+    descText.Text = data.description
+    nameLabel.TextColor3 = data.color
+    signBtn.BackgroundColor3 = data.color
+    
+    -- Show
+    frame.Visible = true
+    
+    print("CLIENT: UI VISIBLE for " .. data.name)
 end
 
--- Hide UI
-local function HideUI()
-	backdrop.Visible = false
-	frame.Visible = false
-	currentSpirit = nil
+-- Function to hide
+local function HideContract()
+    frame.Visible = false
 end
 
--- CRITICAL: Connect to event with error handling
-print("CLIENT: Connecting to ShowContract...")
-
-local connectionSuccess, connectionErr = pcall(function()
-	ShowContract.OnClientEvent:Connect(function(spiritKey, data)
-		print("CLIENT: === EVENT RECEIVED ===")
-		print("CLIENT: spiritKey = " .. tostring(spiritKey))
-		print("CLIENT: data = " .. tostring(data))
-		
-		if spiritKey and data then
-			ShowUI(spiritKey, data)
-		else
-			print("CLIENT: ERROR - Missing data!")
-		end
-	end)
-end)
-
-if connectionSuccess then
-	print("CLIENT: Event connected successfully")
-else
-	print("CLIENT: ERROR connecting event: " .. tostring(connectionErr))
+-- CRITICAL: Connect to prompts directly (NO RemoteEvent needed for GUI!)
+-- Wait for workspace spirits
+local function ConnectPrompts()
+    print("CLIENT: Connecting to prompts...")
+    
+    for spiritKey, data in pairs(SpiritData) do
+        -- Find the spirit part
+        local spiritModel = workspace:FindFirstChild(data.name)
+        if spiritModel then
+            local core = spiritModel:FindFirstChild("Core")
+            if core then
+                local prompt = core:FindFirstChild("ProximityPrompt")
+                if prompt then
+                    print("CLIENT: Found prompt for " .. data.name)
+                    
+                    -- THIS IS THE KEY: LocalScript can detect prompt directly!
+                    prompt.Triggered:Connect(function()
+                        print("CLIENT: Prompt triggered for " .. spiritKey)
+                        ShowContract(spiritKey)
+                    end)
+                else
+                    print("CLIENT: No prompt found for " .. data.name)
+                end
+            end
+        else
+            print("CLIENT: Spirit not found: " .. data.name)
+        end
+    end
 end
+
+-- Wait a moment for server to create spirits
+wait(2)
+ConnectPrompts()
 
 -- Button handlers
 signBtn.MouseButton1Click:Connect(function()
-	print("CLIENT: Sign clicked")
-	if currentSpirit then
-		SignContract:FireServer(currentSpirit)
-		HideUI()
-	end
+    print("CLIENT: Sign clicked")
+    -- Fire to server to give tool
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local SignContract = ReplicatedStorage:WaitForChild("SignContract")
+    
+    -- Get current spirit from visible UI
+    local currentSpirit = nil
+    for key, data in pairs(SpiritData) do
+        if nameLabel.Text == data.name:upper() then
+            currentSpirit = key
+            break
+        end
+    end
+    
+    if currentSpirit then
+        SignContract:FireServer(currentSpirit)
+    end
+    
+    HideContract()
 end)
 
 declineBtn.MouseButton1Click:Connect(function()
-	print("CLIENT: Decline clicked")
-	HideUI()
+    print("CLIENT: Decline clicked")
+    HideContract()
 end)
 
-print("CLIENT: === READY ===")
-print("CLIENT: Walk to spirit, hold E")
+print("CLIENT: Ready!")
