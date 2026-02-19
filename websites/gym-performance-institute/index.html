@@ -338,91 +338,258 @@
             max-width: 600px;
         }
 
-        /* Fiber section with animation */
+        /* Holographic Fiber Section */
         .fiber-section {
             background: linear-gradient(180deg, var(--pure-black) 0%, var(--soft-black) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fiber-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            animation: holoGlow 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes holoGlow {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         .fiber-content {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
             align-items: center;
+            position: relative;
+            z-index: 10;
         }
 
-        .fiber-diagram {
+        /* Holographic Display Container */
+        .holo-display {
             aspect-ratio: 1;
-            background: var(--charcoal);
-            border: 1px solid var(--mid-gray);
+            background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
+            border: 1px solid rgba(0, 240, 255, 0.2);
             position: relative;
             overflow: hidden;
-            animation: diagramPulse 4s ease-in-out infinite;
+            perspective: 1000px;
+            animation: holoFlicker 4s ease-in-out infinite;
         }
 
-        @keyframes diagramPulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.1); }
-            50% { box-shadow: 0 0 60px rgba(0, 240, 255, 0.2); }
+        @keyframes holoFlicker {
+            0%, 100% { opacity: 1; }
+            5% { opacity: 0.95; }
+            10% { opacity: 1; }
+            92% { opacity: 1; }
+            95% { opacity: 0.9; }
+            98% { opacity: 1; }
         }
 
-        .fiber-svg {
+        /* Scan line effect */
+        .holo-display::before {
+            content: '';
             position: absolute;
-            inset: 2rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            box-shadow: 0 0 20px var(--accent-cyan);
+            animation: scanLine 3s ease-in-out infinite;
+            z-index: 100;
         }
 
-        .fiber-path {
-            fill: none;
-            stroke: var(--mid-gray);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawLine 3s ease forwards;
+        @keyframes scanLine {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        .fiber-path:nth-child(2) { animation-delay: 0.3s; }
-        .fiber-path:nth-child(3) { animation-delay: 0.6s; }
-        .fiber-path:nth-child(4) { animation-delay: 0.9s; }
-        .fiber-path:nth-child(5) { animation-delay: 1.2s; }
-        .fiber-path:nth-child(6) { animation-delay: 1.5s; }
-
-        @keyframes drawLine {
-            to { stroke-dashoffset: 0; }
+        /* Holographic grid */
+        .holo-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: center bottom;
+            animation: gridMove 8s linear infinite;
+            opacity: 0.3;
         }
 
-        .fiber-path.active {
-            stroke: var(--accent-cyan);
-            stroke-width: 3;
-            filter: drop-shadow(0 0 8px var(--accent-cyan));
-            animation: drawLine 3s ease forwards, fiberGlow 2s ease-in-out infinite 3s;
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
         }
 
-        @keyframes fiberGlow {
-            0%, 100% { filter: drop-shadow(0 0 8px var(--accent-cyan)); }
-            50% { filter: drop-shadow(0 0 20px var(--accent-cyan)); }
+        /* 3D Rotating Muscle Fiber */
+        .holo-fiber-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
         }
 
+        .holo-fiber {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3D 20s linear infinite;
+        }
+
+        @keyframes rotate3D {
+            0% { transform: rotateY(0deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(10deg); }
+        }
+
+        /* Fiber rings */
+        .fiber-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .fiber-ring:nth-child(1) {
+            width: 280px;
+            height: 280px;
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+
+        .fiber-ring:nth-child(2) {
+            width: 220px;
+            height: 220px;
+            border-color: rgba(0, 240, 255, 0.5);
+            animation: ringPulse 3s ease-in-out infinite 0.5s;
+        }
+
+        .fiber-ring:nth-child(3) {
+            width: 160px;
+            height: 160px;
+            border-color: rgba(0, 240, 255, 0.7);
+            animation: ringPulse 3s ease-in-out infinite 1s;
+        }
+
+        .fiber-ring:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            border-color: var(--accent-cyan);
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, transparent 70%);
+            animation: ringPulse 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+        }
+
+        /* Fiber strands */
+        .fiber-strand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 140px;
+            background: linear-gradient(to bottom, transparent, var(--accent-cyan), transparent);
+            transform-origin: center bottom;
+            opacity: 0.6;
+            animation: strandGlow 2s ease-in-out infinite;
+        }
+
+        .fiber-strand:nth-child(5) { transform: translate(-50%, -100%) rotate(0deg); animation-delay: 0s; }
+        .fiber-strand:nth-child(6) { transform: translate(-50%, -100%) rotate(45deg); animation-delay: 0.2s; }
+        .fiber-strand:nth-child(7) { transform: translate(-50%, -100%) rotate(90deg); animation-delay: 0.4s; }
+        .fiber-strand:nth-child(8) { transform: translate(-50%, -100%) rotate(135deg); animation-delay: 0.6s; }
+        .fiber-strand:nth-child(9) { transform: translate(-50%, -100%) rotate(180deg); animation-delay: 0.8s; }
+        .fiber-strand:nth-child(10) { transform: translate(-50%, -100%) rotate(225deg); animation-delay: 1s; }
+        .fiber-strand:nth-child(11) { transform: translate(-50%, -100%) rotate(270deg); animation-delay: 1.2s; }
+        .fiber-strand:nth-child(12) { transform: translate(-50%, -100%) rotate(315deg); animation-delay: 1.4s; }
+
+        @keyframes strandGlow {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 5px var(--accent-cyan); }
+            50% { opacity: 0.8; box-shadow: 0 0 20px var(--accent-cyan); }
+        }
+
+        /* Holographic UI overlay */
+        .holo-ui {
+            position: absolute;
+            inset: 20px;
+            pointer-events: none;
+        }
+
+        .holo-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent-cyan);
+            opacity: 0.5;
+            animation: cornerPulse 2s ease-in-out infinite;
+        }
+
+        .holo-corner:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .holo-corner:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .holo-corner:nth-child(3) { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .holo-corner:nth-child(4) { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        @keyframes cornerPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .holo-data {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--accent-cyan);
+            opacity: 0.7;
+        }
+
+        .holo-data.top-left { top: 10px; left: 50px; }
+        .holo-data.top-right { top: 10px; right: 50px; }
+        .holo-data.bottom-left { bottom: 10px; left: 50px; }
+        .holo-data.bottom-right { bottom: 10px; right: 50px; }
+
+        /* Fiber info panel */
         .fiber-info h3 {
             font-size: 1.5rem;
             font-weight: 500;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             color: var(--pure-white);
         }
 
         .fiber-types {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .fiber-type {
             padding: 1.5rem;
-            border-left: 3px solid var(--dark-gray);
-            background: var(--charcoal);
+            background: rgba(17, 17, 17, 0.8);
+            border: 1px solid var(--dark-gray);
+            position: relative;
+            overflow: hidden;
             transition: all 0.5s ease;
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(-30px);
         }
 
         .fiber-type.visible {
@@ -430,11 +597,32 @@
             transform: translateX(0);
         }
 
+        .fiber-type::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .fiber-type:hover::before {
+            left: 100%;
+        }
+
         .fiber-type:hover {
-            border-left-color: var(--accent-cyan);
-            background: var(--dark-gray);
-            transform: translateX(10px);
-            box-shadow: -10px 0 30px rgba(0, 240, 255, 0.1);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 30px rgba(0, 240, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .fiber-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
         }
 
         .fiber-type h4 {
@@ -443,12 +631,43 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--accent-cyan);
-            margin-bottom: 0.5rem;
+        }
+
+        .fiber-percentage {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-cyan);
+            animation: percentagePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes percentagePulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; text-shadow: 0 0 10px var(--accent-cyan); }
         }
 
         .fiber-type p {
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
             color: var(--light-gray);
+            line-height: 1.6;
+        }
+
+        .fiber-bar {
+            height: 2px;
+            background: var(--dark-gray);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fiber-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            box-shadow: 0 0 10px var(--accent-cyan);
+            animation: barFill 2s ease-out forwards;
+        }
+
+        @keyframes barFill {
+            from { width: 0; }
         }
 
         /* Mechanics section */
@@ -933,42 +1152,75 @@
         </div>
         
         <div class="fiber-content">
-            <div class="fiber-diagram">
-                <svg class="fiber-svg" viewBox="0 0 400 400">
-                    <ellipse cx="200" cy="200" rx="180" ry="180" fill="none" stroke="#2a2a2a" stroke-width="1"/>
-                    <ellipse cx="200" cy="200" rx="150" ry="150" fill="none" stroke="#2a2a2a" stroke-width="1"/>
+            <div class="holo-display">
+                <div class="holo-grid"></div>
+                
+                <div class="holo-fiber-container">
+                    <div class="holo-fiber">
+                        <div class="fiber-ring"></div>
+                        <div class="fiber-ring"></div>
+                        <div class="fiber-ring"></div>
+                        <div class="fiber-ring"></div>
+                        
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                        <div class="fiber-strand"></div>
+                    </div>
+                </div>
+                
+                <div class="holo-ui">
+                    <div class="holo-corner"></div>
+                    <div class="holo-corner"></div>
+                    <div class="holo-corner"></div>
+                    <div class="holo-corner"></div>
                     
-                    <g class="fiber-bundle">
-                        <path class="fiber-path active" d="M200 50 Q250 200 200 350" />
-                        <path class="fiber-path active" d="M200 50 Q150 200 200 350" />
-                        <path class="fiber-path" d="M50 200 Q200 150 350 200" />
-                        <path class="fiber-path" d="M50 200 Q200 250 350 200" />
-                        <path class="fiber-path" d="M100 100 Q200 200 300 300" />
-                        <path class="fiber-path" d="M300 100 Q200 200 100 300" />
-                    </g>
-                    
-                    <circle cx="200" cy="200" r="30" fill="#00f0ff" opacity="0.2"/>
-                    <circle cx="200" cy="200" r="15" fill="#00f0ff" opacity="0.4"/>
-                </svg>
+                    <span class="holo-data top-left">SCANNING...</span>
+                    <span class="holo-data top-right">3D RENDER</span>
+                    <span class="holo-data bottom-left">FIBER_ID: 8472</span>
+                    <span class="holo-data bottom-right">ACTIVE</span>
+                </div>
             </div>
             
             <div class="fiber-info">
-                <h3>Fiber Type Distribution</h3>
+                <h3>Fiber Type Analysis</h3>
                 
                 <div class="fiber-types">
                     <div class="fiber-type">
-                        <h4>Type I — Slow Twitch</h4>
+                        <div class="fiber-type-header">
+                            <h4>Type I — Slow Twitch</h4>
+                            <span class="fiber-percentage">45%</span>
+                        </div>
                         <p>Endurance-focused fibers with high mitochondrial density. Predominant in distance athletes.</p>
+                        <div class="fiber-bar">
+                            <div class="fiber-bar-fill" style="width: 45%;"></div>
+                        </div>
                     </div>
                     
                     <div class="fiber-type">
-                        <h4>Type IIa — Fast Oxidative</h4>
+                        <div class="fiber-type-header">
+                            <h4>Type IIa — Fast Oxidative</h4>
+                            <span class="fiber-percentage">35%</span>
+                        </div>
                         <p>Intermediate fibers adaptable to both strength and endurance demands. Highly trainable.</p>
+                        <div class="fiber-bar">
+                            <div class="fiber-bar-fill" style="width: 35%;"></div>
+                        </div>
                     </div>
                     
                     <div class="fiber-type">
-                        <h4>Type IIx — Fast Glycolytic</h4>
+                        <div class="fiber-type-header">
+                            <h4>Type IIx — Fast Glycolytic</h4>
+                            <span class="fiber-percentage">20%</span>
+                        </div>
                         <p>Maximum power output fibers. Essential for explosive movements and peak force production.</p>
+                        <div class="fiber-bar">
+                            <div class="fiber-bar-fill" style="width: 20%;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
