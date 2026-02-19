@@ -48,7 +48,7 @@ nameLabel.Text = "SPIRIT"
 nameLabel.TextColor3 = Color3.fromRGB(255, 100, 50)
 nameLabel.Font = Enum.Font.GothamBold
 nameLabel.TextSize = 24
-title.Parent = frame
+nameLabel.Parent = frame
 
 -- Description box
 local descBox = Instance.new("Frame")
@@ -93,8 +93,8 @@ local signCorner = Instance.new("UICorner")
 signCorner.CornerRadius = UDim.new(0, 10)
 signCorner.Parent = signBtn
 
--- Decline button  
-declineBtn = Instance.new("TextButton")
+-- Decline button
+local declineBtn = Instance.new("TextButton")
 declineBtn.Name = "DeclineButton"
 declineBtn.Size = UDim2.new(0, 140, 0, 45)
 declineBtn.Position = UDim2.new(0.5, 10, 1, -65)
