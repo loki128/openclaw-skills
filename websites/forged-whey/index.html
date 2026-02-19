@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORGED — DR DAN'S NO BS WHEY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --forged-black: #0a0a0a;
+            --steel-gray: #1a1a1a;
+            --iron-gray: #2a2a2a;
+            --pure-white: #ffffff;
+            --forged-red: #cc0000;
+            --blood-red: #ff0000;
+            --ash-gray: #888888;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--forged-black);
+            color: var(--pure-white);
+            overflow-x: hidden;
+        }
+
+        /* Steel texture overlay */
+        .steel-texture {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Opening sequence */
+        .forge-opening {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 50%, #1a1a1a 0%, var(--forged-black) 70%);
+            position: relative;
+        }
+
+        .forge-word {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(6rem, 20vw, 16rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--pure-white);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: forgeIn 2s ease forwards;
+            text-shadow: 0 0 60px rgba(255,255,255,0.1);
+        }
+
+        @keyframes forgeIn {
+            0% { opacity: 0; transform: scale(0.8); filter: blur(20px); }
+            50% { opacity: 1; transform: scale(1); filter: blur(0); }
+            100% { opacity: 0; transform: scale(1.2); filter: blur(10px); }
+        }
+
+        /* Brand reveal */
+        .brand-reveal {
+            position: absolute;
+            text-align: center;
+            opacity: 0;
+            animation: brandReveal 2s ease forwards 1.8s;
+        }
+
+        @keyframes brandReveal {
+            to { opacity: 1; }
+        }
+
+        .brand-reveal h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-reveal h1 span {
+            color: var(--forged-red);
+        }
+
+        .brand-reveal p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            letter-spacing: 0.3em;
+            color: var(--ash-gray);
+        }
+
+        /* Iron section */
+        .iron-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            background: linear-gradient(180deg, var(--forged-black) 0%, var(--steel-gray) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .iron-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .iron-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Barbell visualization */
+        .barbell {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .bar {
+            height: 12px;
+            background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 50%, #3a3a3a 100%);
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .plates-left, .plates-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+        }
+
+        .plates-left { left: 60px; }
+        .plates-right { right: 60px; flex-direction: row-reverse; }
+
+        .plate {
+            background: linear-gradient(180deg, #2a2a2a 0%, #0a0a0a 50%, #2a2a2a 100%);
+            border: 1px solid #3a3a3a;
+            margin: 0 2px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .plate-45 { width: 24px; height: 180px; }
+        .plate-25 { width: 20px; height: 140px; }
+        .plate-10 { width: 16px; height: 100px; }
+        .plate-5 { width: 12px; height: 70px; }
+
+        .plate-number {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--ash-gray);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .iron-text h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .iron-text p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--ash-gray);
+            max-width: 50ch;
+        }
+
+        /* Muscle section */
+        .muscle-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            background: var(--forged-black);
+            position: relative;
+        }
+
+        .muscle-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .muscle-fiber-display {
+            height: 500px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .muscle-bicep {
+            width: 200px;
+            height: 350px;
+            position: relative;
+        }
+
+        .muscle-bulge {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            border: 2px solid var(--iron-gray);
+            border-radius: 50%;
+            animation: muscleContract 3s ease-in-out infinite;
+        }
+
+        .muscle-bulge:nth-child(1) {
+            width: 140px;
+            height: 120px;
+            top: 20px;
+            animation-delay: 0s;
+        }
+
+        .muscle-bulge:nth-child(2) {
+            width: 180px;
+            height: 160px;
+            top: 100px;
+            animation-delay: 0.3s;
+        }
+
+        .muscle-bulge:nth-child(3) {
+            width: 160px;
+            height: 140px;
+            top: 200px;
+            animation-delay: 0.6s;
+        }
+
+        @keyframes muscleContract {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.08); }
+        }
+
+        .muscle-striation {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--forged-red), transparent);
+            opacity: 0.3;
+            animation: striationPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes striationPulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Precision section */
+        .precision-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            background: linear-gradient(180deg, var(--steel-gray) 0%, var(--forged-black) 100%);
+        }
+
+        .precision-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .precision-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .precision-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .precision-header p {
+            color: var(--ash-gray);
+            font-size: 1.125rem;
+        }
+
+        .data-panels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .data-panel {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--iron-gray);
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        .data-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--forged-red);
+        }
+
+        .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 500;
+            color: var(--pure-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .data-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ash-gray);
+        }
+
+        .data-bar {
+            height: 4px;
+            background: var(--iron-gray);
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .data-bar-fill {
+            height: 100%;
+            background: var(--forged-red);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Story section */
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 4rem;
+            background: var(--forged-black);
+            text-align: center;
+        }
+
+        .story-content {
+            max-width: 800px;
+        }
+
+        .story-content h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .story-content h2 span {
+            color: var(--forged-red);
+        }
+
+        .story-content p {
+            font-size: 1.125rem;
+            line-height: 2;
+            color: var(--ash-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Product reveal */
+        .product-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            background: radial-gradient(ellipse at center, #1a1a1a 0%, var(--forged-black) 70%);
+        }
+
+        .product-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .product-image-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-image {
+            width: 350px;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--iron-gray);
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(204,0,0,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .product-glow {
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(ellipse at center, rgba(204,0,0,0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .product-details h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .product-details h2 span {
+            color: var(--forged-red);
+        }
+
+        .product-specs {
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--iron-gray);
+            border-bottom: 1px solid var(--iron-gray);
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+        }
+
+        .spec-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ash-gray);
+        }
+
+        .spec-value {
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .product-cta {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            background: var(--forged-red);
+            color: var(--pure-white);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .product-cta:hover {
+            background: var(--pure-white);
+            color: var(--forged-black);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem;
+            text-align: center;
+            border-top: 1px solid var(--iron-gray);
+            background: var(--forged-black);
+        }
+
+        footer p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--ash-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .iron-content,
+            .muscle-content,
+            .product-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .data-panels {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="steel-texture"></div>
+
+    <!-- Opening: FORGED -->
+    <section class="forge-opening">
+        <div class="forge-word">FORGED</div>
+        <div class="brand-reveal">
+            <h1>DR DAN'S <span>NO BS WHEY</span></h1>
+            <p>PHD FORMULATED • THIRD-PARTY TESTED</p>
+        </div>
+    </section>
+
+    <!-- Iron Section -->
+    <section class="iron-section">
+        <div class="iron-content">
+            <div class="iron-text">
+                <h2>RAW IRON.</h2>
+                <p>No machines. No gimmicks. Just iron and will. The bar doesn't care about your excuses. Neither do we. Every batch tested. Every ingredient verified. Zero compromises.</p>
+            </div>
+
+            <div class="iron-visual">
+                <div class="barbell">
+                    <div class="bar"></div>
+                    
+                    <div class="plates-left">
+                        <div class="plate plate-45"></div>
+                        <div class="plate plate-25"></div>
+                        <div class="plate plate-10"></div>
+                    </div>
+                    
+                    <div class="plates-right">
+                        <div class="plate plate-45"></div>
+                        <div class="plate plate-25"></div>
+                        <div class="plate plate-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Muscle Section -->
+    <section class="muscle-section">
+        <div class="muscle-content">
+            <div class="muscle-fiber-display">
+                <div class="muscle-bicep">
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-bulge"></div>
+                    
+                    <div class="muscle-striation" style="top: 80px;"></div>
+                    <div class="muscle-striation" style="top: 160px;"></div>
+                    <div class="muscle-striation" style="top: 240px;"></div>
+                </div>
+            </div>
+
+            <div class="iron-text">
+                <h2>MUSCLE FIBERS.</h2>
+                <p>Type IIx fibers activated. Maximum motor unit recruitment. Every scoop triggers protein synthesis at the cellular level. This isn't just powder—it's architectural material for the body.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Precision Section -->
+    <section class="precision-section">
+        <div class="precision-content">
+            <div class="precision-header">
+                <h2>LABORATORY PRECISION.</h2>
+                <p>Every batch analyzed. Every claim verified.</p>
+            </div>
+
+            <div class="data-panels">
+                <div class="data-panel">
+                    <div class="data-value">92%</div>
+                    <div class="data-label">Protein Content</div>
+                    <div class="data-bar">
+                        <div class="data-bar-fill" style="width: 92%;"></div>
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <div class="data-value">2.8g</div>
+                    <div class="data-label">Leucine</div>
+                    <div class="data-bar">
+                        <div class="data-bar-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <div class="data-value">0</div>
+                    <div class="data-label">Fillers</div>
+                    <div class="data-bar">
+                        <div class="data-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="story-section">
+        <div class="story-content">
+            <h2>BEAT CANCER. <span>REBUILT STRONGER.</span></h2>
+            
+            <p>As a PhD biochemist, I faced mortality. Applied laboratory precision to recovery. What I found disappointed me—an industry built on hype, not science. So I built what I couldn't find.</p>
+            
+            <p>No fillers. No marketing fluff. Just pure, tested, effective nutrition. This is the formula that rebuilt me.</p>
+        </div>
+    </section>
+
+    <!-- Product Reveal -->
+    <section class="product-section">
+        <div class="product-content">
+            <div class="product-image-container">
+                <div class="product-glow"></div>
+                <div class="product-image">
+                    <img src="https://i.ibb.co/tT3q3BVr/PHOTO-2025-06-17-20-53-25.jpg" alt="NO BS WHEY">
+                </div>
+            </div>
+
+            <div class="product-details">
+                <h2>NO BS <span>WHEY</span></h2>
+                <p style="color: var(--ash-gray); margin-bottom: 2rem;">Precision instrument for muscle synthesis.</p>
+
+                <div class="product-specs">
+                    <div class="spec-row">
+                        <span class="spec-label">Protein</span>
+                        <span class="spec-value">25g per serving</span>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <span class="spec-label">Leucine</span>
+                        <span class="spec-value">2.8g</span>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <span class="spec-label">Servings</span>
+                        <span class="spec-value">30</span>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <span class="spec-label">Testing</span>
+                        <span class="spec-value">3rd Party</span>
+                    </div>
+                </div>
+
+                <div class="product-price">$49.99</div>
+
+                <a href="#" class="product-cta">Acquire</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>DR DAN'S NO BS WHEY — FORGED IN LABORATORIES</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for any anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
