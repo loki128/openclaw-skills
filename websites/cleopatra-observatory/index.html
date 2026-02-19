@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleopatra — Dessert Observatory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --obsidian: #050510;
+            --deep-navy: #0a0a1a;
+            --midnight: #101025;
+            --starlight: #e8e4dc;
+            --moonlight: #c9c5bd;
+            --gold-dust: #d4af37;
+            --egypt-amber: rgba(212, 175, 55, 0.15);
+            --france-lavender: rgba(180, 160, 200, 0.12);
+            --italy-terracotta: rgba(180, 120, 100, 0.12);
+            --turkey-rose: rgba(160, 100, 100, 0.12);
+            --china-crimson: rgba(140, 60, 60, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--obsidian);
+            color: var(--starlight);
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        /* Star field background */
+        .star-field {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--starlight);
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.8; transform: scale(1); }
+        }
+
+        /* Constellation lines */
+        .constellation {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .constellation-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--starlight), transparent);
+            opacity: 0.3;
+        }
+
+        /* Opening */
+        .opening {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 30%, var(--deep-navy) 0%, var(--obsidian) 60%);
+            overflow: hidden;
+        }
+
+        .opening-glow {
+            position: absolute;
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: nebulaBreathe 8s ease-in-out infinite;
+        }
+
+        @keyframes nebulaBreathe {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.6; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Constellation forming animation */
+        .brand-constellation {
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .brand-letter {
+            display: inline-block;
+            opacity: 0;
+            animation: starForm 2s ease forwards;
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .brand-letter:nth-child(1) { animation-delay: 0.5s; }
+        .brand-letter:nth-child(2) { animation-delay: 0.7s; }
+        .brand-letter:nth-child(3) { animation-delay: 0.9s; }
+        .brand-letter:nth-child(4) { animation-delay: 1.1s; }
+        .brand-letter:nth-child(5) { animation-delay: 1.3s; }
+        .brand-letter:nth-child(6) { animation-delay: 1.5s; }
+        .brand-letter:nth-child(7) { animation-delay: 1.7s; }
+        .brand-letter:nth-child(8) { animation-delay: 1.9s; }
+        .brand-letter:nth-child(9) { animation-delay: 2.1s; }
+
+        @keyframes starForm {
+            0% { 
+                opacity: 0; 
+                transform: scale(0) rotate(-180deg);
+                filter: blur(20px);
+            }
+            50% {
+                opacity: 0.5;
+                filter: blur(5px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1) rotate(0deg);
+                filter: blur(0);
+            }
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--moonlight);
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards 2.5s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 0.6; }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards 3.5s;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.625rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--moonlight);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold-dust), transparent);
+            animation: starFall 2s ease-in-out infinite;
+        }
+
+        @keyframes starFall {
+            0% { transform: translateY(-10px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(10px); opacity: 0; }
+        }
+
+        /* Observatory sections */
+        .observatory {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .observatory-atmosphere {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 2s ease;
+            pointer-events: none;
+        }
+
+        .observatory.visible .observatory-atmosphere {
+            opacity: 1;
+        }
+
+        .egypt .observatory-atmosphere {
+            background: radial-gradient(ellipse at 70% 50%, var(--egypt-amber) 0%, transparent 50%);
+        }
+
+        .france .observatory-atmosphere {
+            background: radial-gradient(ellipse at 30% 50%, var(--france-lavender) 0%, transparent 50%);
+        }
+
+        .italy .observatory-atmosphere {
+            background: radial-gradient(ellipse at 70% 30%, var(--italy-terracotta) 0%, transparent 50%);
+        }
+
+        .turkey .observatory-atmosphere {
+            background: radial-gradient(ellipse at 40% 60%, var(--turkey-rose) 0%, transparent 50%);
+        }
+
+        .china .observatory-atmosphere {
+            background: radial-gradient(ellipse at 60% 40%, var(--china-crimson) 0%, transparent 50%);
+        }
+
+        .observatory-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8rem;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .constellation-info {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s ease;
+        }
+
+        .observatory.visible .constellation-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .constellation-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.875rem;
+            font-style: italic;
+            color: var(--gold-dust);
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .constellation-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .constellation-story {
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--moonlight);
+            max-width: 45ch;
+        }
+
+        /* Dessert suspended in darkness */
+        .dessert-suspension {
+            position: relative;
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 1.5s ease;
+            transition-delay: 0.3s;
+        }
+
+        .observatory.visible .dessert-suspension {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .dessert-vessel {
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dessert-vessel::before {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            pointer-events: none;
+        }
+
+        .dessert-illumination {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: objectGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes objectGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .dessert-icon {
+            font-size: 8rem;
+            position: relative;
+            z-index: 10;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.3));
+        }
+
+        .dessert-details {
+            margin-top: 3rem;
+            padding-left: 20px;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dessert-origin {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: var(--gold-dust);
+            margin-bottom: 0.5rem;
+        }
+
+        .dessert-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .dessert-note {
+            font-size: 0.875rem;
+            line-height: 1.8;
+            color: var(--moonlight);
+            font-style: italic;
+        }
+
+        /* Reservation section */
+        .reservation {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, var(--deep-navy) 0%, var(--obsidian) 70%);
+            padding: 4rem;
+            position: relative;
+        }
+
+        .reservation::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='%23ffffff' opacity='0.1'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .reservation-content {
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .reservation h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .reservation > p {
+            color: var(--moonlight);
+            line-height: 2;
+            margin-bottom: 3rem;
+            font-size: 1rem;
+        }
+
+        .reservation-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.625rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--moonlight);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--starlight);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold-dust);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .submit-btn {
+            padding: 1.5rem 3rem;
+            background: transparent;
+            border: 1px solid var(--gold-dust);
+            color: var(--gold-dust);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--gold-dust);
+            color: var(--obsidian);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--moonlight);
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .observatory-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .observatory {
+                padding: 6rem 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-name {
+                letter-spacing: 0.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="star-field" id="starField"></div>
+    <div class="constellation" id="constellation"></div>
+
+    <header class="opening">
+        <div class="opening-glow"></div>
+        <div class="brand-constellation">
+            <h1 class="brand-name">
+                <span class="brand-letter">C</span>
+                <span class="brand-letter">l</span>
+                <span class="brand-letter">e</span>
+                <span class="brand-letter">o</span>
+                <span class="brand-letter">p</span>
+                <span class="brand-letter">a</span>
+                <span class="brand-letter">t</span>
+                <span class="brand-letter">r</span>
+                <span class="brand-letter">a</span>
+            </h1>
+            <p class="brand-subtitle">Dessert Observatory</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Enter the Observatory</span>
+            <div class="scroll-line"></div>
+        </div>
+    </header>
+
+    <section class="observatory egypt" data-constellation="egypt">
+        <div class="observatory-atmosphere"></div>
+        <div class="observatory-content">
+            <div class="constellation-info">
+                <p class="constellation-label">The Golden Constellation</p>
+                <h2 class="constellation-name">Egypt</h2>
+                <p class="constellation-story">Where the Nile meets the stars. Ancient recipes of honey and nuts, preserved through millennia. Here, the baklava glows like a distant sun.</p>
+            </div>
+
+            <div class="dessert-suspension">
+                <div class="dessert-vessel">
+                    <div class="dessert-illumination"></div>
+                    <div class="dessert-icon">🍯</div>
+                </div>
+
+                <div class="dessert-details">
+                    <p class="dessert-origin">Cairo, Egypt</p>
+                    <h3 class="dessert-name">Baklava de Luxe</h3>
+                    <p class="dessert-note">Paper-thin phyllo, pistachios, orange blossom honey. A recipe five centuries unchanged.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="observatory france" data-constellation="france">
+        <div class="observatory-atmosphere"></div>
+        <div class="observatory-content">
+            <div class="constellation-info">
+                <p class="constellation-label">The Silver Constellation</p>
+                <h2 class="constellation-name">France</h2>
+                <p class="constellation-story">The art of precision. Where butter becomes silk and flour transforms under patient hands. Patisserie as astronomy.</p>
+            </div>
+
+            <div class="dessert-suspension">
+                <div class="dessert-vessel">
+                    <div class="dessert-illumination"></div>
+                    <div class="dessert-icon">🥐</div>
+                </div>
+
+                <div class="dessert-details">
+                    <p class="dessert-origin">Paris, France</p>
+                    <h3 class="dessert-name">Croissant au Beurre</h3>
+                    <p class="dessert-note">AOC Charentes-Poitou butter, 27 layers, 48-hour fermentation. The measure of a master's skill.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="observatory italy" data-constellation="italy">
+        <div class="observatory-atmosphere"></div>
+        <div class="observatory-content">
+            <div class="constellation-info">
+                <p class="constellation-label">The Terracotta Constellation</p>
+                <h2 class="constellation-name">Italy</h2>
+                <p class="constellation-story">La dolce vita written in the stars. From Sicilian citrus to Tuscan chestnuts, each region contributes its soul to the night sky.</p>
+            </div>
+
+            <div class="dessert-suspension">
+                <div class="dessert-vessel">
+                    <div class="dessert-illumination"></div>
+                    <div class="dessert-icon">🍨</div>
+                </div>
+
+                <div class="dessert-details">
+                    <p class="dessert-origin">Sicily, Italy</p>
+                    <h3 class="dessert-name">Cannoli Siciliani</h3>
+                    <p class="dessert-note">Sheep's ricotta, Bronte pistachios, Catania orange. The island's gift to the heavens.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="observatory turkey" data-constellation="turkey">
+        <div class="observatory-atmosphere"></div>
+        <div class="observatory-content">
+            <div class="constellation-info">
+                <p class="constellation-label">The Rose Constellation</p>
+                <h2 class="constellation-name">Turkey</h2>
+                <p class="constellation-story">Where East meets West in a symphony of rose, pomegranate, and spice. The silk road of sweets mapped in the stars.</p>
+            </div>
+
+            <div class="dessert-suspension">
+                <div class="dessert-vessel">
+                    <div class="dessert-illumination"></div>
+                    <div class="dessert-icon">🌹</div>
+                </div>
+
+                <div class="dessert-details">
+                    <p class="dessert-origin">Istanbul, Turkey</p>
+                    <h3 class="dessert-name">Turkish Delight</h3>
+                    <p class="dessert-note">Rose petal lokum, pistachio centers, dusted with memory and starlight.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="observatory china" data-constellation="china">
+        <div class="observatory-atmosphere"></div>
+        <div class="observatory-content">
+            <div class="constellation-info">
+                <p class="constellation-label">The Crimson Constellation</p>
+                <h2 class="constellation-name">China</h2>
+                <p class="constellation-story">Balance in all things. Delicate textures and subtle sweetness, the philosophy of yin and yang written across the night sky.</p>
+            </div>
+
+            <div class="dessert-suspension">
+                <div class="dessert-vessel">
+                    <div class="dessert-illumination"></div>
+                    <div class="dessert-icon">🥮</div>
+                </div>
+
+                <div class="dessert-details">
+                    <p class="dessert-origin">Hong Kong</p>
+                    <h3 class="dessert-name">Mooncake Supreme</h3>
+                    <p class="dessert-note">Salted egg yolk in lotus paste, encased in thin pastry. A celebration of the harvest moon.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reservation">
+        <div class="reservation-content">
+            <h2>Reserve Your Viewing</h2>
+            <p>Each tasting is a private journey through the constellations. Limited to eight guests per session.</p>
+
+            <form class="reservation-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" placeholder="Full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preferred Date</label>
+                        <input type="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Guests</label>
+                        <select required>
+                            <option value="">Select...</option>
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5-8">5-8 Guests</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Request Viewing</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>CLEOPATRA — DESSERT OBSERVATORY</p>
+    </footer>
+
+    <script>
+        // Generate star field
+        const starField = document.getElementById('starField');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            star.style.animationDuration = (3 + Math.random() * 3) + 's';
+            starField.appendChild(star);
+        }
+
+        // Intersection Observer for constellation reveals
+        const observatories = document.querySelectorAll('.observatory');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.3,
+            rootMargin: '-10% 0px'
+        });
+
+        observatories.forEach(observatory => observer.observe(observatory));
+    </script>
+</body>
+</html>
