@@ -338,223 +338,133 @@
             max-width: 600px;
         }
 
-        /* Holographic Fiber Section */
+        /* Muscle Fiber Growth Section */
         .fiber-section {
             background: linear-gradient(180deg, var(--pure-black) 0%, var(--soft-black) 100%);
             position: relative;
             overflow: hidden;
         }
 
-        .fiber-section::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 30%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 60%);
-            transform: translate(-50%, -50%);
-            animation: holoGlow 6s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes holoGlow {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
         .fiber-content {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 4rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
             align-items: center;
             position: relative;
             z-index: 10;
         }
 
-        /* Holographic Display Container */
-        .holo-display {
+        /* Muscle Fiber Animation Container */
+        .muscle-display {
             aspect-ratio: 1;
             background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
             border: 1px solid rgba(0, 240, 255, 0.2);
             position: relative;
             overflow: hidden;
-            perspective: 1000px;
-            animation: holoFlicker 4s ease-in-out infinite;
-        }
-
-        @keyframes holoFlicker {
-            0%, 100% { opacity: 1; }
-            5% { opacity: 0.95; }
-            10% { opacity: 1; }
-            92% { opacity: 1; }
-            95% { opacity: 0.9; }
-            98% { opacity: 1; }
-        }
-
-        /* Scan line effect */
-        .holo-display::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            box-shadow: 0 0 20px var(--accent-cyan);
-            animation: scanLine 3s ease-in-out infinite;
-            z-index: 100;
-        }
-
-        @keyframes scanLine {
-            0% { top: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        /* Holographic grid */
-        .holo-grid {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transform: perspective(500px) rotateX(60deg);
-            transform-origin: center bottom;
-            animation: gridMove 8s linear infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 40px; }
-        }
-
-        /* 3D Rotating Muscle Fiber */
-        .holo-fiber-container {
-            position: absolute;
-            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform-style: preserve-3d;
         }
 
-        .holo-fiber {
-            width: 300px;
-            height: 300px;
+        /* Convulsing Muscle Fiber */
+        .muscle-fiber {
+            width: 200px;
+            height: 400px;
             position: relative;
-            transform-style: preserve-3d;
-            animation: rotate3D 20s linear infinite;
+            animation: muscleConvulse 3s ease-in-out infinite, muscleGrow 8s ease-in-out infinite;
         }
 
-        @keyframes rotate3D {
-            0% { transform: rotateY(0deg) rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(10deg); }
+        @keyframes muscleConvulse {
+            0%, 100% { transform: scaleX(1) scaleY(1); }
+            25% { transform: scaleX(1.1) scaleY(0.95); }
+            50% { transform: scaleX(0.95) scaleY(1.05); }
+            75% { transform: scaleX(1.05) scaleY(0.98); }
         }
 
-        /* Fiber rings */
-        .fiber-ring {
+        @keyframes muscleGrow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .muscle-bulge {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
             border: 2px solid rgba(0, 240, 255, 0.3);
             border-radius: 50%;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 240, 255, 0.1);
         }
 
-        .fiber-ring:nth-child(1) {
-            width: 280px;
-            height: 280px;
-            animation: ringPulse 3s ease-in-out infinite;
-        }
-
-        .fiber-ring:nth-child(2) {
-            width: 220px;
-            height: 220px;
-            border-color: rgba(0, 240, 255, 0.5);
-            animation: ringPulse 3s ease-in-out infinite 0.5s;
-        }
-
-        .fiber-ring:nth-child(3) {
-            width: 160px;
-            height: 160px;
-            border-color: rgba(0, 240, 255, 0.7);
-            animation: ringPulse 3s ease-in-out infinite 1s;
-        }
-
-        .fiber-ring:nth-child(4) {
-            width: 100px;
+        .muscle-bulge:nth-child(1) {
+            width: 120px;
             height: 100px;
-            border-color: var(--accent-cyan);
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, transparent 70%);
-            animation: ringPulse 3s ease-in-out infinite 1.5s;
-        }
-
-        @keyframes ringPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
-        }
-
-        /* Fiber strands */
-        .fiber-strand {
-            position: absolute;
-            top: 50%;
+            top: 20px;
             left: 50%;
-            width: 2px;
+            transform: translateX(-50%);
+            animation: bulgePulse 2s ease-in-out infinite;
+        }
+
+        .muscle-bulge:nth-child(2) {
+            width: 180px;
             height: 140px;
-            background: linear-gradient(to bottom, transparent, var(--accent-cyan), transparent);
-            transform-origin: center bottom;
-            opacity: 0.6;
-            animation: strandGlow 2s ease-in-out infinite;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bulgePulse 2s ease-in-out infinite 0.3s;
         }
 
-        .fiber-strand:nth-child(5) { transform: translate(-50%, -100%) rotate(0deg); animation-delay: 0s; }
-        .fiber-strand:nth-child(6) { transform: translate(-50%, -100%) rotate(45deg); animation-delay: 0.2s; }
-        .fiber-strand:nth-child(7) { transform: translate(-50%, -100%) rotate(90deg); animation-delay: 0.4s; }
-        .fiber-strand:nth-child(8) { transform: translate(-50%, -100%) rotate(135deg); animation-delay: 0.6s; }
-        .fiber-strand:nth-child(9) { transform: translate(-50%, -100%) rotate(180deg); animation-delay: 0.8s; }
-        .fiber-strand:nth-child(10) { transform: translate(-50%, -100%) rotate(225deg); animation-delay: 1s; }
-        .fiber-strand:nth-child(11) { transform: translate(-50%, -100%) rotate(270deg); animation-delay: 1.2s; }
-        .fiber-strand:nth-child(12) { transform: translate(-50%, -100%) rotate(315deg); animation-delay: 1.4s; }
-
-        @keyframes strandGlow {
-            0%, 100% { opacity: 0.3; box-shadow: 0 0 5px var(--accent-cyan); }
-            50% { opacity: 0.8; box-shadow: 0 0 20px var(--accent-cyan); }
+        .muscle-bulge:nth-child(3) {
+            width: 160px;
+            height: 120px;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bulgePulse 2s ease-in-out infinite 0.6s;
         }
 
-        /* Holographic UI overlay */
-        .holo-ui {
+        .muscle-bulge:nth-child(4) {
+            width: 100px;
+            height: 80px;
+            top: 300px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bulgePulse 2s ease-in-out infinite 0.9s;
+        }
+
+        @keyframes bulgePulse {
+            0%, 100% { 
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 240, 255, 0.1);
+            }
+            50% { 
+                transform: translateX(-50%) scale(1.1);
+                box-shadow: 0 0 40px rgba(0, 240, 255, 0.4), inset 0 0 50px rgba(0, 240, 255, 0.2);
+            }
+        }
+
+        /* Muscle striations */
+        .muscle-striation {
             position: absolute;
-            inset: 20px;
-            pointer-events: none;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            animation: striationGlow 1.5s ease-in-out infinite;
         }
 
-        .holo-corner {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--accent-cyan);
-            opacity: 0.5;
-            animation: cornerPulse 2s ease-in-out infinite;
-        }
+        .muscle-striation:nth-child(5) { top: 60px; animation-delay: 0s; }
+        .muscle-striation:nth-child(6) { top: 140px; animation-delay: 0.2s; }
+        .muscle-striation:nth-child(7) { top: 220px; animation-delay: 0.4s; }
+        .muscle-striation:nth-child(8) { top: 300px; animation-delay: 0.6s; }
+        .muscle-striation:nth-child(9) { top: 360px; animation-delay: 0.8s; }
 
-        .holo-corner:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; }
-        .holo-corner:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; }
-        .holo-corner:nth-child(3) { bottom: 0; left: 0; border-right: none; border-top: none; }
-        .holo-corner:nth-child(4) { bottom: 0; right: 0; border-left: none; border-top: none; }
-
-        @keyframes cornerPulse {
+        @keyframes striationGlow {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 0.8; }
         }
 
-        .holo-data {
+        /* Data readouts */
+        .muscle-data {
             position: absolute;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.625rem;
@@ -562,10 +472,73 @@
             opacity: 0.7;
         }
 
-        .holo-data.top-left { top: 10px; left: 50px; }
-        .holo-data.top-right { top: 10px; right: 50px; }
-        .holo-data.bottom-left { bottom: 10px; left: 50px; }
-        .holo-data.bottom-right { bottom: 10px; right: 50px; }
+        .muscle-data.top-left { top: 20px; left: 20px; }
+        .muscle-data.top-right { top: 20px; right: 20px; }
+        .muscle-data.bottom-left { bottom: 20px; left: 20px; }
+        .muscle-data.bottom-right { bottom: 20px; right: 20px; }
+
+        /* Product Image */
+        .product-showcase {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .product-image {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .product-glow {
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.2) 0%, transparent 70%);
+            animation: productGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes productGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .product-label {
+            text-align: center;
+        }
+
+        .product-label h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-label p {
+            font-size: 0.875rem;
+            color: var(--light-gray);
+        }
 
         /* Fiber info panel */
         .fiber-info h3 {
@@ -1152,76 +1125,34 @@
         </div>
         
         <div class="fiber-content">
-            <div class="holo-display">
-                <div class="holo-grid"></div>
-                
-                <div class="holo-fiber-container">
-                    <div class="holo-fiber">
-                        <div class="fiber-ring"></div>
-                        <div class="fiber-ring"></div>
-                        <div class="fiber-ring"></div>
-                        <div class="fiber-ring"></div>
-                        
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                        <div class="fiber-strand"></div>
-                    </div>
+            <div class="muscle-display">
+                <div class="muscle-fiber">
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-bulge"></div>
+                    <div class="muscle-striation"></div>
+                    <div class="muscle-striation"></div>
+                    <div class="muscle-striation"></div>
+                    <div class="muscle-striation"></div>
+                    <div class="muscle-striation"></div>
                 </div>
                 
-                <div class="holo-ui">
-                    <div class="holo-corner"></div>
-                    <div class="holo-corner"></div>
-                    <div class="holo-corner"></div>
-                    <div class="holo-corner"></div>
-                    
-                    <span class="holo-data top-left">SCANNING...</span>
-                    <span class="holo-data top-right">3D RENDER</span>
-                    <span class="holo-data bottom-left">FIBER_ID: 8472</span>
-                    <span class="holo-data bottom-right">ACTIVE</span>
-                </div>
+                <span class="muscle-data top-left">CONTRACTING...</span>
+                <span class="muscle-data top-right">GROWTH: +15%</span>
+                <span class="muscle-data bottom-left">FIBER_DENSITY: HIGH</span>
+                <span class="muscle-data bottom-right">PROTEIN_SYNTHESIS: ACTIVE</span>
             </div>
             
-            <div class="fiber-info">
-                <h3>Fiber Type Analysis</h3>
+            <div class="product-showcase">
+                <div class="product-image">
+                    <div class="product-glow"></div>
+                    <img src="https://i.ibb.co/tT3q3BVr/PHOTO-2025-06-17-20-53-25.jpg" alt="NO BS WHEY Protein">
+                </div>
                 
-                <div class="fiber-types">
-                    <div class="fiber-type">
-                        <div class="fiber-type-header">
-                            <h4>Type I — Slow Twitch</h4>
-                            <span class="fiber-percentage">45%</span>
-                        </div>
-                        <p>Endurance-focused fibers with high mitochondrial density. Predominant in distance athletes.</p>
-                        <div class="fiber-bar">
-                            <div class="fiber-bar-fill" style="width: 45%;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="fiber-type">
-                        <div class="fiber-type-header">
-                            <h4>Type IIa — Fast Oxidative</h4>
-                            <span class="fiber-percentage">35%</span>
-                        </div>
-                        <p>Intermediate fibers adaptable to both strength and endurance demands. Highly trainable.</p>
-                        <div class="fiber-bar">
-                            <div class="fiber-bar-fill" style="width: 35%;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="fiber-type">
-                        <div class="fiber-type-header">
-                            <h4>Type IIx — Fast Glycolytic</h4>
-                            <span class="fiber-percentage">20%</span>
-                        </div>
-                        <p>Maximum power output fibers. Essential for explosive movements and peak force production.</p>
-                        <div class="fiber-bar">
-                            <div class="fiber-bar-fill" style="width: 20%;"></div>
-                        </div>
-                    </div>
+                <div class="product-label">
+                    <h4>DR DAN'S NO BS WHEY</h4>
+                    <p>PhD Formulated • 25g Protein • 2.8g Leucine</p>
                 </div>
             </div>
         </div>
