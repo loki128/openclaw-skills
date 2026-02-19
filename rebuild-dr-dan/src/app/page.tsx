@@ -1,9 +1,9 @@
-import Hero from './sections/Hero';
-import IronSection from './sections/IronSection';
-import MoleculeSection from './sections/MoleculeSection';
-import LabSection from './sections/LabSection';
-import StorySection from './sections/StorySection';
-import ProductSection from './sections/ProductSection';
+import Hero from '@/components/sections/Hero';
+import IronSection from '@/components/sections/IronSection';
+import MoleculeSection from '@/components/sections/MoleculeSection';
+import LabSection from '@/components/sections/LabSection';
+import StorySection from '@/components/sections/StorySection';
+import ProductSection from '@/components/sections/ProductSection';
 
 export default function Home() {
   return (
