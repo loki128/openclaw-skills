@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FORGED — DR DAN'S NO BS WHEY</title>
+    <title>FORGED - DR DAN'S NO BS WHEY</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -274,7 +274,7 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%);
             border: 3px solid var(--iron-gray);
             border-radius: 50%;
-            box-shadow: 
+            box-shadow:
                 0 0 60px rgba(204,0,0,0.2),
                 inset 0 0 40px rgba(0,0,0,0.5);
         }
@@ -504,7 +504,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(204,0,0,0.1) 0%, transparent 40%),
                 radial-gradient(circle at 80% 20%, rgba(100,100,100,0.05) 0%, transparent 40%);
             pointer-events: none;
@@ -547,7 +547,7 @@
         .graph-grid {
             position: absolute;
             inset: 4rem;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -641,11 +641,11 @@
         }
 
         @keyframes particleDrop {
-            0% { 
+            0% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
             }
-            100% { 
+            100% {
                 transform: translateY(300px) scale(0);
                 opacity: 0;
             }
@@ -696,11 +696,11 @@
             border-radius: 2px;
         }
 
-        .legend-line.cancer { 
+        .legend-line.cancer {
             background: linear-gradient(90deg, var(--blood-red), var(--forged-red));
             box-shadow: 0 0 10px var(--forged-red);
         }
-        .legend-line.sweetener { 
+        .legend-line.sweetener {
             background: linear-gradient(90deg, #555, var(--ash-gray));
         }
 
@@ -882,13 +882,13 @@
             <div class="iron-visual">
                 <div class="barbell">
                     <div class="bar"></div>
-                    
+
                     <div class="plates-left">
                         <div class="plate plate-45"></div>
                         <div class="plate plate-25"></div>
                         <div class="plate plate-10"></div>
                     </div>
-                    
+
                     <div class="plates-right">
                         <div class="plate plate-45"></div>
                         <div class="plate plate-25"></div>
@@ -909,62 +909,62 @@
 
             <div class="graph-container">
                 <div class="graph-grid"></div>
-                
+
                 <svg class="graph-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id="cancerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
                             <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
                         </linearGradient>
-                        
+
                         <linearGradient id="sweetenerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" style="stop-color:#666666;stop-opacity:1" />
                             <stop offset="100%" style="stop-color:#888888;stop-opacity:1" />
                         </linearGradient>
                     </defs>
-                    
-                    <path class="graph-path cancer" 
+
+                    <path class="graph-path cancer"
                           d="M 0 80 Q 200 100, 400 200 T 800 320" />
-                    
-                    <path class="graph-path sweetener" 
+
+                    <path class="graph-path sweetener"
                           d="M 0 120 Q 200 140, 400 240 T 800 360" />
                 </svg>
-                
+
                 <div class="graph-dot cancer" style="left: 10%; top: 20%;"></div>
                 <div class="graph-dot cancer" style="left: 35%; top: 28%;"></div>
                 <div class="graph-dot cancer" style="left: 60%; top: 50%;"></div>
                 <div class="graph-dot cancer" style="left: 85%; top: 80%;"></div>
-                
+
                 <div class="graph-dot sweetener" style="left: 10%; top: 30%;"></div>
                 <div class="graph-dot sweetener" style="left: 35%; top: 38%;"></div>
                 <div class="graph-dot sweetener" style="left: 60%; top: 60%;"></div>
                 <div class="graph-dot sweetener" style="left: 85%; top: 90%;"></div>
-                
+
                 <div class="particle-fall cancer" style="left: 15%; top: 15%; animation-delay: 0s;"></div>
                 <div class="particle-fall cancer" style="left: 40%; top: 25%; animation-delay: 0.3s;"></div>
                 <div class="particle-fall cancer" style="left: 65%; top: 45%; animation-delay: 0.6s;"></div>
                 <div class="particle-fall sweetener" style="left: 20%; top: 25%; animation-delay: 0.2s;"></div>
                 <div class="particle-fall sweetener" style="left: 45%; top: 35%; animation-delay: 0.5s;"></div>
                 <div class="particle-fall sweetener" style="left: 70%; top: 55%; animation-delay: 0.8s;"></div>
-                
+
                 <div class="graph-labels-y">
                     <span class="graph-label">HIGH</span>
                     <span class="graph-label">MEDIUM</span>
                     <span class="graph-label">LOW</span>
                 </div>
-                
+
                 <div class="graph-labels-x">
                     <span class="graph-label">HIGH SWEETENER INTAKE</span>
                     <span class="graph-label">NO SWEETENERS</span>
                 </div>
             </div>
-            
+
             <div class="graph-legend">
                 <div class="legend-item">
                     <div class="legend-line cancer"></div>
                     <span class="legend-text">Cancer Cell Markers</span>
                 </div>
-                
+
                 <div class="legend-item">
                     <div class="legend-line sweetener"></div>
                     <span class="legend-text">Artificial Sweeteners</span>
@@ -982,7 +982,7 @@
                     <div class="muscle-base"></div>
                     <div class="muscle-base"></div>
                     <div class="muscle-base"></div>
-                    
+
                     <div class="muscle-fiber-line"></div>
                     <div class="muscle-fiber-line"></div>
                     <div class="muscle-fiber-line"></div>
@@ -993,7 +993,7 @@
                     <div class="muscle-fiber-line"></div>
                     <div class="muscle-fiber-line"></div>
                     <div class="muscle-fiber-line"></div>
-                    
+
                     <div class="muscle-tendon top"></div>
                     <div class="muscle-tendon bottom"></div>
                 </div>
@@ -1001,7 +1001,7 @@
 
             <div class="iron-text">
                 <h2>MUSCLE FIBERS.</h2>
-                <p>Type IIx fibers activated. Maximum motor unit recruitment. Every scoop triggers protein synthesis at the cellular level. This isn't just powder—it's architectural material for the body.</p>
+                <p>Type IIx fibers activated. Maximum motor unit recruitment. Every scoop triggers protein synthesis at the cellular level. This isn't just powder-it's architectural material for the body.</p>
             </div>
         </div>
     </section>
@@ -1053,85 +1053,6 @@
         </div>
     </section>
 
-    <!-- Cancer/Sweetener Graph Section -->
-    <section class="graph-section">
-        <div class="graph-content">
-            <div class="graph-header">
-                <h2>THE CORRELATION.</h2>
-                <p>As artificial sweeteners decrease, so do cancer markers.</p>
-            </div>
-
-            <div class="graph-container">
-                <div class="graph-grid"></div>
-                
-                <svg class="graph-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="cancerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
-                        </linearGradient>
-                        
-                        <linearGradient id="sweetenerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#666666;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#888888;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    
-                    <!-- Cancer line - starts high, drops low -->
-                    <path class="graph-path cancer" 
-                          d="M 0 80 Q 200 100, 400 200 T 800 320" />
-                    
-                    <!-- Sweetener line - starts high, drops low -->
-                    <path class="graph-path sweetener" 
-                          d="M 0 120 Q 200 140, 400 240 T 800 360" />
-                </svg>
-                
-                <!-- Animated dots on cancer line -->
-                <div class="graph-dot cancer" style="left: 10%; top: 20%;"></div>
-                <div class="graph-dot cancer" style="left: 35%; top: 28%;"></div>
-                <div class="graph-dot cancer" style="left: 60%; top: 50%;"></div>
-                <div class="graph-dot cancer" style="left: 85%; top: 80%;"></div>
-                
-                <!-- Animated dots on sweetener line -->
-                <div class="graph-dot sweetener" style="left: 10%; top: 30%;"></div>
-                <div class="graph-dot sweetener" style="left: 35%; top: 38%;"></div>
-                <div class="graph-dot sweetener" style="left: 60%; top: 60%;"></div>
-                <div class="graph-dot sweetener" style="left: 85%; top: 90%;"></div>
-                
-                <!-- Falling particles -->
-                <div class="particle-fall cancer" style="left: 15%; top: 15%; animation-delay: 0s;"></div>
-                <div class="particle-fall cancer" style="left: 40%; top: 25%; animation-delay: 0.3s;"></div>
-                <div class="particle-fall cancer" style="left: 65%; top: 45%; animation-delay: 0.6s;"></div>
-                <div class="particle-fall sweetener" style="left: 20%; top: 25%; animation-delay: 0.2s;"></div>
-                <div class="particle-fall sweetener" style="left: 45%; top: 35%; animation-delay: 0.5s;"></div>
-                <div class="particle-fall sweetener" style="left: 70%; top: 55%; animation-delay: 0.8s;"></div>
-                
-                <div class="graph-labels-y">
-                    <span class="graph-label">HIGH</span>
-                    <span class="graph-label">MEDIUM</span>
-                    <span class="graph-label">LOW</span>
-                </div>
-                
-                <div class="graph-labels-x">
-                    <span class="graph-label">HIGH SWEETENER INTAKE</span>
-                    <span class="graph-label">NO SWEETENERS</span>
-                </div>
-            </div>
-            
-            <div class="graph-legend">
-                <div class="legend-item">
-                    <div class="legend-line cancer"></div>
-                    <span class="legend-text">Cancer Cell Markers</span>
-                </div>
-                
-                <div class="legend-item">
-                    <div class="legend-line sweetener"></div>
-                    <span class="legend-text">Artificial Sweeteners</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Product Reveal -->
     <section class="product-section">
         <div class="product-content">
@@ -1151,17 +1072,17 @@
                         <span class="spec-label">Protein</span>
                         <span class="spec-value">25g per serving</span>
                     </div>
-                    
+
                     <div class="spec-row">
                         <span class="spec-label">Leucine</span>
                         <span class="spec-value">2.8g</span>
                     </div>
-                    
+
                     <div class="spec-row">
                         <span class="spec-label">Servings</span>
                         <span class="spec-value">30</span>
                     </div>
-                    
+
                     <div class="spec-row">
                         <span class="spec-label">Testing</span>
                         <span class="spec-value">3rd Party</span>
@@ -1176,7 +1097,7 @@
     </section>
 
     <footer>
-        <p>DR DAN'S NO BS WHEY — FORGED IN LABORATORIES</p>
+        <p>DR DAN'S NO BS WHEY - FORGED IN LABORATORIES</p>
     </footer>
 
     <script>
