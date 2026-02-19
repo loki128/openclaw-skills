@@ -30,54 +30,56 @@ export default function ExperienceProduct() {
           className="flex justify-center"
         >
           <motion.div
-            className="w-[400px] h-[500px] relative"
+            className="relative"
             style={{
               rotateX: isHovered ? -mousePosition.y : 0,
               rotateY: isHovered ? mousePosition.x : 0,
               transformStyle: 'preserve-3d'
             }}
           >
-            <div 
-              className="w-full h-full flex items-center justify-center"
+            {/* Glow effect */}
+            <motion.div
+              className="absolute inset-0 -z-10"
+              animate={{ 
+                opacity: isHovered ? 0.5 : 0.3,
+                scale: isHovered ? 1.1 : 1
+              }}
               style={{
-                background: 'linear-gradient(135deg, #111 0%, #0a0a0a 100%)',
-                border: '1px solid #222'
+                background: 'radial-gradient(circle, rgba(0,255,136,0.2) 0%, transparent 70%)',
+                filter: 'blur(60px)'
+              }}
+            />
+
+            {/* Actual product image */}
+            <motion.div
+              className="relative w-[450px] h-[600px] overflow-hidden"
+              style={{
+                clipPath: 'polygon(10% 0%, 90% 0%, 100% 5%, 100% 95%, 90% 100%, 10% 100%, 0% 95%, 0% 5%)'
               }}
             >
-              <div className="text-center"
-              >
-                <div className="w-40 h-56 mx-auto mb-6 relative"
-                  style={{ transform: 'translateZ(40px)' }}
-                >
-                  <div 
-                    className="absolute inset-0"
-                    style={{
-                      background: 'linear-gradient(180deg, #1a1a1a 0%, #111 100%)',
-                      border: '1px solid #2a2a2a',
-                      clipPath: 'polygon(15% 0%, 85% 0%, 100% 8%, 100% 92%, 85% 100%, 15% 100%, 0% 92%, 0% 8%)'
-                    }}
-                  />
-                  
-                  <div className="absolute inset-0 flex flex-col items-center justify-center"
-                  >
-                    <span className="text-[#00ff88] text-sm uppercase tracking-[0.4em] mb-3"
-                    >NO BS</span>
-                    
-                    <span className="text-white text-3xl font-bold"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                    >
-                      WHEY
-                    </span>
-                    
-                    <span className="text-[#444] text-xs mt-6 uppercase tracking-wider"
-                    >PhD Formulated</span>
-                  </div>
-                </div>
+              <img 
+                src="https://i.ibb.co/tT3q3BVr/PHOTO-2025-06-17-20-53-25.jpg"
+                alt="NO BS WHEY Protein"
+                className="w-full h-full object-cover"
+              />
+              
+              {/* Overlay gradient for blend */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(5,5,5,0.3) 0%, transparent 20%, transparent 80%, rgba(5,5,5,0.5) 100%)'
+                }}
+              />
+            </motion.div>
 
-                <p className="text-[#333] text-sm tracking-[0.2em]"
-                >2LB / 30 SERVINGS</p>
-              </div>
-            </div>
+            {/* Reflection */}
+            <motion.div
+              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 opacity-30"
+              style={{
+                background: 'linear-gradient(to bottom, rgba(0,255,136,0.3), transparent)',
+                filter: 'blur(30px)'
+              }}
+            />
           </motion.div>
         </motion.div>
 
@@ -87,13 +89,13 @@ export default function ExperienceProduct() {
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
         >
-          <div className="flex items-center gap-3 mb-8"
-          >
-            <span className="px-4 py-2 bg-[#00ff88] text-black text-xs font-bold uppercase tracking-wider"
-            >PhD Formulated</span>
-            
-            <span className="px-4 py-2 border border-[#ff3333] text-[#ff3333] text-xs font-bold uppercase tracking-wider"
-            >Survivor Approved</span>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="px-4 py-2 bg-[#00ff88] text-black text-xs font-bold uppercase tracking-wider">
+              PhD Formulated
+            </span>
+            <span className="px-4 py-2 border border-[#ff3333] text-[#ff3333] text-xs font-bold uppercase tracking-wider">
+              Survivor Approved
+            </span>
           </div>
 
           <h2 
@@ -108,19 +110,14 @@ export default function ExperienceProduct() {
             NO BS WHEY
           </h2>
 
-          <p className="text-[#666] text-xl mb-12 max-w-[40ch]"
-          >
+          <p className="text-[#666] text-xl mb-12 max-w-[40ch]">
             25g protein. 2.8g leucine. Zero fillers. 
             Third-party tested.
           </p>
 
-          <div className="flex items-baseline gap-4 mb-12"
-          >
-            <span className="text-white text-5xl font-bold"
-            >$49.99</span>
-            
-            <span className="text-[#444]"
-            >/ 30 servings</span>
+          <div className="flex items-baseline gap-4 mb-12">
+            <span className="text-white text-5xl font-bold">$49.99</span>
+            <span className="text-[#444]">/ 30 servings</span>
           </div>
 
           <motion.button
