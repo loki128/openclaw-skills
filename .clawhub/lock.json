@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "skills": {
+    "superdesign": {
+      "version": "1.0.0",
+      "installedAt": 1771451640645
+    },
+    "awwwards-design": {
+      "version": "1.0.0",
+      "installedAt": 1771451644897
+    },
+    "lb-motion-skill": {
+      "version": "0.1.0",
+      "installedAt": 1771451649119
+    },
+    "distinctive-design-systems": {
+      "version": "1.0.0",
+      "installedAt": 1771451653037
+    },
+    "threejs": {
+      "version": "1.0.0",
+      "installedAt": 1771451657030
+    },
+    "fonts": {
+      "version": "1.0.0",
+      "installedAt": 1771451661004
+    },
+    "design-system-creation": {
+      "version": "1.0.0",
+      "installedAt": 1771451665751
+    },
+    "ui-audit": {
+      "version": "1.0.1",
+      "installedAt": 1771451671093
+    },
+    "auto-animate": {
+      "version": "0.1.0",
+      "installedAt": 1771451676610
+    },
+    "frontend-design-ultimate": {
+      "version": "1.0.0",
+      "installedAt": 1771451681100
+    },
+    "find-skills": {
+      "version": "0.1.0",
+      "installedAt": 1771452160686
+    },
+    "self-improving-agent-1-0-2": {
+      "version": "1.0.0",
+      "installedAt": 1771452162921
+    },
+    "ontology": {
+      "version": "0.1.2",
+      "installedAt": 1771452164753
+    },
+    "notion": {
+      "version": "1.0.0",
+      "installedAt": 1771452166391
+    },
+    "nano-banana-pro": {
+      "version": "1.0.1",
+      "installedAt": 1771452168095
+    }
+  }
+}
