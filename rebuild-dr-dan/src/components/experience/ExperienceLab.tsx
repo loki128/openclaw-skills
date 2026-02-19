@@ -1,119 +1,106 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ExperienceLab() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-20%" });
-
-  const certifications = [
-    { title: 'NSF Certified', desc: 'Independently tested for banned substances and label accuracy.', color: '#00ff88' },
-    { title: 'GMP Facility', desc: 'Manufactured in FDA-registered facilities following strict protocols.', color: '#4488ff' },
-    { title: 'Third-Party Tested', desc: 'Every batch verified by independent laboratories for purity.', color: '#ffffff' },
-  ];
-
   return (
-    <section className="relative py-32 bg-[#050505]">
-      <div className="max-w-[1200px] mx-auto px-8">
-        <div ref={ref}>
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              className="text-[#4488ff] text-sm uppercase tracking-[0.5em] mb-6"
-            >
-              The Lab
-            </motion.p>
+    <section className="min-h-screen bg-[#050505] flex items-center px-16 py-32">
+      <div className="w-1/3">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-[#4488ff] text-xs uppercase tracking-[0.5em] mb-8"
+        >
+          The Lab
+        </motion.p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.1 }}
-              className="text-white text-4xl md:text-5xl font-bold mb-8"
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-white mb-8"
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: 'clamp(48px, 6vw, 80px)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            lineHeight: 1
+          }}
+        >
+          Tested.
+          <br />
+          Verified.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-[#555] text-lg max-w-[40ch] leading-relaxed mb-12"
+        >
+          Every batch tested for heavy metals, microbial contamination, 
+          and protein content. If it doesn't meet our standards, 
+          it doesn't leave the lab.
+        </motion.p>
+
+        <div className="space-y-6">
+          {[
+            { label: 'Protein Content', value: 92, color: '#00ff88' },
+            { label: 'Heavy Metals', value: 0, color: '#ff3333' },
+            { label: 'Microbial', value: 0, color: '#4488ff' },
+          ].map((item, index) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 + index * 0.1 }}
+            >
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-[#555]">{item.label}</span>
+                <span className="font-mono" style={{ color: item.color }}>{item.value}%</span>
+              </div>
+              <div className="h-1 bg-[#111] border border-[#1a1a1a]">
+                <motion.div
+                  className="h-full"
+                  style={{ backgroundColor: item.color }}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${item.value}%` }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <div className="absolute right-16 top-1/2 -translate-y-1/2 grid grid-cols-1 gap-8">
+        {[
+          { title: 'NSF', desc: 'Certified' },
+          { title: 'GMP', desc: 'Facility' },
+          { title: '3rd', desc: 'Party Tested' },
+        ].map((cert, index) => (
+          <motion.div
+            key={cert.title}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 + index * 0.15 }}
+            className="text-right"
+          >
+            <p className="text-white text-4xl font-bold"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
-              Laboratory Standards
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-              className="text-[#888] text-lg leading-relaxed"
-            >
-              We don't trust marketing claims. We trust data. Every batch 
-              undergoes rigorous testing for heavy metals, microbial contamination, 
-              and protein content. If it doesn't meet our standards, it doesn't 
-              leave the lab.
-            </motion.p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {certifications.map((cert, index) => (
-              <motion.div
-                key={cert.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className="p-8 border border-[#1a1a1a]"
-              >
-                <div 
-                  className="w-3 h-3 mb-6"
-                  style={{ backgroundColor: cert.color }}
-                />
-                
-                <h3 className="text-white text-xl font-bold mb-4"
-                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
-                  {cert.title}
-                </h3>
-                
-                <p className="text-[#555] leading-relaxed">
-                  {cert.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.6 }}
-            className="p-8 border border-[#1a1a1a]"
-          >
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#1a1a1a]">
-              <span className="text-[#555] text-sm uppercase tracking-wider">
-                Purity Analysis
-              </span>
-              <span className="text-[#00ff88] font-mono">92.4% Pure</span>
-            </div>
-
-            <div className="space-y-6">
-              {[
-                { label: 'Protein Content', value: 92, color: '#00ff88' },
-                { label: 'Heavy Metals', value: 0, color: '#ff3333' },
-                { label: 'Microbial Contamination', value: 0, color: '#4488ff' },
-              ].map((item, index) => (
-                <div key={item.label}>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-[#555]">{item.label}</span>
-                    <span className="font-mono" style={{ color: item.color }}>{item.value}%</span>
-                  </div>
-                  <div className="h-2 bg-[#111] border border-[#1a1a1a]">
-                    <motion.div
-                      className="h-full"
-                      style={{ backgroundColor: item.color }}
-                      initial={{ width: 0 }}
-                      animate={isInView ? { width: `${item.value}%` } : {}}
-                      transition={{ delay: 0.8 + index * 0.1, duration: 1 }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+              {cert.title}
+            </p>
+            <p className="text-[#444] text-sm uppercase tracking-wider">
+              {cert.desc}
+            </p>
           </motion.div>
-        </div>
+        ))}
       </div>
     </section>
   );

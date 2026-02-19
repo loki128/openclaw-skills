@@ -1,66 +1,43 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ExperienceOpening() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
-
   return (
-    <section 
-      ref={containerRef}
-      className="relative h-screen flex items-center justify-center bg-[#050505]"
-    >
-      <motion.div 
-        className="text-center z-10 px-8"
-        style={{ opacity, y }}
+    <section className="h-screen flex flex-col items-center justify-center bg-[#050505] px-8">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-[#333] text-xs uppercase tracking-[0.5em] mb-8"
       >
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-[#333] text-sm uppercase tracking-[0.5em] mb-8"
-        >
-          Performance Lab
-        </motion.p>
+        Performance Lab
+      </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="text-white text-6xl md:text-8xl font-bold mb-4"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
-          DR DAN'S
-        </motion.h1>
+      <motion.h1
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="text-white text-center"
+        style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(64px, 12vw, 160px)',
+          fontWeight: 700,
+          letterSpacing: '-0.03em',
+          lineHeight: 0.95
+        }}
+      >
+        NO BS WHEY
+      </motion.h1>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="text-white text-6xl md:text-8xl font-bold mb-12"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
-          NO BS WHEY
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="text-[#444] text-sm uppercase tracking-[0.3em]"
-        >
-          Scroll to enter
-        </motion.p>
-      </motion.div>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="text-[#444] text-lg mt-12 max-w-[50ch] text-center"
+      >
+        PhD formulated. Third-party tested. Zero compromises.
+      </motion.p>
     </section>
   );
 }
