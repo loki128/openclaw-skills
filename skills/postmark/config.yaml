@@ -1,0 +1,4 @@
+api_key: "b547f844-05ed-47fa-971c-d92a8f86154b"
+server_id: "18260126"
+from_email: "your-sender@yourdomain.com"
+base_url: "https://api.postmarkapp.com"
