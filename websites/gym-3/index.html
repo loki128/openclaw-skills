@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITANIUM — Premium Fitness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --electric-blue: #00D9FF;
+            --deep-space: #0a0e17;
+            --midnight: #111827;
+            --steel: #1f2937;
+            --silver: #9ca3af;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--deep-space);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10, 14, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        .logo span {
+            color: var(--electric-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--electric-blue);
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--electric-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 6rem 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 100px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero-badge span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--electric-blue);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(135deg, var(--electric-blue), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--silver);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: linear-gradient(135deg, var(--electric-blue), #0099cc);
+            color: var(--deep-space);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 100px;
+            transition: all 0.3s;
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 50px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Features strip */
+        .features-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feature-item {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feature-item:last-child {
+            border-right: none;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            font-size: 0.75rem;
+            color: var(--silver);
+        }
+
+        /* Section styling */
+        section {
+            padding: 8rem 4rem;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--silver);
+            font-size: 1.125rem;
+            font-weight: 300;
+        }
+
+        /* Amenities */
+        .amenities {
+            background: var(--midnight);
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .amenity-card {
+            background: var(--steel);
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .amenity-card:hover {
+            border-color: var(--electric-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .amenity-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .amenity-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .amenity-card p {
+            color: var(--silver);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Membership */
+        .membership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .membership-card {
+            background: var(--midnight);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .membership-card.featured {
+            background: linear-gradient(135deg, var(--electric-blue), #0099cc);
+            color: var(--deep-space);
+        }
+
+        .membership-card.featured p,
+        .membership-card.featured li {
+            color: rgba(10, 14, 23, 0.8);
+        }
+
+        .membership-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .membership-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .membership-card .price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .membership-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .membership-card ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .membership-card li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.875rem;
+        }
+
+        .membership-card.featured li {
+            border-bottom-color: rgba(10, 14, 23, 0.1);
+        }
+
+        .membership-btn {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--electric-blue);
+            color: var(--electric-blue);
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .membership-card.featured .membership-btn {
+            background: var(--deep-space);
+            border-color: var(--deep-space);
+            color: white;
+        }
+
+        .membership-btn:hover {
+            background: var(--electric-blue);
+            color: var(--deep-space);
+        }
+
+        /* App section */
+        .app-section {
+            background: linear-gradient(135deg, var(--midnight), var(--deep-space));
+        }
+
+        .app-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .app-text h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-text p {
+            color: var(--silver);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .app-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .app-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-visual {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--steel), var(--midnight));
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--midnight);
+            padding: 4rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h3 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: var(--electric-blue);
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--silver);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--silver);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-item {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .app-content {
+                grid-template-columns: 1fr;
+            }
+
+            .app-visual {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <nav>
+        <div class="logo">TITAN<span>IUM</span></div>
+        <div class="nav-links">
+            <a href="#amenities">Amenities</a>
+            <a href="#membership">Membership</a>
+            <a href="#app">App</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-badge">
+            <span>Now Open 24/7</span>
+        </div>
+        
+        <h1>ELEVATE YOUR <span>POTENTIAL</span></h1>
+        <p>Premium fitness experience with state-of-the-art equipment, expert trainers, and luxury amenities.</p>
+        <a href="#membership" class="hero-cta">Start Your Journey →</a>
+    </header>
+
+    <div class="features-strip">
+        <div class="feature-item">
+            <div class="feature-icon">🏋️</div>
+            <h3>Premium Equipment</h3>
+            <p>Technogym & Life Fitness</p>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">🧘</div>
+            <h3>Wellness Spa</h3>
+            <p>Sauna, Steam & Pool</p>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">👥</div>
+            <h3>Expert Trainers</h3>
+            <p>Certified Professionals</p>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">📱</div>
+            <h3>Smart App</h3>
+            <p>Track Everything</p>
+        </div>
+    </div>
+
+    <section id="amenities" class="amenities">
+        <div class="container">
+            <div class="section-header">
+                <h2>World-Class Amenities</h2>
+                <p>Everything you need for a complete fitness experience</p>
+            </div>
+            
+            <div class="amenities-grid">
+                <div class="amenity-card">
+                    <div class="amenity-icon">🏊</div>
+                    <h3>Olympic Pool</h3>
+                    <p>25-meter heated pool with dedicated lap lanes and aqua fitness classes.</p>
+                </div>
+                
+                <div class="amenity-card">
+                    <div class="amenity-icon">🧖</div>
+                    <h3>Recovery Spa</h3>
+                    <p>Sauna, steam room, cold plunge, and massage therapy services.</p>
+                </div>
+                
+                <div class="amenity-card">
+                    <div class="amenity-icon">🥗</div>
+                    <h3>Nutrition Bar</h3>
+                    <p>Fresh smoothies, protein shakes, and healthy meals prepared daily.</p>
+                </div>
+                
+                <div class="amenity-card">
+                    <div class="amenity-icon">🅿️</div>
+                    <h3>Valet Parking</h3>
+                    <p>Complimentary valet service and EV charging stations.</p>
+                </div>
+                
+                <div class="amenity-card">
+                    <div class="amenity-icon">🔒</div>
+                    <h3>Private Lockers</h3>
+                    <p>Spacious lockers with digital locks and laundry service.</p>
+                </div>
+                
+                <div class="amenity-card">
+                    <div class="amenity-icon">📶</div>
+                    <h3>Fiber WiFi</h3>
+                    <p>High-speed internet throughout the facility for connected workouts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="membership">
+        <div class="container">
+            <div class="section-header">
+                <h2>Membership Plans</h2>
+                <p>Flexible options designed for your lifestyle</p>
+            </div>
+            
+            <div class="membership-grid">
+                <div class="membership-card">
+                    <h3>Essential</h3>
+                    <div class="price">$99<span>/month</span></div>
+                    <ul>
+                        <li>Gym access 5AM-11PM</li>
+                        <li>Standard equipment</li>
+                        <li>Locker room access</li>
+                        <li>2 guest passes/month</li>
+                    </ul>
+                    <button class="membership-btn">Get Started</button>
+                </div>
+                
+                <div class="membership-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">$199<span>/month</span></div>
+                    <ul>
+                        <li>24/7 gym access</li>
+                        <li>Pool & spa access</li>
+                        <li>Unlimited group classes</li>
+                        <li>4 PT sessions/month</li>
+                        <li>Nutrition consultation</li>
+                    </ul>
+                    <button class="membership-btn">Get Started</button>
+                </div>
+                
+                <div class="membership-card">
+                    <h3>Elite</h3>
+                    <div class="price">$399<span>/month</span></div>
+                    <ul>
+                        <li>Everything in Premium</li>
+                        <li>Unlimited PT sessions</li>
+                        <li>Private training area</li>
+                        <li>Priority class booking</li>
+                        <li>Concierge service</li>
+                    </ul>
+                    <button class="membership-btn">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="app" class="app-section">
+        <div class="container">
+            <div class="app-content">
+                <div class="app-text">
+                    <h2>Your Fitness, In Your Pocket</h2>
+                    <p>Track workouts, book classes, monitor progress, and connect with your trainer—all from the Titanium app.</p>
+                    
+                    <div class="app-features">
+                        <div class="app-feature">
+                            <div class="app-feature-icon">📊</div>
+                            <span>Detailed workout analytics</span>
+                        </div>
+                        
+                        <div class="app-feature">
+                            <div class="app-feature-icon">📅</div>
+                            <span>Easy class booking</span>
+                        </div>
+                        
+                        <div class="app-feature">
+                            <div class="app-feature-icon">🎯</div>
+                            <span>Goal tracking & achievements</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="app-visual">📱</div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>Titanium</h3>
+                <p style="color: var(--silver); font-size: 0.875rem;">Premium fitness for those who demand excellence.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Location</h3>
+                <a href="#">888 Fitness Blvd</a>
+                <a href="#">Los Angeles, CA 90001</a>
+                <a href="#">(310) 555-0199</a>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Hours</h3>
+                <a href="#">Mon-Fri: 5AM - 11PM</a>
+                <a href="#">Sat-Sun: 7AM - 9PM</a>
+                <a href="#">24/7 for Premium+</a>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Connect</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 Titanium Fitness. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

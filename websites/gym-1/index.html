@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRON TEMPLE — Elite Fitness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blood-red: #8B0000;
+            --dark-metal: #1a1a1a;
+            --gunmetal: #2d2d2d;
+            --steel: #4a4a4a;
+            --iron: #717171;
+        }
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: var(--dark-metal);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.15),
+                rgba(0,0,0,0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .logo span {
+            color: var(--blood-red);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--blood-red);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, var(--gunmetal) 0%, var(--dark-metal) 70%);
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(139,0,0,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139,0,0,0.1) 1px, transparent 1px);
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--blood-red);
+            color: var(--blood-red);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--blood-red);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--iron);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: var(--blood-red);
+            color: white;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        }
+
+        .hero-cta:hover {
+            background: white;
+            color: var(--dark-metal);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: var(--gunmetal);
+            border-top: 3px solid var(--blood-red);
+            border-bottom: 3px solid var(--blood-red);
+        }
+
+        .stat {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-right: 1px solid var(--steel);
+        }
+
+        .stat:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--blood-red);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--iron);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Section styling */
+        section {
+            padding: 6rem 3rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--iron);
+            font-size: 1.125rem;
+        }
+
+        /* Equipment grid */
+        .equipment {
+            background: var(--gunmetal);
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .equipment-card {
+            background: var(--dark-metal);
+            border: 1px solid var(--steel);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .equipment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--blood-red);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .equipment-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .equipment-card:hover {
+            border-color: var(--blood-red);
+            transform: translateY(-5px);
+        }
+
+        .equipment-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .equipment-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .equipment-card p {
+            color: var(--iron);
+            font-size: 0.875rem;
+        }
+
+        /* Trainers */
+        .trainers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .trainer-card {
+            position: relative;
+            background: var(--gunmetal);
+            overflow: hidden;
+        }
+
+        .trainer-image {
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, var(--steel), var(--dark-metal));
+            position: relative;
+        }
+
+        .trainer-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+
+        .trainer-overlay h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .trainer-overlay p {
+            color: var(--blood-red);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Pricing */
+        .pricing {
+            background: var(--gunmetal);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--dark-metal);
+            border: 2px solid var(--steel);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--blood-red);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--blood-red);
+            padding: 0.25rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .pricing-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-card .price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--blood-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .price span {
+            font-size: 1rem;
+            color: var(--iron);
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .pricing-card li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gunmetal);
+            color: var(--iron);
+        }
+
+        .pricing-card li::before {
+            content: '✓ ';
+            color: var(--blood-red);
+            font-weight: 700;
+        }
+
+        .pricing-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--blood-red);
+            color: var(--blood-red);
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pricing-btn:hover {
+            background: var(--blood-red);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-metal);
+            padding: 4rem 3rem;
+            text-align: center;
+            border-top: 3px solid var(--blood-red);
+        }
+
+        footer .logo {
+            margin-bottom: 2rem;
+        }
+
+        footer p {
+            color: var(--iron);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat {
+                border-right: none;
+                border-bottom: 1px solid var(--steel);
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+
+    <nav>
+        <div class="logo">IRON <span>TEMPLE</span></div>
+        <div class="nav-links">
+            <a href="#equipment">Equipment</a>
+            <a href="#trainers">Trainers</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+            <span class="hero-badge">No Compromises. No Excuses.</span>
+            <h1>FORGE YOUR <span>LEGACY</span></h1>
+            <p>Elite equipment. Expert trainers. Uncompromising atmosphere. This is where champions are made.</p>
+            <a href="#pricing" class="hero-cta">Start Training →</a>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Elite Trainers</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">200+</span>
+            <span class="stat-label">Equipment Pieces</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Access</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">15K+</span>
+            <span class="stat-label">Members</span>
+        </div>
+    </div>
+
+    <section id="equipment" class="equipment">
+        <div class="section-header">
+            <h2>War Room Equipment</h2>
+            <p>Professional-grade arsenal for serious athletes</p>
+        </div>
+        
+        <div class="equipment-grid">
+            <div class="equipment-card">
+                <div class="equipment-icon">🏋️</div>
+                <h3>Free Weights</h3>
+                <p>Dumbbells from 5-150lbs, Olympic plates, power racks</p>
+            </div>
+            
+            <div class="equipment-card">
+                <div class="equipment-icon">🏃</div>
+                <h3>Cardio Zone</h3>
+                <p>Treadmills, rowers, assault bikes, stair climbers</p>
+            </div>
+            
+            <div class="equipment-card">
+                <div class="equipment-icon">🥊</div>
+                <h3>Combat Area</h3>
+                <p>Heavy bags, speed bags, MMA cage, wrestling mats</p>
+            </div>
+            
+            <div class="equipment-card">
+                <div class="equipment-icon">💪</div>
+                <h3>Strength Machines</h3>
+                <p>Hammer Strength, Life Fitness, Cybex arsenal</p>
+            </div>
+            
+            <div class="equipment-card">
+                <div class="equipment-icon">🧘</div>
+                <h3>Recovery Zone</h3>
+                <p>Sauna, steam room, cryotherapy, massage therapy</p>
+            </div>
+            
+            <div class="equipment-card">
+                <div class="equipment-icon">📊</div>
+                <h3>Performance Lab</h3>
+                <p>Body composition analysis, VO2 max testing, DEXA scans</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="trainers">
+        <div class="section-header">
+            <h2>Elite Trainers</h2>
+            <p>Learn from the best in the industry</p>
+        </div>
+        
+        <div class="trainers-grid">
+            <div class="trainer-card">
+                <div class="trainer-image"></div>
+                <div class="trainer-overlay">
+                    <h3>Marcus Steel</h3>
+                    <p>Powerlifting Coach</p>
+                </div>
+            </div>
+            
+            <div class="trainer-card">
+                <div class="trainer-image"></div>
+                <div class="trainer-overlay">
+                    <h3>Sarah Viper</h3>
+                    <p>HIIT Specialist</p>
+                </div>
+            </div>
+            
+            <div class="trainer-card">
+                <div class="trainer-image"></div>
+                <div class="trainer-overlay">
+                    <h3>James Iron</h3>
+                    <p>Bodybuilding Pro</p>
+                </div>
+            </div>
+            
+            <div class="trainer-card">
+                <div class="trainer-image"></div>
+                <div class="trainer-overlay">
+                    <h3>Elena Frost</h3>
+                    <p>Nutrition Expert</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="section-header">
+            <h2>Choose Your Path</h2>
+            <p>Membership options for every warrior</p>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Warrior</h3>
+                <div class="price">$49<span>/month</span></div>
+                <ul>
+                    <li>Gym access 6AM-10PM</li>
+                    <li>Free weights & cardio</li>
+                    <li>Locker room access</li>
+                    <li>2 guest passes/month</li>
+                </ul>
+                <button class="pricing-btn">Select Plan</button>
+            </div>
+            
+            <div class="pricing-card featured">
+                <h3>Gladiator</h3>
+                <div class="price">$79<span>/month</span></div>
+                <ul>
+                    <li>24/7 gym access</li>
+                    <li>All equipment zones</li>
+                    <li>Sauna & steam room</li>
+                    <li>4 group classes/month</li>
+                    <li>Nutrition consultation</li>
+                </ul>
+                <button class="pricing-btn">Select Plan</button>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Titan</h3>
+                <div class="price">$149<span>/month</span></div>
+                <ul>
+                    <li>Everything in Gladiator</li>
+                    <li>8 personal training sessions</li>
+                    <li>Monthly body composition scan</li>
+                    <li>Cryotherapy access</li>
+                    <li>Priority class booking</li>
+                </ul>
+                <button class="pricing-btn">Select Plan</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="logo">IRON <span>TEMPLE</span></div>
+        <p>123 Iron Street, Industrial District</p>
+        <p>Open 24/7 for members</p>
+        <p style="margin-top: 2rem; color: var(--iron);">© 2024 Iron Temple. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

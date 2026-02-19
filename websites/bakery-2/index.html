@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Dynasty — Cleopatra's Bakery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --rose: #E8D5C4;
+            --terracotta: #C4A484;
+            --deep-brown: #3D2817;
+            --cream: #FAF7F2;
+            --gold: #D4AF37;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--deep-brown);
+        }
+
+        /* Cursor follower */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, opacity 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: scale(2);
+            background: var(--gold);
+            opacity: 0.3;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(250, 247, 242, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .menu-btn {
+            width: 30px;
+            height: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .menu-btn span {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--deep-brown);
+            transition: 0.3s;
+        }
+
+        .menu-btn span:nth-child(1) { top: 0; }
+        .menu-btn span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+        .menu-btn span:nth-child(3) { bottom: 0; }
+
+        /* Hero with diagonal split */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: -100px;
+            bottom: 0;
+            background: var(--cream);
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 0 100%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--terracotta);
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: #666;
+            max-width: 400px;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2.5rem;
+            background: var(--deep-brown);
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            width: fit-content;
+        }
+
+        .cta-btn:hover {
+            background: var(--gold);
+            color: var(--deep-brown);
+        }
+
+        .hero-visual {
+            position: relative;
+            background: linear-gradient(135deg, var(--rose), var(--terracotta));
+            overflow: hidden;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .floating-pastry {
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.2;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating-pastry:nth-child(1) {
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .floating-pastry:nth-child(2) {
+            bottom: 20%;
+            right: 20%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        /* Marquee */
+        .marquee {
+            background: var(--deep-brown);
+            color: var(--cream);
+            padding: 1.5rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin: 0 3rem;
+            opacity: 0.8;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Products horizontal scroll */
+        .products-section {
+            padding: 6rem 0;
+            overflow: hidden;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+        }
+
+        .products-scroll {
+            display: flex;
+            gap: 2rem;
+            padding: 0 4rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .products-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .product-card {
+            flex: 0 0 350px;
+            scroll-snap-align: start;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-img {
+            height: 250px;
+            background: linear-gradient(135deg, var(--rose), #f0e0d0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .product-info {
+            padding: 2rem;
+        }
+
+        .product-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info p {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--terracotta);
+        }
+
+        /* Features grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            padding: 0;
+        }
+
+        .feature {
+            padding: 4rem;
+            text-align: center;
+            border-right: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .feature:nth-child(3n) {
+            border-right: none;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: var(--deep-brown);
+            color: var(--cream);
+            padding: 6rem 4rem;
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .newsletter-form button {
+            padding: 1rem 2rem;
+            background: var(--gold);
+            color: var(--deep-brown);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--cream);
+            padding: 4rem;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer .logo {
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--deep-brown);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--terracotta);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content::before {
+                clip-path: none;
+                right: 0;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .feature {
+                border-right: none;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+
+    <nav>
+        <div class="logo">SWEET DYNASTY</div>
+        <div class="menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p style="color: var(--terracotta); letter-spacing: 0.2em; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 1rem;">Est. 1987</p>
+            <h1>Taste the <span>Dynasty</span></h1>
+            <p>Three generations of baking excellence. Every pastry tells a story of tradition, passion, and the finest ingredients.</p>
+            <a href="#products" class="cta-btn">Explore Menu →</a>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-pastry">🥐</div>
+            <div class="floating-pastry">🧁</div>
+        </div>
+    </header>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            <span>✦ Fresh Daily</span>
+            <span>✦ Artisan Crafted</span>
+            <span>✦ Premium Ingredients</span>
+            <span>✦ Family Recipe</span>
+            <span>✦ Fresh Daily</span>
+            <span>✦ Artisan Crafted</span>
+            <span>✦ Premium Ingredients</span>
+            <span>✦ Family Recipe</span>
+        </div>
+    </div>
+
+    <section class="products-section" id="products">
+        <div class="section-title">
+            <h2>Signature Collection</h2>
+            <p>Scroll to discover our finest creations</p>
+        </div>
+        
+        <div class="products-scroll">
+            <div class="product-card">
+                <div class="product-img">🥐</div>
+                <div class="product-info">
+                    <h3>Golden Croissant</h3>
+                    <p>Buttery, flaky, perfectly laminated</p>
+                    <span class="product-price">$4.50</span>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">🍰</div>
+                <div class="product-info">
+                    <h3>Royal Chocolate</h3>
+                    <p>Decadent layers of pure cocoa bliss</p>
+                    <span class="product-price">$8.00</span>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">🧁</div>
+                <div class="product-info">
+                    <h3>Velvet Cupcake</h3>
+                    <p>Swiss meringue buttercream topping</p>
+                    <span class="product-price">$5.50</span>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">🥖</div>
+                <div class="product-info">
+                    <h3>Artisan Sourdough</h3>
+                    <p>48-hour fermented, crusty perfection</p>
+                    <span class="product-price">$7.00</span>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">🍪</div>
+                <div class="product-info">
+                    <h3>Macaron Set</h3>
+                    <p>Six delicate flavors, one box</p>
+                    <span class="product-price">$18.00</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <div class="feature-icon">🌾</div>
+            <h3>Organic Flour</h3>
+            <p>Sourced from local mills, stone-ground for maximum flavor</p>
+        </div>
+        
+        <div class="feature">
+            <div class="feature-icon">🧈</div>
+            <h3>French Butter</h3>
+            <p>AOC certified, churned to golden perfection</p>
+        </div>
+        
+        <div class="feature">
+            <div class="feature-icon">⏰</div>
+            <h3>Fresh Daily</h3>
+            <p>Baked every morning at 4 AM, never frozen</p>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <h2>Join the Dynasty</h2>
+        <p>Get exclusive recipes, early access to seasonal items, and 10% off your first order.</p>
+        
+        <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="logo">SWEET DYNASTY</div>
+        
+        <div class="social-links">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+        </div>
+        
+        <p style="color: #666; font-size: 0.875rem;">© 2024 Sweet Dynasty. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const hoverElements = document.querySelectorAll('a, button, .product-card');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

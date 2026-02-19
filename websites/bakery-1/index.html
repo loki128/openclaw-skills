@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleopatra Delights — Artisan Bakery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #C9A962;
+            --cream: #F5F0E8;
+            --charcoal: #1A1A1A;
+            --warm-white: #FDFCFA;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--warm-white);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: white;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .hero-images {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 4rem;
+            opacity: 0.4;
+        }
+
+        .hero-img {
+            background: linear-gradient(45deg, #C9A96220, transparent);
+            border-radius: 2px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 400;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 span {
+            display: block;
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero p {
+            font-size: 0.875rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* Floating elements */
+        .floating {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-1 {
+            top: 20%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation-delay: 0s;
+        }
+
+        .floating-2 {
+            bottom: 20%;
+            right: 10%;
+            width: 150px;
+            height: 150px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Section styling */
+        section {
+            padding: 8rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Products grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .product-card {
+            position: relative;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            transition: transform 0.5s, box-shadow 0.5s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+        }
+
+        .product-img {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--cream), #e8e0d0);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .product-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card p {
+            color: #666;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .price {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--gold);
+        }
+
+        /* Story section */
+        .story {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .story-img {
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-img::before {
+            content: '';
+            position: absolute;
+            inset: 2rem;
+            border: 1px solid var(--gold);
+            opacity: 0.5;
+        }
+
+        .story-content h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .story-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--cream), #e0d5c0);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item:nth-child(2) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-item:hover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            opacity: 0.2;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: white;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        footer .logo {
+            margin-bottom: 2rem;
+        }
+
+        footer p {
+            opacity: 0.6;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .story {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-item:nth-child(2) {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+
+    <nav>
+        <div class="logo">CLEOPATRA</div>
+        <div class="nav-links">
+            <a href="#products">Products</a>
+            <a href="#story">Story</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-images">
+            <div class="hero-img"></div>
+            <div class="hero-img"></div>
+            <div class="hero-img"></div>
+        </div>
+        <div class="floating floating-1"></div>
+        <div class="floating floating-2"></div>
+        <div class="hero-content">
+            <h1>Cleopatra <span>Delights</span></h1>
+            <p>Artisan Bakery Since 1987</p>
+        </div>
+    </header>
+
+    <section id="products">
+        <div class="section-header">
+            <p>Our Collection</p>
+            <h2>Handcrafted Perfection</h2>
+        </div>
+        <div class="products">
+            <div class="product-card">
+                <span class="price">$8.00</span>
+                <div class="product-img">🥐</div>
+                <h3>Butter Croissant</h3>
+                <p>Flaky layers of pure French butter, baked to golden perfection every morning.</p>
+            </div>
+            <div class="product-card">
+                <span class="price">$12.00</span>
+                <div class="product-img">🍰</div>
+                <h3>Velvet Cake</h3>
+                <p>Rich chocolate layers with ganache, topped with edible gold leaf.</p>
+            </div>
+            <div class="product-card">
+                <span class="price">$6.50</span>
+                <div class="product-img">🥖</div>
+                <h3>Sourdough</h3>
+                <p>48-hour fermented dough, crusty exterior with a soft, airy crumb.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="story" class="story">
+        <div class="story-img"></div>
+        <div class="story-content">
+            <p style="color: var(--gold); letter-spacing: 0.2em; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 1rem;">Our Story</p>
+            <h2>Baking is not just our profession—it's our heritage.</h2>
+            <p>For three generations, the Cleopatra family has perfected the art of baking. What started as a small kitchen in Cairo has grown into an artisan bakery known worldwide for its commitment to quality and tradition.</p>
+            <p>Every morning at 4 AM, our master bakers begin their craft. No shortcuts. No preservatives. Just time-honored techniques and the finest ingredients.</p>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="section-header">
+            <p>Visual Journey</p>
+            <h2>The Gallery</h2>
+        </div>
+        <div class="gallery">
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+            <div class="gallery-item"></div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="logo">CLEOPATRA</div>
+        <p>123 Artisan Street, Cairo, Egypt</p>
+        <p>Open daily 6AM — 8PM</p>
+        <p style="margin-top: 2rem; opacity: 0.4;">© 2024 Cleopatra Delights. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating');
+            parallax.forEach(el => {
+                const speed = 0.5;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

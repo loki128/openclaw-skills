@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Crust — Artisan Bakery</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --mustard: #D4A017;
+            --olive: #556B2F;
+            --cream: #F5F5DC;
+            --charcoal: #2C2C2C;
+            --warm-gray: #8B8680;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.6;
+        }
+
+        /* Page loader */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--charcoal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: var(--mustard);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: background 0.3s, padding 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(245, 245, 220, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 3rem;
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--mustard);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero with video-like animation */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: radial-gradient(circle at 2px 2px, var(--charcoal) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--mustard);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--olive);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--warm-gray);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            animation: fadeUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--mustard);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--charcoal);
+            border: 2px solid var(--charcoal);
+        }
+
+        .btn-secondary:hover {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        /* Floating elements */
+        .float-element {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .float-1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-2 { top: 30%; right: 15%; animation-delay: -2s; }
+        .float-3 { bottom: 25%; left: 20%; animation-delay: -4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Section styling */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--warm-gray);
+            font-size: 1.125rem;
+        }
+
+        /* Masonry gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px;
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            background: linear-gradient(135deg, #e8e0d0, #d0c8b8);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-item.wide {
+            grid-column: span 2;
+        }
+
+        .gallery-item.tall {
+            grid-row: span 2;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay h3 {
+            color: white;
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+        }
+
+        /* Menu section */
+        .menu-section {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .menu-category h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--mustard);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--mustard);
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .menu-item h4 {
+            font-weight: 500;
+        }
+
+        .menu-item p {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 0.25rem;
+        }
+
+        .menu-item .price {
+            color: var(--mustard);
+            font-weight: 700;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: linear-gradient(135deg, var(--olive), #3d4d26);
+            color: white;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial p {
+            font-size: 1.125rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial .author {
+            font-weight: 700;
+            color: var(--mustard);
+        }
+
+        /* Location */
+        .location {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        .location-map {
+            background: linear-gradient(135deg, #e0d8c8, #d0c8b8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .location-info {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .location-info h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .location-info p {
+            color: var(--warm-gray);
+            margin-bottom: 1rem;
+        }
+
+        .hours {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .hours h3 {
+            font-family: 'DM Serif Display', serif;
+            margin-bottom: 1rem;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h3 {
+            font-family: 'DM Serif Display', serif;
+            margin-bottom: 1rem;
+            color: var(--mustard);
+        }
+
+        .footer-col p, .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer-col a:hover {
+            color: var(--mustard);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-item.large,
+            .gallery-item.wide {
+                grid-column: span 2;
+            }
+
+            .location {
+                grid-template-columns: 1fr;
+            }
+
+            .location-map {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <span class="loader-text">Golden Crust</span>
+    </div>
+
+    <nav>
+        <div class="logo">Golden Crust</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#menu">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="float-element float-1">🥐</div>
+        <div class="float-element float-2">🍞</div>
+        <div class="float-element float-3">🥖</div>
+        
+        <span class="hero-badge">★ Est. 1985</span>
+        <h1>Artisan <span>Baking</span></h1>
+        <p>Handcrafted with passion, baked with tradition. Experience the golden difference.</p>
+        <div class="hero-buttons">
+            <a href="#menu" class="btn btn-primary">View Menu</a>
+            <a href="#contact" class="btn btn-secondary">Visit Us</a>
+        </div>
+    </header>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Creations</h2>
+                <p>A visual journey through our bakery</p>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item large">
+                    <div class="gallery-overlay">
+                        <h3>Fresh Croissants</h3>
+                    </div>
+                </div>
+                <div class="gallery-item"></div>
+                <div class="gallery-item"></div>
+                <div class="gallery-item wide">
+                    <div class="gallery-overlay">
+                        <h3>Artisan Sourdough</h3>
+                    </div>
+                </div>
+                <div class="gallery-item"></div>
+                <div class="gallery-item tall"></div>
+                <div class="gallery-item"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="menu-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: white;">Our Menu</h2>
+                <p style="color: rgba(255,255,255,0.7);">Fresh daily, made with love</p>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-category">
+                    <h3>Pastries</h3>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Butter Croissant</h4>
+                            <p>Flaky, buttery, perfectly golden</p>
+                        </div>
+                        <span class="price">$4.50</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Pain au Chocolat</h4>
+                            <p>Chocolate-filled delight</p>
+                        </div>
+                        <span class="price">$5.00</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Almond Danish</h4>
+                            <p>With vanilla glaze</p>
+                        </div>
+                        <span class="price">$5.50</span>
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3>Breads</h3>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Country Sourdough</h4>
+                            <p>48-hour fermented</p>
+                        </div>
+                        <span class="price">$8.00</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Multigrain Loaf</h4>
+                            <p>Seeds and whole grains</p>
+                        </div>
+                        <span class="price">$7.50</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Baguette</h4>
+                            <p>Traditional French</p>
+                        </div>
+                        <span class="price">$4.00</span>
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3>Cakes</h3>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Chocolate Fudge</h4>
+                            <p>Rich and decadent</p>
+                        </div>
+                        <span class="price">$45/slice</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Lemon Drizzle</h4>
+                            <p>Zesty and light</p>
+                        </div>
+                        <span class="price">$6.50</span>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div>
+                            <h4>Carrot Cake</h4>
+                            <p>With cream cheese frosting</p>
+                        </div>
+                        <span class="price">$7.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>What People Say</h2>
+                <p>Words from our beloved customers</p>
+            </div>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p>"The best croissant I've ever had outside of Paris. Flaky, buttery perfection every single time."</p>
+                    <span class="author">— Sarah Mitchell</span>
+                </div>
+                
+                <div class="testimonial">
+                    <p>"Golden Crust has become our family's Sunday tradition. The sourdough is absolutely incredible."</p>
+                    <span class="author">— James Rodriguez</span>
+                </div>
+                
+                <div class="testimonial">
+                    <p>"You can taste the passion in every bite. This is what real artisan baking should be."</p>
+                    <span class="author">— Emma Thompson</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="location">
+        <div class="location-map">
+            <span style="font-size: 4rem; opacity: 0.3;">📍</span>
+        </div>
+        
+        <div class="location-info">
+            <h2>Visit Us</h2>
+            <p>123 Baker Street</p>
+            <p>San Francisco, CA 94102</p>
+            <p style="margin-top: 1rem;">📞 (415) 555-0123</p>
+            <p>✉️ hello@goldencrust.com</p>
+            
+            <div class="hours">
+                <h3>Opening Hours</h3>
+                
+                <div class="hours-row">
+                    <span>Monday — Friday</span>
+                    <span>6:00 AM — 7:00 PM</span>
+                </div>
+                
+                <div class="hours-row">
+                    <span>Saturday — Sunday</span>
+                    <span>7:00 AM — 6:00 PM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>Golden Crust</h3>
+                <p>Artisan bakery serving handcrafted pastries, breads, and cakes since 1985.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <p><a href="#">About Us</a></p>
+                <p><a href="#">Our Menu</a></p>
+                <p><a href="#">Catering</a></p>
+                <p><a href="#">Careers</a></p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Connect</h3>
+                <p><a href="#">Instagram</a></p>
+                <p><a href="#">Facebook</a></p>
+                <p><a href="#">Twitter</a></p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 Golden Crust. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Page loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
